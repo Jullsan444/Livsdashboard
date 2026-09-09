@@ -203,16 +203,22 @@ function defaultData() {
 function parseHealthJSON(json) {
   const metrics = json && json.data && json.data.metrics ? json.data.metrics : [];
   const byDate = {};
+  const SUM_FIELDS = new Set(["steps", "activeEnergy", "sleepHr"]);
   metrics.forEach((metric) => {
     const field = METRIC_MAP[metric.name];
     if (!field || !Array.isArray(metric.data)) return;
     metric.data.forEach((point) => {
       const date = String(point.date || "").slice(0, 10);
       if (!date) return;
-      const value = point.qty ?? point.Avg ?? point.avg ?? point.asleep;
+      let value = point.qty ?? point.Avg ?? point.avg ?? point.asleep;
       if (value == null) return;
+      if (field === "activeEnergy") value = value / 4.184; // kJ -> kcal
       byDate[date] = byDate[date] || { date };
-      byDate[date][field] = value;
+      if (SUM_FIELDS.has(field)) {
+        byDate[date][field] = (byDate[date][field] || 0) + value;
+      } else {
+        byDate[date][field] = value; // point-in-time metrics: keep latest sample
+      }
     });
   });
   return Object.values(byDate).sort((a, b) => b.date.localeCompare(a.date));
