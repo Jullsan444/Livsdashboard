@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Livsdashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #EDEAE2;
+  --panel: #E3DFD3;
+  --ink: #1B1A17;
+  --line: rgba(27,26,23,0.16);
+  --chrome1: #DADDE0;
+  --chrome2: #93979D;
+  --chrome3: #4E5157;
+  --signal: #B4301D;
+  --font-display: 'Big Shoulders Display', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  background-image: radial-gradient(circle, rgba(27,26,23,0.05) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+.ld-frame { display: flex; min-height: 100vh; }
+.ld-rail {
+  width: 168px; flex-shrink: 0; border-right: 1px solid var(--line);
+  padding: 20px 14px; display: flex; flex-direction: column; gap: 28px;
+}
+.ld-mast { line-height: 1; }
+.ld-mast-num { font-family: var(--font-display); font-weight: 900; font-size: 44px; }
+.ld-mast-label { font-size: 11px; letter-spacing: 0.08em; color: var(--chrome3); margin-top: 2px; }
+.ld-nav { display: flex; flex-direction: column; gap: 2px; }
+.ld-navitem {
+  display: flex; align-items: center; gap: 10px; padding: 9px 8px; border: none; background: none;
+  font-family: var(--font-body); font-size: 13.5px; color: var(--chrome3); text-align: left; cursor: pointer;
+  border-radius: 3px; width: 100%;
+}
+.ld-navitem:hover { background: rgba(27,26,23,0.05); color: var(--ink); }
+.ld-navitem.active { background: var(--ink); color: var(--bg); }
+.ld-main { flex: 1; padding: 28px 34px 90px; min-width: 0; }
+.ld-header { margin-bottom: 22px; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+.ld-eyebrow { font-size: 11.5px; color: var(--chrome3); margin-bottom: 4px; }
+.ld-header h1 { font-family: var(--font-display); font-weight: 800; font-size: 34px; margin: 0; }
+.ld-sync { font-size: 11.5px; color: var(--chrome3); margin-top: 6px; }
+.ld-sync.err { color: var(--signal); }
+
+.ld-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; grid-template-rows: auto auto; gap: 12px; }
+.ld-block { border: 1px solid var(--line); padding: 18px; cursor: pointer; background: var(--panel); }
+.ld-block-lg { grid-row: span 2; background: linear-gradient(155deg, var(--chrome1), var(--chrome2) 60%, var(--chrome3)); color: #fff; }
+.ld-block-label { font-size: 11px; letter-spacing: 0.08em; opacity: 0.75; margin-bottom: 10px; }
+.ld-block-num { font-family: var(--font-display); font-weight: 900; font-size: 30px; line-height: 1; }
+.ld-block-sub { font-size: 12.5px; margin-top: 6px; opacity: 0.8; }
+
+.ld-panel { max-width: 640px; }
+.ld-empty { color: var(--chrome3); font-size: 13.5px; padding: 16px 0; }
+.ld-input {
+  font-family: var(--font-body); border: 1px solid var(--line); background: var(--panel);
+  padding: 9px 12px; font-size: 13.5px; color: var(--ink); flex: 1; min-width: 0;
+}
+.ld-select, .ld-select-sm {
+  font-family: var(--font-body); border: 1px solid var(--line); background: var(--panel);
+  padding: 8px; font-size: 12.5px; color: var(--ink);
+}
+.ld-select-sm { width: 100%; font-size: 11px; padding: 5px 4px; }
+.ld-addrow { display: flex; gap: 8px; margin-bottom: 18px; }
+.ld-addbtn { border: 1px solid var(--ink); background: var(--ink); color: var(--bg); width: 38px; cursor: pointer; }
+.ld-strip { display: flex; align-items: baseline; gap: 22px; margin-bottom: 20px; font-size: 13px; color: var(--chrome3); flex-wrap: wrap; }
+.ld-strip-num { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--ink); margin-right: 4px; }
+.ld-linklike { background: none; border: none; text-decoration: underline; cursor: pointer; font-size: 12px; color: var(--chrome3); }
+.ld-checklist { display: flex; flex-direction: column; gap: 6px; }
+.ld-checkrow {
+  display: flex; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--line);
+  background: var(--panel); cursor: pointer; text-align: left; font-family: var(--font-body); font-size: 13.5px;
+  color: var(--ink); width: 100%;
+}
+.ld-checkrow .done { text-decoration: line-through; opacity: 0.5; }
+.ld-trash { margin-left: auto; opacity: 0.4; cursor: pointer; flex-shrink: 0; }
+.ld-trash:hover { opacity: 1; color: var(--signal); }
+.ld-stages { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.ld-stage-chip { border: 1px solid var(--line); padding: 6px 10px; font-size: 12px; display: flex; gap: 6px; align-items: center; }
+.ld-stage-idx { font-family: var(--font-display); font-weight: 800; color: var(--chrome3); }
+.ld-stagegroup { margin-bottom: 16px; }
+.ld-stagegroup-title { font-size: 11.5px; color: var(--chrome3); margin-bottom: 6px; }
+.ld-list { display: flex; flex-direction: column; gap: 6px; }
+.ld-listrow { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); background: var(--panel); font-size: 13px; }
+.ld-listdate { color: var(--chrome3); font-size: 11.5px; flex-shrink: 0; }
+.ld-listtext { flex: 1; }
+.ld-status { border: 1px solid var(--ink); background: none; padding: 3px 9px; font-size: 11px; cursor: pointer; font-family: var(--font-body); }
+.ld-status-postat { background: var(--ink); color: var(--bg); }
+.ld-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+.ld-tag { font-size: 11px; border: 1px solid var(--line); padding: 4px 9px; color: var(--chrome3); }
+.ld-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 14px; }
+.ld-table th, .ld-table td { border: 1px solid var(--line); padding: 6px; text-align: center; }
+.ld-table-label { font-weight: 600; text-align: left; padding-left: 10px; }
+.ld-note { font-size: 12px; color: var(--chrome3); }
+.ld-tabbar { display: none; }
+.ld-icon { width: 16px; height: 16px; display: inline-flex; }
+.ld-uploadbtn { display:flex; align-items:center; gap:10px; padding:11px 12px; border:1px solid var(--line); background:var(--panel); cursor:pointer; font-family: var(--font-body); font-size:13.5px; width:100%; margin-top:6px; }
+
+@media (max-width: 760px) {
+  .ld-rail { display: none; }
+  .ld-main { padding: 20px 16px 90px; }
+  .ld-header h1 { font-size: 26px; }
+  .ld-grid { grid-template-columns: 1fr 1fr; }
+  .ld-block-lg { grid-column: span 2; grid-row: auto; }
+  .ld-tabbar { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 1px solid var(--line); justify-content: space-around; padding: 8px 4px; }
+  .ld-tabbtn { background: none; border: none; padding: 8px; color: var(--chrome3); cursor: pointer; font-size: 11px; }
+  .ld-tabbtn.active { color: var(--ink); }
+}
+</style>
+</head>
+<body>
+<div class="ld-frame">
+  <aside class="ld-rail">
+    <div class="ld-mast">
+      <div class="ld-mast-num" id="mastNum">—</div>
+      <div class="ld-mast-label">DAG</div>
+    </div>
+    <nav class="ld-nav" id="navRail"></nav>
+  </aside>
+  <main class="ld-main">
+    <header class="ld-header">
+      <div class="ld-eyebrow" id="eyebrow">Livsdashboard</div>
+      <h1 id="pageTitle">Idag</h1>
+      <div class="ld-sync" id="syncStatus"></div>
+    </header>
+    <div id="panelRoot"></div>
+  </main>
+</div>
+<nav class="ld-tabbar" id="tabBar"></nav>
+
+<script>
+// ---------- Config ----------
+const SCRIPT_URL_KEY = "ld_script_url";
+let SCRIPT_URL = localStorage.getItem(SCRIPT_URL_KEY) || "";
+
+const NAV = [
+  { id: "idag", label: "Idag" },
+  { id: "hard75", label: "75 Hard" },
+  { id: "dosed", label: "Dosed" },
+  { id: "content", label: "Content" },
+  { id: "skincare", label: "Skincare" },
+  { id: "training", label: "Träning" },
+  { id: "halsa", label: "Hälsa" },
+  { id: "todos", label: "Todo" },
+];
+
+const HARD75_TASKS = [
+  { key: "workout1", label: "Träningspass 1, 45 min" },
+  { key: "workout2", label: "Träningspass 2, 45 min utomhus" },
+  { key: "diet", label: "Kostplan följd, 0 alkohol" },
+  { key: "water", label: "4 liter vatten" },
+  { key: "read", label: "10 sidor facklitteratur" },
+  { key: "photo", label: "Progressbild tagen" },
+];
+const DOSED_STAGES = ["Wordmark", "Ikonografi", "Förpackning", "Fysisk mockup"];
+const ACTIVES = [
+  { key: "none", label: "—" },
+  { key: "basic", label: "Basic (niacinamid/fukt)" },
+  { key: "bha", label: "BHA 2%" },
+  { key: "glycolic", label: "Glykolsyra 7%" },
+  { key: "retinol", label: "Retinol 0.5%" },
+];
+const WEEKDAYS = ["Mån", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"];
+const SKINCARE_PRODUCTS = [
+  "La Roche-Posay Effaclar", "The Ordinary Niacinamide + Zinc", "The Ordinary Retinol 0.5%",
+  "The Ordinary Glycolic Acid 7%", "Paula's Choice 2% BHA", "Paula's Choice CLEAR moisturizer",
+  "Benton Snail Bee Serum", "La Roche-Posay Cicaplast B5+", "Beauty of Joseon Red Bean mask",
+  "Maria Åkerberg AHA & Jojoba",
+];
+const CONTENT_CYCLE = ["idé", "filmat", "redigerat", "postat"];
+const METRIC_MAP = {
+  step_count: "steps", resting_heart_rate: "restingHr",
+  weight_body_mass: "weight", active_energy: "activeEnergy", sleep_analysis: "sleepHr",
+};
+
+function todayISO() { return new Date().toISOString().slice(0, 10); }
+function diffDays(a, b) {
+  return Math.round((new Date(b + "T00:00:00") - new Date(a + "T00:00:00")) / 86400000);
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+function defaultData() {
+  return {
+    hard75: { startDate: "", days: {} },
+    dosed: { tasks: [] },
+    content: [],
+    skincare: { grid: {} },
+    training: [],
+    todos: [],
+    health: { endpointUrl: "", rows: [], lastFetched: null },
+  };
+}
+
+function parseHealthJSON(json) {
+  const metrics = json && json.data && json.data.metrics ? json.data.metrics : [];
+  const byDate = {};
+  metrics.forEach((metric) => {
+    const field = METRIC_MAP[metric.name];
+    if (!field || !Array.isArray(metric.data)) return;
+    metric.data.forEach((point) => {
+      const date = String(point.date || "").slice(0, 10);
+      if (!date) return;
+      const value = point.qty ?? point.Avg ?? point.avg ?? point.asleep;
+      if (value == null) return;
+      byDate[date] = byDate[date] || { date };
+      byDate[date][field] = value;
+    });
+  });
+  return Object.values(byDate).sort((a, b) => b.date.localeCompare(a.date));
+}
+
+// ---------- JSONP ----------
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = "ldcb_" + Math.random().toString(36).slice(2);
+    const script = document.createElement("script");
+    const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 10000);
+    function cleanup() { clearTimeout(timer); delete window[cb]; script.remove(); }
+    window[cb] = (data) => { cleanup(); resolve(data); };
+    script.onerror = () => { cleanup(); reject(new Error("Kunde inte ladda länken")); };
+    const sep = url.includes("?") ? "&" : "?";
+    script.src = url + sep + "callback=" + cb + "&_=" + Date.now();
+    document.body.appendChild(script);
+  });
+}
+
+async function postToScript(payload) {
+  if (!SCRIPT_URL) return;
+  try {
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors", // we don't need to read the response, just fire it
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.warn("Sync-fel:", e);
+  }
+}
+
+// ---------- State ----------
+let state = null;
+let saveTimer = null;
+let tab = "idag";
+
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem("ld_data");
+    return raw ? JSON.parse(raw) : defaultData();
+  } catch { return defaultData(); }
+}
+function saveLocal() {
+  localStorage.setItem("ld_data", JSON.stringify(state));
+}
+function commit(next) {
+  state = next;
+  saveLocal();
+  render();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    postToScript({ _type: "dashboard", payload: state });
+  }, 500);
+}
+
+async function init() {
+  state = loadLocal();
+  render();
+  if (SCRIPT_URL) {
+    setSyncStatus("Synkar…");
+    try {
+      const remote = await jsonp(SCRIPT_URL + "?action=dashboard");
+      if (remote && Object.keys(remote).length) {
+        state = { ...defaultData(), ...remote };
+        saveLocal();
+      }
+      setSyncStatus("Synkad " + new Date().toLocaleTimeString("sv-SE"));
+    } catch (e) {
+      setSyncStatus("Kunde inte synka (visar lokal data)", true);
+    }
+    render();
+    if (state.health.endpointUrl) fetchHealth(state.health.endpointUrl);
+  } else {
+    setSyncStatus("Ingen synk-länk sparad ännu");
+  }
+}
+
+function setSyncStatus(text, isError) {
+  const el = document.getElementById("syncStatus");
+  el.textContent = text;
+  el.className = "ld-sync" + (isError ? " err" : "");
+}
+
+async function fetchHealth(url) {
+  try {
+    const json = await jsonp(url);
+    const rows = parseHealthJSON(json);
+    state.health = { ...state.health, endpointUrl: url, rows, lastFetched: new Date().toISOString() };
+    saveLocal();
+    render();
+  } catch (e) {
+    console.warn("Hälsodata-fel:", e);
+    render();
+  }
+}
+
+// ---------- Render ----------
+function render() {
+  const today = todayISO();
+  document.getElementById("eyebrow").textContent = "Livsdashboard — Utgåva " + today;
+  document.getElementById("pageTitle").textContent = NAV.find((n) => n.id === tab).label;
+
+  const dayNumber = state.hard75.startDate ? diffDays(state.hard75.startDate, today) + 1 : null;
+  document.getElementById("mastNum").textContent = dayNumber ? String(dayNumber).padStart(2, "0") : "—";
+
+  const navRail = document.getElementById("navRail");
+  navRail.innerHTML = NAV.map((n) =>
+    `<button class="ld-navitem ${tab === n.id ? "active" : ""}" data-tab="${n.id}">${esc(n.label)}</button>`
+  ).join("");
+  navRail.querySelectorAll("[data-tab]").forEach((btn) => btn.onclick = () => { tab = btn.dataset.tab; render(); });
+
+  const tabBar = document.getElementById("tabBar");
+  tabBar.innerHTML = NAV.map((n) =>
+    `<button class="ld-tabbtn ${tab === n.id ? "active" : ""}" data-tab="${n.id}">${esc(n.label)}</button>`
+  ).join("");
+  tabBar.querySelectorAll("[data-tab]").forEach((btn) => btn.onclick = () => { tab = btn.dataset.tab; render(); });
+
+  const root = document.getElementById("panelRoot");
+  root.innerHTML = renderPanel(tab, today, dayNumber);
+  attachPanelHandlers(tab);
+}
+
+function computeStreak(today, dayNumber) {
+  let streak = 0;
+  if (state.hard75.startDate && dayNumber) {
+    for (let n = dayNumber; n >= 1; n--) {
+      const d = new Date(state.hard75.startDate + "T00:00:00");
+      d.setDate(d.getDate() + n - 1);
+      const key = d.toISOString().slice(0, 10);
+      const entry = state.hard75.days[key];
+      const allDone = entry && HARD75_TASKS.every((t) => entry.tasks && entry.tasks[t.key]);
+      if (allDone) streak++; else break;
+    }
+  }
+  return streak;
+}
+
+function renderPanel(tab, today, dayNumber) {
+  if (tab === "idag") {
+    const streak = computeStreak(today, dayNumber);
+    const dosedDone = state.dosed.tasks.filter((t) => t.done).length;
+    const dosedTotal = state.dosed.tasks.length;
+    const nextContent = state.content.find((c) => c.status !== "postat");
+    const openTodos = state.todos.filter((t) => !t.done).length;
+    return `
+      <div class="ld-grid">
+        <div class="ld-block ld-block-lg" data-goto="hard75">
+          <div class="ld-block-label">75 HARD</div>
+          <div class="ld-block-num">${dayNumber ? dayNumber + "/75" : "Ej startad"}</div>
+          <div class="ld-block-sub">${streak} dagar i rad fullföljda</div>
+        </div>
+        <div class="ld-block" data-goto="dosed">
+          <div class="ld-block-label">DOSED</div>
+          <div class="ld-block-num">${dosedTotal ? dosedDone + "/" + dosedTotal : "—"}</div>
+          <div class="ld-block-sub">tasks klara</div>
+        </div>
+        <div class="ld-block" data-goto="content">
+          <div class="ld-block-label">CONTENT</div>
+          <div class="ld-block-num">${nextContent ? esc(nextContent.status) : "Inget på gång"}</div>
+          <div class="ld-block-sub">${nextContent ? esc(nextContent.idea) : "Lägg till en idé"}</div>
+        </div>
+        <div class="ld-block" data-goto="todos">
+          <div class="ld-block-label">TODO</div>
+          <div class="ld-block-num">${openTodos}</div>
+          <div class="ld-block-sub">öppna punkter</div>
+        </div>
+      </div>`;
+  }
+
+  if (tab === "hard75") {
+    if (!state.hard75.startDate) {
+      return `<div class="ld-panel"><div class="ld-empty">
+        <p>Sätt ett startdatum för att börja räkna dagar.</p>
+        <input type="date" class="ld-input" id="startDateInput" />
+      </div></div>`;
+    }
+    const dayEntry = state.hard75.days[today] || {};
+    const streak = computeStreak(today, dayNumber);
+    return `<div class="ld-panel">
+      <div class="ld-strip">
+        <div><span class="ld-strip-num">${dayNumber}</span> / 75</div>
+        <div><span class="ld-strip-num">${streak}</span> streak</div>
+        <button class="ld-linklike" id="resetStart">Ändra startdatum</button>
+      </div>
+      <div class="ld-checklist">
+        ${HARD75_TASKS.map((t) => {
+          const checked = !!(dayEntry.tasks && dayEntry.tasks[t.key]);
+          return `<button class="ld-checkrow" data-task="${t.key}">
+            <span>${checked ? "☑" : "☐"}</span>
+            <span class="${checked ? "done" : ""}">${esc(t.label)}</span>
+          </button>`;
+        }).join("")}
+      </div>
+    </div>`;
+  }
+
+  if (tab === "dosed") {
+    return `<div class="ld-panel">
+      <div class="ld-stages">
+        ${DOSED_STAGES.map((s, i) => `<div class="ld-stage-chip"><span class="ld-stage-idx">${i + 1}</span>${esc(s)}</div>`).join("")}
+      </div>
+      <div class="ld-addrow">
+        <input class="ld-input" id="dosedTitle" placeholder="Ny task…" />
+        <select class="ld-select" id="dosedStage">
+          ${DOSED_STAGES.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}
+        </select>
+        <button class="ld-addbtn" id="dosedAdd">+</button>
+      </div>
+      ${DOSED_STAGES.map((s) => {
+        const items = state.dosed.tasks.filter((t) => t.stage === s);
+        if (!items.length) return "";
+        return `<div class="ld-stagegroup">
+          <div class="ld-stagegroup-title">${esc(s)}</div>
+          ${items.map((t) => `<div class="ld-checkrow">
+            <span data-toggle-dosed="${t.id}" style="display:flex;gap:10px;flex:1;cursor:pointer;">
+              <span>${t.done ? "☑" : "☐"}</span><span class="${t.done ? "done" : ""}">${esc(t.title)}</span>
+            </span>
+            <span class="ld-trash" data-remove-dosed="${t.id}">✕</span>
+          </div>`).join("")}
+        </div>`;
+      }).join("")}
+    </div>`;
+  }
+
+  if (tab === "content") {
+    const sorted = [...state.content].sort((a, b) => a.date.localeCompare(b.date));
+    return `<div class="ld-panel">
+      <div class="ld-addrow">
+        <input type="date" class="ld-input" id="contentDate" value="${today}" style="max-width:140px;" />
+        <input class="ld-input" id="contentIdea" placeholder="Idé…" />
+        <button class="ld-addbtn" id="contentAdd">+</button>
+      </div>
+      <div class="ld-list">
+        ${sorted.map((c) => `<div class="ld-listrow">
+          <span class="ld-listdate">${c.date}</span>
+          <span class="ld-listtext">${esc(c.idea)}</span>
+          <button class="ld-status ${c.status === "postat" ? "ld-status-postat" : ""}" data-cycle-content="${c.id}">${esc(c.status)}</button>
+          <span class="ld-trash" data-remove-content="${c.id}">✕</span>
+        </div>`).join("") || `<div class="ld-empty">Inga idéer inlagda än.</div>`}
+      </div>
+    </div>`;
+  }
+
+  if (tab === "skincare") {
+    return `<div class="ld-panel">
+      <div class="ld-tags">${SKINCARE_PRODUCTS.map((p) => `<span class="ld-tag">${esc(p)}</span>`).join("")}</div>
+      <table class="ld-table">
+        <thead><tr><th></th>${WEEKDAYS.map((d) => `<th>${d}</th>`).join("")}</tr></thead>
+        <tbody>
+          ${["AM", "PM"].map((slot) => `<tr>
+            <td class="ld-table-label">${slot}</td>
+            ${WEEKDAYS.map((d) => `<td>
+              <select class="ld-select-sm" data-skincare-day="${d}" data-skincare-slot="${slot}">
+                ${ACTIVES.map((a) => `<option value="${a.key}" ${(state.skincare.grid[d] && state.skincare.grid[d][slot]) === a.key ? "selected" : ""}>${esc(a.label)}</option>`).join("")}
+              </select>
+            </td>`).join("")}
+          </tr>`).join("")}
+        </tbody>
+      </table>
+      <p class="ld-note">Tips: lägg inte BHA, glykolsyra och retinol på samma kväll.</p>
+    </div>`;
+  }
+
+  if (tab === "training") {
+    return `<div class="ld-panel">
+      <div class="ld-addrow">
+        <input class="ld-input" id="trainingTitle" placeholder="Rutin, t.ex. Legday stretch…" />
+        <button class="ld-addbtn" id="trainingAdd">+</button>
+      </div>
+      <div class="ld-checklist">
+        ${state.training.map((t) => `<div class="ld-checkrow">
+          <span data-toggle-training="${t.id}" style="display:flex;gap:10px;flex:1;cursor:pointer;">
+            <span>${t.done ? "☑" : "☐"}</span><span class="${t.done ? "done" : ""}">${esc(t.title)}</span>
+          </span>
+          <span class="ld-trash" data-remove-training="${t.id}">✕</span>
+        </div>`).join("") || `<div class="ld-empty">Lägg till dina stretch- och träningsrutiner.</div>`}
+      </div>
+    </div>`;
+  }
+
+  if (tab === "todos") {
+    return `<div class="ld-panel">
+      <div class="ld-addrow">
+        <input class="ld-input" id="todoText" placeholder="Ny todo…" />
+        <button class="ld-addbtn" id="todoAdd">+</button>
+      </div>
+      <div class="ld-checklist">
+        ${state.todos.map((t) => `<div class="ld-checkrow">
+          <span data-toggle-todo="${t.id}" style="display:flex;gap:10px;flex:1;cursor:pointer;">
+            <span>${t.done ? "☑" : "☐"}</span><span class="${t.done ? "done" : ""}">${esc(t.text)}</span>
+          </span>
+          <span class="ld-trash" data-remove-todo="${t.id}">✕</span>
+        </div>`).join("") || `<div class="ld-empty">Inga todos ännu.</div>`}
+      </div>
+    </div>`;
+  }
+
+  if (tab === "halsa") {
+    const rows = state.health.rows || [];
+    const latest = rows[0];
+    return `<div class="ld-panel">
+      ${!state.health.endpointUrl ? `
+        <div class="ld-empty">
+          <p>Klistra in din Apps Script-webbadress (slutar på /exec).</p>
+          <div class="ld-addrow">
+            <input class="ld-input" id="healthUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${SCRIPT_URL || ""}" />
+            <button class="ld-addbtn" id="healthUrlSave">✓</button>
+          </div>
+        </div>` : `
+        <div class="ld-strip">
+          <span id="healthStatusText">${state.health.lastFetched ? "Uppdaterad " + new Date(state.health.lastFetched).toLocaleString("sv-SE") : "Väntar på data…"}</span>
+          <button class="ld-linklike" id="healthRefresh">Uppdatera nu</button>
+        </div>`}
+      ${latest ? `
+        <div class="ld-grid" style="margin-bottom:18px;">
+          <div class="ld-block"><div class="ld-block-label">STEG</div><div class="ld-block-num">${latest.steps ?? "—"}</div><div class="ld-block-sub">${latest.date}</div></div>
+          <div class="ld-block"><div class="ld-block-label">SÖMN</div><div class="ld-block-num">${latest.sleepHr ? latest.sleepHr.toFixed(1) + " h" : "—"}</div></div>
+          <div class="ld-block"><div class="ld-block-label">VILOPULS</div><div class="ld-block-num">${latest.restingHr ?? "—"}</div></div>
+          <div class="ld-block"><div class="ld-block-label">VIKT</div><div class="ld-block-num">${latest.weight ? latest.weight + " kg" : "—"}</div></div>
+        </div>` : ""}
+      ${rows.length ? `
+        <table class="ld-table" style="margin-bottom:18px;">
+          <thead><tr><th>Datum</th><th>Steg</th><th>Sömn</th><th>Vilopuls</th><th>Vikt</th></tr></thead>
+          <tbody>
+            ${rows.slice(0, 10).map((r) => `<tr>
+              <td>${r.date}</td><td>${r.steps ?? "—"}</td>
+              <td>${r.sleepHr ? r.sleepHr.toFixed(1) : "—"}</td>
+              <td>${r.restingHr ?? "—"}</td><td>${r.weight ?? "—"}</td>
+            </tr>`).join("")}
+          </tbody>
+        </table>` : ""}
+    </div>`;
+  }
+
+  return "";
+}
+
+// ---------- Handlers ----------
+function attachPanelHandlers(tab) {
+  document.querySelectorAll("[data-goto]").forEach((el) =>
+    el.onclick = () => { tab = el.dataset.goto; window.__gotoTab(tab); }
+  );
+
+  if (tab === "hard75") {
+    const startInput = document.getElementById("startDateInput");
+    if (startInput) startInput.onchange = (e) => {
+      state.hard75.startDate = e.target.value; commit(state);
+    };
+    const resetBtn = document.getElementById("resetStart");
+    if (resetBtn) resetBtn.onclick = () => { state.hard75.startDate = ""; commit(state); };
+    document.querySelectorAll("[data-task]").forEach((btn) => btn.onclick = () => {
+      const key = btn.dataset.task;
+      const today = todayISO();
+      const days = { ...state.hard75.days };
+      const entry = days[today] || { tasks: {} };
+      const current = !!(entry.tasks && entry.tasks[key]);
+      days[today] = { tasks: { ...entry.tasks, [key]: !current } };
+      state.hard75.days = days;
+      commit(state);
+    });
+  }
+
+  if (tab === "dosed") {
+    document.getElementById("dosedAdd").onclick = () => {
+      const title = document.getElementById("dosedTitle").value.trim();
+      const stage = document.getElementById("dosedStage").value;
+      if (!title) return;
+      state.dosed.tasks.push({ id: uid(), title, stage, done: false });
+      commit(state);
+    };
+    document.querySelectorAll("[data-toggle-dosed]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.toggleDosed;
+      state.dosed.tasks = state.dosed.tasks.map((t) => t.id === id ? { ...t, done: !t.done } : t);
+      commit(state);
+    });
+    document.querySelectorAll("[data-remove-dosed]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.removeDosed;
+      state.dosed.tasks = state.dosed.tasks.filter((t) => t.id !== id);
+      commit(state);
+    });
+  }
+
+  if (tab === "content") {
+    document.getElementById("contentAdd").onclick = () => {
+      const date = document.getElementById("contentDate").value || todayISO();
+      const idea = document.getElementById("contentIdea").value.trim();
+      if (!idea) return;
+      state.content.push({ id: uid(), date, idea, status: "idé" });
+      commit(state);
+    };
+    document.querySelectorAll("[data-cycle-content]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.cycleContent;
+      state.content = state.content.map((c) => c.id === id
+        ? { ...c, status: CONTENT_CYCLE[(CONTENT_CYCLE.indexOf(c.status) + 1) % CONTENT_CYCLE.length] }
+        : c);
+      commit(state);
+    });
+    document.querySelectorAll("[data-remove-content]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.removeContent;
+      state.content = state.content.filter((c) => c.id !== id);
+      commit(state);
+    });
+  }
+
+  if (tab === "skincare") {
+    document.querySelectorAll("[data-skincare-day]").forEach((sel) => sel.onchange = (e) => {
+      const day = sel.dataset.skincareDay, slot = sel.dataset.skincareSlot;
+      const grid = { ...state.skincare.grid };
+      grid[day] = { ...(grid[day] || {}), [slot]: e.target.value };
+      state.skincare.grid = grid;
+      commit(state);
+    });
+  }
+
+  if (tab === "training") {
+    document.getElementById("trainingAdd").onclick = () => {
+      const title = document.getElementById("trainingTitle").value.trim();
+      if (!title) return;
+      state.training.push({ id: uid(), title, done: false });
+      commit(state);
+    };
+    document.querySelectorAll("[data-toggle-training]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.toggleTraining;
+      state.training = state.training.map((t) => t.id === id ? { ...t, done: !t.done } : t);
+      commit(state);
+    });
+    document.querySelectorAll("[data-remove-training]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.removeTraining;
+      state.training = state.training.filter((t) => t.id !== id);
+      commit(state);
+    });
+  }
+
+  if (tab === "todos") {
+    document.getElementById("todoAdd").onclick = () => {
+      const text = document.getElementById("todoText").value.trim();
+      if (!text) return;
+      state.todos.push({ id: uid(), text, done: false });
+      commit(state);
+    };
+    document.querySelectorAll("[data-toggle-todo]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.toggleTodo;
+      state.todos = state.todos.map((t) => t.id === id ? { ...t, done: !t.done } : t);
+      commit(state);
+    });
+    document.querySelectorAll("[data-remove-todo]").forEach((el) => el.onclick = () => {
+      const id = el.dataset.removeTodo;
+      state.todos = state.todos.filter((t) => t.id !== id);
+      commit(state);
+    });
+  }
+
+  if (tab === "halsa") {
+    const saveBtn = document.getElementById("healthUrlSave");
+    if (saveBtn) saveBtn.onclick = () => {
+      const url = document.getElementById("healthUrl").value.trim();
+      if (!url) return;
+      SCRIPT_URL = url;
+      localStorage.setItem(SCRIPT_URL_KEY, url);
+      state.health.endpointUrl = url;
+      commit(state);
+      fetchHealth(url);
+    };
+    const refreshBtn = document.getElementById("healthRefresh");
+    if (refreshBtn) refreshBtn.onclick = () => fetchHealth(state.health.endpointUrl);
+  }
+}
+
+window.__gotoTab = (t) => { tab = t; render(); };
+
+init();
+</script>
+</body>
+</html>
