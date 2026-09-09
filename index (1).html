@@ -100,6 +100,7 @@ body {
 .ld-table th, .ld-table td { border: 1px solid var(--line); padding: 6px; text-align: center; }
 .ld-table-label { font-weight: 600; text-align: left; padding-left: 10px; }
 .ld-note { font-size: 12px; color: var(--chrome3); }
+.ld-notesbox { white-space: pre-wrap; border: 1px solid var(--line); background: var(--panel); padding: 16px; font-size: 13px; line-height: 1.6; }
 .ld-tabbar { display: none; }
 .ld-icon { width: 16px; height: 16px; display: inline-flex; }
 .ld-uploadbtn { display:flex; align-items:center; gap:10px; padding:11px 12px; border:1px solid var(--line); background:var(--panel); cursor:pointer; font-family: var(--font-body); font-size:13.5px; width:100%; margin-top:6px; }
@@ -149,6 +150,7 @@ const NAV = [
   { id: "skincare", label: "Skincare" },
   { id: "training", label: "Träning" },
   { id: "halsa", label: "Hälsa" },
+  { id: "anteckningar", label: "Anteckningar" },
   { id: "todos", label: "Todo" },
 ];
 
@@ -197,6 +199,7 @@ function defaultData() {
     training: [],
     todos: [],
     health: { endpointUrl: "", rows: [], lastFetched: null },
+    notes: { text: "", lastFetched: null },
   };
 }
 
@@ -210,7 +213,7 @@ function parseHealthJSON(json) {
     metric.data.forEach((point) => {
       const date = String(point.date || "").slice(0, 10);
       if (!date) return;
-      let value = point.qty ?? point.Avg ?? point.avg ?? point.asleep;
+      let value = point.qty ?? point.totalSleep ?? point.Avg ?? point.avg ?? point.asleep;
       if (value == null) return;
       if (field === "activeEnergy") value = value / 4.184; // kJ -> kcal
       byDate[date] = byDate[date] || { date };
@@ -294,8 +297,21 @@ async function init() {
     }
     render();
     if (state.health.endpointUrl) fetchHealth(state.health.endpointUrl);
+    if (SCRIPT_URL) fetchNotes();
   } else {
     setSyncStatus("Ingen synk-länk sparad ännu");
+  }
+}
+
+async function fetchNotes() {
+  if (!SCRIPT_URL) return;
+  try {
+    const text = await jsonp(SCRIPT_URL + "?action=notes");
+    state.notes = { text: text || "", lastFetched: new Date().toISOString() };
+    saveLocal();
+    render();
+  } catch (e) {
+    console.warn("Anteckningar-fel:", e);
   }
 }
 
@@ -538,7 +554,7 @@ function renderPanel(tab, today, dayNumber) {
         </div>`}
       ${latest ? `
         <div class="ld-grid" style="margin-bottom:18px;">
-          <div class="ld-block"><div class="ld-block-label">STEG</div><div class="ld-block-num">${latest.steps ?? "—"}</div><div class="ld-block-sub">${latest.date}</div></div>
+          <div class="ld-block"><div class="ld-block-label">STEG</div><div class="ld-block-num">${latest.steps != null ? Math.round(latest.steps) : "—"}</div><div class="ld-block-sub">${latest.date}</div></div>
           <div class="ld-block"><div class="ld-block-label">SÖMN</div><div class="ld-block-num">${latest.sleepHr ? latest.sleepHr.toFixed(1) + " h" : "—"}</div></div>
           <div class="ld-block"><div class="ld-block-label">VILOPULS</div><div class="ld-block-num">${latest.restingHr ?? "—"}</div></div>
           <div class="ld-block"><div class="ld-block-label">VIKT</div><div class="ld-block-num">${latest.weight ? latest.weight + " kg" : "—"}</div></div>
@@ -548,12 +564,22 @@ function renderPanel(tab, today, dayNumber) {
           <thead><tr><th>Datum</th><th>Steg</th><th>Sömn</th><th>Vilopuls</th><th>Vikt</th></tr></thead>
           <tbody>
             ${rows.slice(0, 10).map((r) => `<tr>
-              <td>${r.date}</td><td>${r.steps ?? "—"}</td>
+              <td>${r.date}</td><td>${r.steps != null ? Math.round(r.steps) : "—"}</td>
               <td>${r.sleepHr ? r.sleepHr.toFixed(1) : "—"}</td>
               <td>${r.restingHr ?? "—"}</td><td>${r.weight ?? "—"}</td>
             </tr>`).join("")}
           </tbody>
         </table>` : ""}
+    </div>`;
+  }
+
+  if (tab === "anteckningar") {
+    return `<div class="ld-panel">
+      <div class="ld-strip">
+        <span>${state.notes.lastFetched ? "Uppdaterad " + new Date(state.notes.lastFetched).toLocaleString("sv-SE") : "Väntar på data…"}</span>
+        <button class="ld-linklike" id="notesRefresh">Uppdatera nu</button>
+      </div>
+      <div class="ld-notesbox">${esc(state.notes.text || "Inga anteckningar synkade än.")}</div>
     </div>`;
   }
 
@@ -691,6 +717,11 @@ function attachPanelHandlers(tab) {
     if (refreshBtn) refreshBtn.onclick = () => fetchHealth(state.health.endpointUrl);
     const editBtn = document.getElementById("healthEditUrl");
     if (editBtn) editBtn.onclick = () => { window.__editingHealthUrl = true; render(); };
+  }
+
+  if (tab === "anteckningar") {
+    const notesRefresh = document.getElementById("notesRefresh");
+    if (notesRefresh) notesRefresh.onclick = () => fetchNotes();
   }
 }
 
