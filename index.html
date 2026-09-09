@@ -210,7 +210,7 @@ function parseHealthJSON(json) {
     metric.data.forEach((point) => {
       const date = String(point.date || "").slice(0, 10);
       if (!date) return;
-      let value = point.qty ?? point.Avg ?? point.avg ?? point.asleep;
+      let value = point.qty ?? point.totalSleep ?? point.Avg ?? point.avg ?? point.asleep;
       if (value == null) return;
       if (field === "activeEnergy") value = value / 4.184; // kJ -> kcal
       byDate[date] = byDate[date] || { date };
@@ -538,7 +538,7 @@ function renderPanel(tab, today, dayNumber) {
         </div>`}
       ${latest ? `
         <div class="ld-grid" style="margin-bottom:18px;">
-          <div class="ld-block"><div class="ld-block-label">STEG</div><div class="ld-block-num">${latest.steps ?? "—"}</div><div class="ld-block-sub">${latest.date}</div></div>
+          <div class="ld-block"><div class="ld-block-label">STEG</div><div class="ld-block-num">${latest.steps != null ? Math.round(latest.steps) : "—"}</div><div class="ld-block-sub">${latest.date}</div></div>
           <div class="ld-block"><div class="ld-block-label">SÖMN</div><div class="ld-block-num">${latest.sleepHr ? latest.sleepHr.toFixed(1) + " h" : "—"}</div></div>
           <div class="ld-block"><div class="ld-block-label">VILOPULS</div><div class="ld-block-num">${latest.restingHr ?? "—"}</div></div>
           <div class="ld-block"><div class="ld-block-label">VIKT</div><div class="ld-block-num">${latest.weight ? latest.weight + " kg" : "—"}</div></div>
@@ -548,7 +548,7 @@ function renderPanel(tab, today, dayNumber) {
           <thead><tr><th>Datum</th><th>Steg</th><th>Sömn</th><th>Vilopuls</th><th>Vikt</th></tr></thead>
           <tbody>
             ${rows.slice(0, 10).map((r) => `<tr>
-              <td>${r.date}</td><td>${r.steps ?? "—"}</td>
+              <td>${r.date}</td><td>${r.steps != null ? Math.round(r.steps) : "—"}</td>
               <td>${r.sleepHr ? r.sleepHr.toFixed(1) : "—"}</td>
               <td>${r.restingHr ?? "—"}</td><td>${r.weight ?? "—"}</td>
             </tr>`).join("")}
