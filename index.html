@@ -517,17 +517,18 @@ function renderPanel(tab, today, dayNumber) {
     const rows = state.health.rows || [];
     const latest = rows[0];
     return `<div class="ld-panel">
-      ${!state.health.endpointUrl ? `
+      ${!state.health.endpointUrl || window.__editingHealthUrl ? `
         <div class="ld-empty">
           <p>Klistra in din Apps Script-webbadress (slutar på /exec).</p>
           <div class="ld-addrow">
-            <input class="ld-input" id="healthUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${SCRIPT_URL || ""}" />
+            <input class="ld-input" id="healthUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(state.health.endpointUrl || SCRIPT_URL || "")}" />
             <button class="ld-addbtn" id="healthUrlSave">✓</button>
           </div>
         </div>` : `
         <div class="ld-strip">
           <span id="healthStatusText">${state.health.lastFetched ? "Uppdaterad " + new Date(state.health.lastFetched).toLocaleString("sv-SE") : "Väntar på data…"}</span>
           <button class="ld-linklike" id="healthRefresh">Uppdatera nu</button>
+          <button class="ld-linklike" id="healthEditUrl">Ändra länk</button>
         </div>`}
       ${latest ? `
         <div class="ld-grid" style="margin-bottom:18px;">
@@ -676,11 +677,14 @@ function attachPanelHandlers(tab) {
       SCRIPT_URL = url;
       localStorage.setItem(SCRIPT_URL_KEY, url);
       state.health.endpointUrl = url;
+      window.__editingHealthUrl = false;
       commit(state);
       fetchHealth(url);
     };
     const refreshBtn = document.getElementById("healthRefresh");
     if (refreshBtn) refreshBtn.onclick = () => fetchHealth(state.health.endpointUrl);
+    const editBtn = document.getElementById("healthEditUrl");
+    if (editBtn) editBtn.onclick = () => { window.__editingHealthUrl = true; render(); };
   }
 }
 
