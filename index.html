@@ -140,7 +140,8 @@ body {
 <script>
 // ---------- Config ----------
 const SCRIPT_URL_KEY = "ld_script_url";
-let SCRIPT_URL = localStorage.getItem(SCRIPT_URL_KEY) || "";
+const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEj7ARaV7S2oyXkkmPiUHURCdc9bymV3acbQ84KsF_9xvY3IwztgZWLwQGlfUImWz25g/exec";
+let SCRIPT_URL = localStorage.getItem(SCRIPT_URL_KEY) || DEFAULT_SCRIPT_URL;
 
 const NAV = [
   { id: "idag", label: "Idag" },
@@ -198,7 +199,7 @@ function defaultData() {
     skincare: { grid: {} },
     training: [],
     todos: [],
-    health: { endpointUrl: "", rows: [], lastFetched: null },
+    health: { endpointUrl: DEFAULT_SCRIPT_URL, rows: [], lastFetched: null },
     notes: { text: "", lastFetched: null },
   };
 }
