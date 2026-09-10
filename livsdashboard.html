@@ -301,7 +301,7 @@
 
     <div class="card">
       <div class="card-label">Kalender</div>
-      <div class="card-sub">manuellt tillagt tills iCal-import kopplas in</div>
+      <div class="card-sub">hämtas automatiskt från din Apple-kalender denna vecka, plus manuella tillägg</div>
       <div id="calList">
         <div class="list-item">12 sep · Fotografering — Dosed mockup, 14:00</div>
       </div>
@@ -1002,12 +1002,47 @@
     document.getElementById('taskInput_' + d).focus();
   }
 
-  var calEvents = ['12 sep · Fotografering — Dosed mockup, 14:00'];
+  var calEvents = [];
+  var fetchedCalendarEvents = [];
+  var calendarLoaded = false;
+
+  function fetchCalendarData(){
+    var cbName = 'calCb_' + Date.now();
+    window[cbName] = function(data){
+      fetchedCalendarEvents = data || [];
+      calendarLoaded = true;
+      try { delete window[cbName]; } catch(e){}
+      renderCalEvents();
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=calendar&callback=' + cbName;
+    tag.onerror = function(){ /* blockeras i förhandsvisning här i chatten — fungerar på GitHub Pages */ };
+    document.body.appendChild(tag);
+  }
+
   function renderCalEvents(){
     var el = document.getElementById('calList');
-    el.innerHTML = calEvents.length
-      ? calEvents.map(function(e){ return '<div class="list-item">' + e + '</div>'; }).join('')
-      : '<div class="list-empty">Inga händelser ännu.</div>';
+    var wkStart = isoDate(REAL_WEEK_DATES[0]);
+    var wkEnd = isoDate(REAL_WEEK_DATES[6]);
+
+    var realHtml = fetchedCalendarEvents
+      .filter(function(ev){ var d = (ev.start||'').slice(0,10); return d >= wkStart && d <= wkEnd; })
+      .map(function(ev){
+        var timePart = ev.start.length > 10 ? ev.start.slice(11,16) : 'Hela dagen';
+        var dPart = ev.start.slice(5,10).replace('-','/');
+        return '<div class="list-item">' + dPart + ' · ' + timePart + ' — ' + ev.summary + '</div>';
+      });
+
+    var manualHtml = calEvents.map(function(e){ return '<div class="list-item">' + e + '</div>'; });
+
+    var allHtml = realHtml.concat(manualHtml);
+    if(allHtml.length){
+      el.innerHTML = allHtml.join('');
+    } else if(!calendarLoaded){
+      el.innerHTML = '<div class="list-empty">Hämtar kalender... (fungerar när sidan är publicerad på GitHub Pages)</div>';
+    } else {
+      el.innerHTML = '<div class="list-empty">Inga händelser denna vecka.</div>';
+    }
     saveAll();
   }
   function addCalEvent(){
@@ -2498,6 +2533,7 @@
   renderPrevMonthCard();
   renderSessionsAndSleep();
   fetchHealthData();
+  fetchCalendarData();
   populateMonthPicker();
   populateWeekPicker();
   refreshWeekNav();
