@@ -196,6 +196,14 @@
   @media (max-width:640px){.gp-grid{grid-template-columns:1fr;}}
   .gp-card{background:var(--surface-soft);border:1px solid var(--border);border-radius:10px;padding:8px;}
   .gp-title{font-size:11px;color:var(--text-soft);margin-bottom:4px;}
+  .cal-week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;min-width:700px;}
+  .cal-day-col{border:1px solid var(--border);border-radius:10px;padding:8px;min-height:100px;background:var(--surface-soft);}
+  .cal-day-col.today{border-color:var(--accent);background:var(--accent-soft);}
+  .cal-day-head{font-size:11px;color:var(--text-soft);margin-bottom:6px;font-weight:600;}
+  .cal-day-col.today .cal-day-head{color:var(--accent);}
+  .cal-event{font-size:11px;padding:4px 0;border-top:1px solid var(--border);line-height:1.3;}
+  .cal-event:first-child{border-top:none;}
+  .cal-event .t{color:var(--text-soft);font-size:10px;display:block;}
   .session-row{display:flex;align-items:center;gap:12px;background:var(--surface-soft);border-radius:10px;padding:10px 12px;}
   .session-icon{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
   .session-name{font-size:12px;color:var(--text-soft);}
@@ -302,9 +310,10 @@
     <div class="card">
       <div class="card-label">Kalender</div>
       <div class="card-sub">hämtas automatiskt från din Apple-kalender denna vecka, plus manuella tillägg</div>
-      <div id="calList">
-        <div class="list-item">12 sep · Fotografering — Dosed mockup, 14:00</div>
+      <div style="overflow-x:auto;">
+        <div class="cal-week-grid" id="calWeekGrid"></div>
       </div>
+      <div id="calManualList" style="margin-top:10px;"></div>
       <div class="add-row">
         <input type="text" id="calInput" placeholder="Lägg till händelse (datum + vad)...">
         <button onclick="addCalEvent()">Lägg till</button>
@@ -1021,28 +1030,29 @@
   }
 
   function renderCalEvents(){
-    var el = document.getElementById('calList');
-    var wkStart = isoDate(REAL_WEEK_DATES[0]);
-    var wkEnd = isoDate(REAL_WEEK_DATES[6]);
+    var gridEl = document.getElementById('calWeekGrid');
+    var manualEl = document.getElementById('calManualList');
+    var todayKey = isoDate(new Date());
 
-    var realHtml = fetchedCalendarEvents
-      .filter(function(ev){ var d = (ev.start||'').slice(0,10); return d >= wkStart && d <= wkEnd; })
-      .map(function(ev){
-        var timePart = ev.start.length > 10 ? ev.start.slice(11,16) : 'Hela dagen';
-        var dPart = ev.start.slice(5,10).replace('-','/');
-        return '<div class="list-item">' + dPart + ' · ' + timePart + ' — ' + ev.summary + '</div>';
-      });
+    gridEl.innerHTML = REAL_WEEK_DATES.map(function(dt, i){
+      var dk = isoDate(dt);
+      var dayEvents = fetchedCalendarEvents.filter(function(ev){ return (ev.start||'').slice(0,10) === dk; })
+        .sort(function(a,b){ return (a.start||'').localeCompare(b.start||''); });
+      var eventsHtml = dayEvents.length
+        ? dayEvents.map(function(ev){
+            var timePart = ev.start.length > 10 ? ev.start.slice(11,16) : 'Hela dagen';
+            return '<div class="cal-event"><span class="t">' + timePart + '</span>' + ev.summary + '</div>';
+          }).join('')
+        : '';
+      return '<div class="cal-day-col' + (dk === todayKey ? ' today' : '') + '">' +
+        '<div class="cal-day-head">' + days7[i] + ' ' + dt.getDate() + '</div>' +
+        eventsHtml +
+        '</div>';
+    }).join('');
 
-    var manualHtml = calEvents.map(function(e){ return '<div class="list-item">' + e + '</div>'; });
-
-    var allHtml = realHtml.concat(manualHtml);
-    if(allHtml.length){
-      el.innerHTML = allHtml.join('');
-    } else if(!calendarLoaded){
-      el.innerHTML = '<div class="list-empty">Hämtar kalender... (fungerar när sidan är publicerad på GitHub Pages)</div>';
-    } else {
-      el.innerHTML = '<div class="list-empty">Inga händelser denna vecka.</div>';
-    }
+    manualEl.innerHTML = calEvents.length
+      ? '<div class="card-sub" style="margin-bottom:6px;">Manuellt tillagda</div>' + calEvents.map(function(e){ return '<div class="list-item">' + e + '</div>'; }).join('')
+      : (!calendarLoaded ? '<div class="list-empty">Hämtar kalender... (fungerar när sidan är publicerad på GitHub Pages)</div>' : '');
     saveAll();
   }
   function addCalEvent(){
