@@ -374,17 +374,13 @@
 
     <div class="card">
       <div class="card-label">Träning denna månad</div>
-      <div class="stat-grid">
-        <div class="stat"><div class="lbl">Pass totalt</div><div class="val">18</div><div class="sub">av 22 dagar</div></div>
-        <div class="stat"><div class="lbl">Steg totalt</div><div class="val">241 300</div><div class="sub">~10 970/dag</div></div>
-        <div class="stat"><div class="lbl">Aktiv energi</div><div class="val">8 640 cal</div><div class="sub">~392/dag</div></div>
-        <div class="stat"><div class="lbl">Snittvikt</div><div class="val">— kg</div><div class="sub">senaste mätning</div></div>
+      <div class="stat-grid" id="monthStatGrid">
+        <div class="stat"><div class="lbl">Pass totalt</div><div class="val" id="statPassTotal">—</div><div class="sub" id="statPassSub"></div></div>
+        <div class="stat"><div class="lbl">Steg totalt</div><div class="val" id="statStepsTotal">—</div><div class="sub" id="statStepsSub"></div></div>
+        <div class="stat"><div class="lbl">Aktiv energi</div><div class="val" id="statEnergyTotal">—</div><div class="sub" id="statEnergySub"></div></div>
+        <div class="stat"><div class="lbl">Snittvikt</div><div class="val" id="statWeight">— kg</div><div class="sub">senaste mätning</div></div>
       </div>
-      <div class="breakdown">
-        <div class="breakdown-row"><div class="name">Styrka</div><div class="track"><div class="fill" style="width:70%;"></div></div><div class="count">12 pass</div></div>
-        <div class="breakdown-row"><div class="name">Cardio / löpning</div><div class="track"><div class="fill" style="width:29%;"></div></div><div class="count">5 pass</div></div>
-        <div class="breakdown-row"><div class="name">Rörlighet / stretch</div><div class="track"><div class="fill" style="width:6%;"></div></div><div class="count">1 pass</div></div>
-      </div>
+      <div class="breakdown" id="monthBreakdown"></div>
       <div class="source-note"><div class="dot"></div>Hämtas automatiskt från Apple Health via samma pipeline som veckovyn — passtyp, steg och energi grupperas per kalendermånad.</div>
     </div>
 
@@ -1420,35 +1416,154 @@
     document.getElementById('habitsMonthlyLabels').innerHTML = '<span>' + bars[0].label + '</span><span>' + bars[bars.length-1].label + ' · nu</span>';
   }
 
+  var HEALTH_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyEj7ARaV7S2oyXkkmPiUHURCdc9bymV3acbQ84KsF_9xvY3IwztgZWLwQGlfUImWz25g/exec';
+  var healthData = { metrics: [], workouts: [] };
+  var healthLoaded = false;
+
+  function fetchHealthData(){
+    var cbName = 'healthCb_' + Date.now();
+    window[cbName] = function(data){
+      healthData.metrics = (data.data && data.data.metrics) || [];
+      healthData.workouts = (data.data && data.data.workouts) || [];
+      healthLoaded = true;
+      try { delete window[cbName]; } catch(e){}
+      renderSessionsAndSleep();
+      renderYearSessionsAndSleep();
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=health&callback=' + cbName;
+    tag.onerror = function(){ /* blockeras i förhandsvisning här i chatten — fungerar på GitHub Pages */ };
+    document.body.appendChild(tag);
+  }
+  function metricByName(name){
+    return healthData.metrics.filter(function(m){ return m.name === name; })[0];
+  }
+  function metricSumInRange(name, startStr, endStr){
+    var m = metricByName(name);
+    if(!m) return null;
+    var sum = 0, found = false;
+    m.data.forEach(function(pt){
+      var d = (pt.date||'').slice(0,10);
+      if(d >= startStr && d <= endStr){ sum += (pt.qty||0); found = true; }
+    });
+    return found ? sum : null;
+  }
+  function metricLatestInRange(name, startStr, endStr){
+    var m = metricByName(name);
+    if(!m) return null;
+    var latest = null;
+    m.data.forEach(function(pt){
+      var d = (pt.date||'').slice(0,10);
+      if(d >= startStr && d <= endStr){ if(!latest || d >= latest.d){ latest = { d:d, qty:pt.qty }; } }
+    });
+    return latest ? latest.qty : null;
+  }
+  function workoutsInRange(startStr, endStr){
+    return healthData.workouts.filter(function(w){
+      var d = (w.start||'').slice(0,10);
+      return d >= startStr && d <= endStr;
+    });
+  }
+  function workoutIconFor(name){
+    var n = (name||'').toLowerCase();
+    if(n.indexOf('yoga') > -1 || n.indexOf('stretch') > -1 || n.indexOf('rörlighet') > -1) return '🤸';
+    if(n.indexOf('gång') > -1 || n.indexOf('walk') > -1 || n.indexOf('löpning') > -1 || n.indexOf('run') > -1) return '🚶';
+    return '🏋️';
+  }
+
   function renderSessionsAndSleep(){
-    var sessions = [
-      { icon:'🧘', name:'Yoga', stat:'9 kcal', day:'tisdag' },
-      { icon:'🚶', name:'Utomhusgång', stat:'2,11 km', day:'tisdag' },
-      { icon:'🤸', name:'Nedvarvning', stat:'12 kcal', day:'måndag' },
-      { icon:'🚶', name:'Utomhusgång', stat:'6,57 km', day:'söndag' },
-      { icon:'🚶', name:'Utomhusgång', stat:'9,83 km', day:'lördag' }
-    ];
+    var today = new Date();
+    var y = today.getFullYear(), m = today.getMonth();
+    var monthStart = y + '-' + pad2(m+1) + '-01';
+    var monthEnd = y + '-' + pad2(m+1) + '-' + pad2(new Date(y,m+1,0).getDate());
+
     var listEl = document.getElementById('sessionsList');
-    if(listEl){
-      listEl.innerHTML = sessions.map(function(s){
-        return '<div class="session-row"><div class="session-icon">' + s.icon + '</div>' +
-          '<div><div class="session-name">' + s.name + '</div><div class="session-stat">' + s.stat + '</div></div>' +
-          '<div class="session-day">' + s.day + '</div></div>';
-      }).join('');
+    var passTotalEl = document.getElementById('statPassTotal');
+    var passSubEl = document.getElementById('statPassSub');
+    var stepsTotalEl = document.getElementById('statStepsTotal');
+    var stepsSubEl = document.getElementById('statStepsSub');
+    var energyTotalEl = document.getElementById('statEnergyTotal');
+    var energySubEl = document.getElementById('statEnergySub');
+    var weightEl = document.getElementById('statWeight');
+    var breakdownEl = document.getElementById('monthBreakdown');
+
+    if(!healthLoaded){
+      if(listEl) listEl.innerHTML = '<div class="list-empty">Hämtar hälsodata... (fungerar när sidan är publicerad på GitHub Pages)</div>';
+      return;
     }
 
-    var sleepVals = [7.2, 6.8, 8.1, 7.6, 6.5, 7.8, 9.3];
-    var sleepDayLabels = ['tors','fre','lör','sön','mån','tis','ons'];
+    var workouts = workoutsInRange(monthStart, monthEnd).sort(function(a,b){ return (b.start||'').localeCompare(a.start||''); });
+    var daysInMonth = new Date(y, m+1, 0).getDate();
+
+    if(listEl){
+      listEl.innerHTML = workouts.length === 0
+        ? '<div class="list-empty">Inga träningspass hittade för den här månaden.</div>'
+        : workouts.slice(0,8).map(function(w){
+            var mins = Math.round((w.duration||0)/60);
+            var dObj = new Date((w.start||'').replace(' ','T').slice(0,19));
+            return '<div class="session-row"><div class="session-icon">' + workoutIconFor(w.name) + '</div>' +
+              '<div><div class="session-name">' + (w.name||'Pass') + '</div><div class="session-stat">' + mins + ' min</div></div>' +
+              '<div class="session-day">' + formatShort(dObj) + '</div></div>';
+          }).join('');
+    }
+
+    if(passTotalEl){
+      passTotalEl.textContent = workouts.length;
+      passSubEl.textContent = 'av ' + daysInMonth + ' dagar';
+    }
+    var steps = metricSumInRange('step_count', monthStart, monthEnd);
+    if(stepsTotalEl){
+      stepsTotalEl.textContent = steps !== null ? Math.round(steps).toLocaleString('sv-SE') : '—';
+      stepsSubEl.textContent = steps !== null ? '~' + Math.round(steps/daysInMonth).toLocaleString('sv-SE') + '/dag' : 'ingen data';
+    }
+    var energy = metricSumInRange('active_energy', monthStart, monthEnd);
+    if(energyTotalEl){
+      energyTotalEl.textContent = energy !== null ? Math.round(energy).toLocaleString('sv-SE') + ' cal' : '—';
+      energySubEl.textContent = energy !== null ? '~' + Math.round(energy/daysInMonth) + '/dag' : 'ingen data';
+    }
+    var weight = metricLatestInRange('weight_body_mass', monthStart, monthEnd);
+    if(weightEl) weightEl.textContent = weight !== null ? weight.toFixed(1) + ' kg' : '— kg';
+
+    if(breakdownEl){
+      var groups = {};
+      workouts.forEach(function(w){
+        var n = (w.name||'').toLowerCase();
+        var cat = (n.indexOf('yoga')>-1 || n.indexOf('stretch')>-1 || n.indexOf('rörlighet')>-1) ? 'Rörlighet / stretch'
+          : (n.indexOf('gång')>-1 || n.indexOf('walk')>-1 || n.indexOf('löpning')>-1 || n.indexOf('run')>-1) ? 'Cardio / löpning'
+          : 'Styrka';
+        groups[cat] = (groups[cat]||0) + 1;
+      });
+      var total = workouts.length || 1;
+      breakdownEl.innerHTML = Object.keys(groups).map(function(cat){
+        var pct = Math.round((groups[cat]/total)*100);
+        return '<div class="breakdown-row"><div class="name">' + cat + '</div><div class="track"><div class="fill" style="width:' + pct + '%;"></div></div><div class="count">' + groups[cat] + ' pass</div></div>';
+      }).join('') || '<div class="card-sub" style="margin:0;">Inga pass att bryta ner ännu.</div>';
+    }
+
+    var weekdayShort3b = ['mån','tis','ons','tor','fre','lör','sön'];
+    var sleepMetric = metricByName('sleep_analysis');
+    var sleepPts = sleepMetric ? sleepMetric.data.slice().sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); }).slice(-7) : [];
+    var sleepVals = sleepPts.map(function(p){ return p.totalSleep || 0; });
+    var sleepDayLabels = sleepPts.map(function(p){
+      var d = new Date((p.date||'').replace(' ','T').slice(0,19));
+      return weekdayShort3b[(d.getDay()+6)%7];
+    });
     var barsEl = document.getElementById('sleepBars');
     if(barsEl){
-      var maxH = 9.5;
-      barsEl.innerHTML = sleepVals.map(function(v){
-        return '<div class="bar' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div>';
-      }).join('');
-      document.getElementById('sleepLabels').innerHTML = sleepDayLabels.map(function(d){ return '<span>' + d + '</span>'; }).join('');
-      var avg = sleepVals.reduce(function(a,b){ return a+b; },0) / sleepVals.length;
-      var h = Math.floor(avg), min = Math.round((avg-h)*60);
-      document.getElementById('sleepAvgLabel').textContent = 'Snitt: ' + h + 'h ' + min + 'min';
+      if(sleepVals.length === 0){
+        barsEl.innerHTML = '';
+        document.getElementById('sleepLabels').innerHTML = '';
+        document.getElementById('sleepAvgLabel').textContent = 'Ingen sömndata hämtad än.';
+      } else {
+        var maxH = Math.max(9.5, Math.max.apply(null, sleepVals) + 0.5);
+        barsEl.innerHTML = sleepVals.map(function(v){
+          return '<div class="bar' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div>';
+        }).join('');
+        document.getElementById('sleepLabels').innerHTML = sleepDayLabels.map(function(d){ return '<span>' + d + '</span>'; }).join('');
+        var avg = sleepVals.reduce(function(a,b){ return a+b; },0) / sleepVals.length;
+        var h = Math.floor(avg), min = Math.round((avg-h)*60);
+        document.getElementById('sleepAvgLabel').textContent = 'Snitt: ' + h + 'h ' + min + 'min · senaste 7 nätterna';
+      }
     }
   }
 
@@ -2382,6 +2497,7 @@
   renderMonthAccordion();
   renderPrevMonthCard();
   renderSessionsAndSleep();
+  fetchHealthData();
   populateMonthPicker();
   populateWeekPicker();
   refreshWeekNav();
