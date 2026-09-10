@@ -477,6 +477,17 @@
       <div class="card-label" id="dailyHabitLabel">75 Hard — Ons</div>
       <ul class="task-list" id="dailyHabitList" style="margin-bottom:18px;"></ul>
 
+      <div class="card-label" id="dailyCalLabel">Kalender — idag</div>
+      <div id="dailyCalList" style="margin-bottom:18px;"></div>
+
+      <div class="card-label" id="dailyTrainingLabel">Träning idag</div>
+      <div class="stat-grid" id="dailyTrainingGrid" style="margin-bottom:18px;">
+        <div class="stat"><div class="stat-icon">👣</div><div class="lbl">Steg</div><div class="val" id="dailyStatSteps">—</div></div>
+        <div class="stat"><div class="stat-icon">🔥</div><div class="lbl">Energi</div><div class="val" id="dailyStatEnergy">—</div></div>
+        <div class="stat"><div class="stat-icon">💤</div><div class="lbl">Sömn i natt</div><div class="val" id="dailyStatSleep">—</div></div>
+      </div>
+      <ul class="task-list" id="dailyWorkoutsList" style="margin-bottom:18px;"></ul>
+
       <div class="card-label" id="dailyTodoLabel">To do — Onsdag</div>
       <ul class="task-list" id="dailyTodoList" style="margin-bottom:18px;"></ul>
       <div class="add-row" style="margin-bottom:18px;">
@@ -1211,6 +1222,7 @@
       calendarLoaded = true;
       try { delete window[cbName]; } catch(e){}
       renderCalEvents();
+      renderDailyCalendar();
     };
     var tag = document.createElement('script');
     tag.src = HEALTH_ENDPOINT + '?action=calendar&callback=' + cbName;
@@ -1378,6 +1390,8 @@
     renderMoodRow();
     renderDailyHabits();
     renderDailyTodo();
+    renderDailyCalendar();
+    renderDailyTraining();
     renderDailyNoteArea();
     renderMeasureSection();
   }
@@ -1683,6 +1697,7 @@
       renderSessionsAndSleep();
       renderYearSessionsAndSleep();
       renderWeekTrainingSleep();
+      renderDailyTraining();
     };
     var tag = document.createElement('script');
     tag.src = HEALTH_ENDPOINT + '?action=health&callback=' + cbName;
@@ -1723,6 +1738,55 @@
     if(n.indexOf('yoga') > -1 || n.indexOf('stretch') > -1 || n.indexOf('rörlighet') > -1) return '🤸';
     if(n.indexOf('gång') > -1 || n.indexOf('walk') > -1 || n.indexOf('löpning') > -1 || n.indexOf('run') > -1) return '🚶';
     return '🏋️';
+  }
+
+  function renderDailyCalendar(){
+    var labelEl = document.getElementById('dailyCalLabel');
+    var listEl = document.getElementById('dailyCalList');
+    if(!labelEl) return;
+    labelEl.textContent = 'Kalender — ' + dayLabelFor(selectedDate);
+    var dayEvents = fetchedCalendarEvents.filter(function(ev){ return (ev.start||'').slice(0,10) === selectedDate; })
+      .sort(function(a,b){ return (a.start||'').localeCompare(b.start||''); });
+    if(!calendarLoaded){
+      listEl.innerHTML = '<div class="list-empty">Hämtar kalender... (fungerar när sidan är publicerad på GitHub Pages)</div>';
+      return;
+    }
+    listEl.innerHTML = dayEvents.length
+      ? dayEvents.map(function(ev, ei){
+          var timePart = ev.start.length > 10 ? ev.start.slice(11,16) : 'Hela dagen';
+          var c = cardPalette[ei % cardPalette.length];
+          return '<div class="cal-event" style="background:' + c.bg + ';color:' + c.fg + ';"><span class="t" style="color:' + c.fg + ';">' + timePart + '</span>' + ev.summary + '</div>';
+        }).join('')
+      : '<div class="list-empty">Inga händelser den här dagen.</div>';
+  }
+
+  function renderDailyTraining(){
+    var labelEl = document.getElementById('dailyTrainingLabel');
+    if(!labelEl) return;
+    labelEl.textContent = 'Träning — ' + dayLabelFor(selectedDate);
+    var stepsEl = document.getElementById('dailyStatSteps');
+    var energyEl = document.getElementById('dailyStatEnergy');
+    var sleepEl = document.getElementById('dailyStatSleep');
+    var workoutsEl = document.getElementById('dailyWorkoutsList');
+    if(!healthLoaded){
+      stepsEl.textContent = '—'; energyEl.textContent = '—'; sleepEl.textContent = '—';
+      workoutsEl.innerHTML = '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Hämtar hälsodata...</li>';
+      return;
+    }
+    var steps = metricSumInRange('step_count', selectedDate, selectedDate);
+    stepsEl.textContent = steps !== null ? Math.round(steps).toLocaleString('sv-SE') : '—';
+    var energy = metricSumInRange('active_energy', selectedDate, selectedDate);
+    energyEl.textContent = energy !== null ? Math.round(energy).toLocaleString('sv-SE') + ' cal' : '—';
+    var sleepMetric = metricByName('sleep_analysis');
+    var sleepPt = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) === selectedDate; })[0] : null;
+    sleepEl.textContent = sleepPt ? sleepPt.totalSleep.toFixed(1) + ' h' : '—';
+    var workouts = workoutsInRange(selectedDate, selectedDate);
+    workoutsEl.innerHTML = workouts.length
+      ? workouts.map(function(w){
+          var mins = Math.round((w.duration||0)/60);
+          return '<li style="cursor:default;"><span class="box">' + workoutIconFor(w.name) + '</span><span class="t">' + (w.name||'Pass') + ' <span style="color:var(--text-soft);font-size:11px;">— ' + mins + ' min</span></span></li>';
+        }).join('')
+      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga träningspass loggade den här dagen.</li>';
   }
 
   function renderWeekTrainingSleep(){
@@ -3025,6 +3089,69 @@
     }
     if(dosedLog.length === 0) dosedLog.push('9 sep · Skickade wordmark till tryckeriet');
     if(tiktokLog.length === 0) tiktokLog.push('9 sep · Filmade gymklipp för fredag');
+
+    if(Object.keys(tasksByDay).every(function(d){ return tasksByDay[d].length === 0; })){
+      tasksByDay['Mån'].push({t:'Handla matvaror till veckan', done:true});
+      tasksByDay['Tis'].push({t:'Boka fotograf mockup', done:true});
+      tasksByDay['Ons'].push({t:'Skicka wordmark till tryck', done:false});
+      tasksByDay['Tor'].push({t:'Klippa söndagens innehåll', done:false});
+      tasksByDay['Fre'].push({t:'Beställa retinol-påfyllning', done:false});
+    }
+
+    if(calEvents.length === 0){
+      calEvents.push('Manuellt exempel: Läkarbesök 15:00');
+    }
+
+    if(Object.keys(dailyLog).length === 0){
+      var seedMoods = ['glad','neutral','glad','arg','ledsen'];
+      var seedNotes = [
+        'Bra dag, hann med allt på listan.',
+        'Lugn dag, mest jobb och vila.',
+        'Riktigt bra träningspass idag!',
+        'Stressig dag, mycket att göra samtidigt.',
+        'Kände mig trött, tog det lugnt på kvällen.'
+      ];
+      REAL_WEEK_DATES.slice(0,5).forEach(function(dt, i){
+        var dk = isoDate(dt);
+        dailyLog[dk] = { mood: seedMoods[i], note: seedNotes[i], saved: true };
+      });
+    }
+
+    if(measurementsLog.length === 0){
+      var sunday = REAL_WEEK_DATES[6];
+      measurementsLog.push({
+        weekKey: isoDate(REAL_WEEK_DATES[0]),
+        date: isoDate(sunday),
+        values: { weight:'66.4', arm:'27', waist:'71', thigh:'54', chest:'88', hips:'92' }
+      });
+    }
+
+    if(Object.keys(monthlyData).length === 0){
+      var mk = monthKeyFor(currentMonthDate);
+      monthlyData[mk] = { answers: [
+        'Att hålla igång 75 Hard samtidigt som jobb och studier.',
+        'Att jag äntligen kom igång med Dosed på riktigt.',
+        'Att konsekvens slår motivation — små dagliga vanor bygger allt.',
+        'Tränat 18 av 22 dagar, sovit bra mesta delen av månaden.',
+        'Klippt mitt första riktiga TikTok-innehåll för Dosed.',
+        'Planera veckans innehåll i förväg istället för att filma i sista sekund.',
+        'Fokusera mer på förpackningsdesignen och mindre på perfektionism.'
+      ] };
+    }
+
+    if(Object.keys(yearData).length === 0){
+      var yk = currentYear();
+      yearData[yk] = { resets: [
+        'Att bygga något eget som betyder något — Dosed.',
+        'Ett varumärke ingen annan skulle byggt på samma sätt.',
+        'Att jämföra mig med andra på sociala medier.',
+        'Att inte hinna lansera Dosed innan året är slut.'
+      ], buckets: [] };
+    }
+
+    if(goals['Ekonomi'].length === 0) goals['Ekonomi'].push({t:'Bygga 30 000 kr buffert', done:false});
+    if(goals['TikTok'].length === 0) goals['TikTok'].push({t:'Nå 10 000 följare', done:false});
+    if(goals['Personligt'].length === 0) goals['Personligt'].push({t:'Läsa 5 böcker detta kvartal', done:false});
   }
   seedIfEmpty();
 
@@ -3059,6 +3186,7 @@
     renderSessionsAndSleep();
     renderYearSessionsAndSleep();
     renderWeekTrainingSleep();
+    renderDailyTraining();
   }, 2500);
 
   renderWeekGoals();
@@ -3078,6 +3206,8 @@
   renderPrevMonthCard();
   renderSessionsAndSleep();
   renderWeekTrainingSleep();
+  renderDailyTraining();
+  renderDailyCalendar();
   fetchHealthData();
   fetchCalendarData();
   populateMonthPicker();
