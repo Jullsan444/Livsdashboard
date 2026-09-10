@@ -365,6 +365,13 @@
       <ul class="task-list" id="homeTodayPriorities"></ul>
     </div>
 
+    <div class="card">
+      <div class="card-label">AI Daily Brief</div>
+      <div class="card-sub">bygger på riktig data från hela Life OS — inget sparas automatiskt</div>
+      <button class="save-btn" onclick="requestDailyBrief()">Generera Daily Brief</button>
+      <div id="dailyBriefResult" style="margin-top:12px;"></div>
+    </div>
+
     <div class="grid2">
       <div class="card">
         <div class="card-label">This week</div>
@@ -2740,7 +2747,37 @@
     renderGoalTableRows();
   }
   function toggleMilestoneQuick(i, mi){ lifeGoals[i].milestones[mi].done = !lifeGoals[i].milestones[mi].done; renderGoalTableRows(); }
-  var pendingAiSteps = [];
+
+  function buildAIContext(){
+    var todayKey = isoDate(new Date());
+    var todayLabelNow = days7[(new Date().getDay()+6)%7];
+    var q = quarterInfoFor(quarterOffset);
+    var savingsTotal = savingsGoals.reduce(function(sum,g){ return sum + (g.saved||0); }, 0);
+    var stepsToday = healthLoaded ? metricSumInRange('step_count', todayKey, todayKey) : null;
+    var sleepMetric = healthLoaded ? metricByName('sleep_analysis') : null;
+    var sleepPt = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) === todayKey; })[0] : null;
+    return JSON.stringify({
+      currentDate: todayKey,
+      currentWeek: 'v' + isoWeekNumber(new Date()),
+      currentQuarter: q.label,
+      longTermGoals: lifeGoals.filter(function(g){ return ['10 år','5 år','3 år'].indexOf(g.timeframe) > -1; }).map(function(g){ return { id:g.id, title:g.title, timeframe:g.timeframe, progress:g.progress }; }),
+      activeGoals: lifeGoals.filter(function(g){ return !g.completed; }).map(function(g){ return { id:g.id, title:g.title, timeframe:g.timeframe, progress:g.progress, kpiTarget:g.kpiTarget, kpiActual:g.kpiActual, kpiUnit:g.kpiUnit, deadline:g.deadline, parentId:g.parentId }; }),
+      activeProjects: projects.map(function(p){ return { title:p.title, status:p.status, progress:p.progress, deadline:p.deadline }; }),
+      todayTasks: (tasksByDay[todayLabelNow]||[]).map(function(t){ return { text:t.t, done:t.done }; }),
+      weeklyTargets: weekGoals,
+      quarterlyTargetsByCategory: goals,
+      tiktokKPIs: tiktokStats,
+      dosedStatus: { revenue:dosedFinance.revenue, expenses:dosedFinance.expenses, stagesDone: dosedStagesData.filter(function(s){return s.done;}).length, stagesTotal: dosedStagesData.length, openTasks: dosedTasks.filter(function(t){return !t.done;}).length },
+      healthTrends: { stepsToday: stepsToday, sleepLastNight: sleepPt ? sleepPt.totalSleep : null },
+      habitsWeeklyPct: habitPctForDates(REAL_WEEK_DATES),
+      hard75Active: isInChallenge(todayKey),
+      education: studyPlans.map(function(s){ return { title:s.title, status:s.status }; }),
+      money: { income:moneyPrivate.income, expenses:moneyPrivate.expenses, debt:moneyPrivate.debt, savingsTotal:savingsTotal, dosedRevenue:dosedFinance.revenue },
+      recentReviews: Object.keys(monthlyData).slice(-1).map(function(k){ return { month:k, answers:monthlyData[k].answers }; })
+    });
+  }
+
+  var pendingAiItems = [];
   function requestAiGoalSplit(){
     var val = document.getElementById('aiGoalInput').value.trim();
     if(!val){ alert('Skriv in målet du vill bryta ner först.'); return; }
@@ -2752,7 +2789,7 @@
       renderAiGoalSuggestion(data);
     };
     var tag = document.createElement('script');
-    tag.src = HEALTH_ENDPOINT + '?action=ai_breakdown&goal=' + encodeURIComponent(val) + '&callback=' + cbName;
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=breakdown&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(val) + '&callback=' + cbName;
     tag.onerror = function(){ resultEl.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu (fungerar när sidan är publicerad på GitHub Pages, och OPENAI_API_KEY är satt i Apps Script).</div>'; };
     document.body.appendChild(tag);
   }
@@ -2762,31 +2799,72 @@
       resultEl.innerHTML = '<div class="list-empty">Fel från AI: ' + data.error + '</div>';
       return;
     }
-    pendingAiSteps = data.steps || [];
-    resultEl.innerHTML = '<div class="card-sub" style="margin-bottom:8px;">AI:ns förslag — granska innan du skapar målen</div>' +
-      pendingAiSteps.map(function(s, i){
-        return '<div class="goal-row" style="cursor:default;">' +
-          '<span style="font-size:11px;background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + s.timeframe + '</span>' +
-          '<span class="t">' + s.title + (s.kpiTarget ? ' <span style="color:var(--text-soft);font-size:11px;">(' + s.kpiTarget + ' ' + (s.kpiUnit||'') + ')</span>' : '') + '</span>' +
-          '</div>';
-      }).join('') +
+    var r = data.result || {};
+    pendingAiItems = [].concat(r.yearly||[], r.quarterly||[], r.monthly||[], r.weekly||[], r.daily||[]);
+    var timeframeMap = { yearly:'Årligen', quarterly:'Kvartalsvis', monthly:'Månadsvis', weekly:'Veckovis', daily:'Dagligen' };
+    ['yearly','quarterly','monthly','weekly','daily'].forEach(function(key){
+      (r[key]||[]).forEach(function(item){ item._timeframe = timeframeMap[key]; });
+    });
+    var itemsHtml = pendingAiItems.map(function(s){
+      return '<div class="goal-row" style="cursor:default;">' +
+        '<span style="font-size:11px;background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + s._timeframe + '</span>' +
+        '<span class="t">' + s.title + (s.target ? ' <span style="color:var(--text-soft);font-size:11px;">(' + s.target + ' ' + (s.metric||'') + ')</span>' : '') + '</span>' +
+        '</div>';
+    }).join('');
+    var assumptionsHtml = (r.assumptions||[]).length ? '<div class="card-sub" style="margin-top:10px;margin-bottom:4px;">Antaganden</div>' + r.assumptions.map(function(a){ return '<div class="list-item">' + a + '</div>'; }).join('') : '';
+    var risksHtml = (r.risks||[]).length ? '<div class="card-sub" style="margin-top:10px;margin-bottom:4px;">Risker</div>' + r.risks.map(function(rk){ return '<div class="list-item">' + rk + '</div>'; }).join('') : '';
+    resultEl.innerHTML = '<div class="card-sub" style="margin-bottom:8px;">AI:ns förslag — granska innan du skapar målen (proposed, inget är sparat än)</div>' +
+      itemsHtml + assumptionsHtml + risksHtml +
       '<div style="display:flex;gap:8px;margin-top:12px;">' +
         '<button class="save-btn" onclick="acceptAiSteps()">Acceptera & skapa mål</button>' +
         '<button class="change-btn" onclick="document.getElementById(\'aiGoalResult\').innerHTML=\'\';">Avvisa</button>' +
       '</div>';
   }
   function acceptAiSteps(){
-    var parentId = null;
-    pendingAiSteps.forEach(function(s){
+    var idMap = {};
+    pendingAiItems.forEach(function(s){
       goalIdCounter++;
-      var g = { id:goalIdCounter, title:s.title, category:'AI-förslag', timeframe:s.timeframe, parentId:parentId, completed:false, progress:0, deadline:'', kpiTarget:s.kpiTarget||null, kpiActual:0, kpiUnit:s.kpiUnit||'', milestones:[], actions:[] };
+      idMap[s.id] = goalIdCounter;
+    });
+    var prevId = null;
+    pendingAiItems.forEach(function(s){
+      var resolvedParent = (s.parentId && idMap[s.parentId]) ? idMap[s.parentId] : prevId;
+      var g = { id:idMap[s.id], title:s.title, category:'AI-förslag', timeframe:s._timeframe, parentId:resolvedParent, completed:false, progress:0, deadline:s.deadline||'', kpiTarget:(s.target!==undefined?s.target:null), kpiActual:0, kpiUnit:s.metric||'', milestones:[], actions:[] };
       lifeGoals.push(g);
-      parentId = g.id;
+      prevId = g.id;
     });
     document.getElementById('aiGoalResult').innerHTML = '<div class="list-empty">Mål skapade — se dem under Hierarki-fliken.</div>';
     document.getElementById('aiGoalInput').value = '';
     renderGoalsTable();
   }
+
+  function requestDailyBrief(){
+    var el = document.getElementById('dailyBriefResult');
+    if(!el) return;
+    el.innerHTML = '<div class="list-empty">Frågar AI...</div>';
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      renderDailyBrief(data);
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=daily_brief&context=' + encodeURIComponent(buildAIContext()) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
+  function renderDailyBrief(data){
+    var el = document.getElementById('dailyBriefResult');
+    if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+    var b = data.result || {};
+    el.innerHTML =
+      '<div class="card-sub" style="margin-bottom:4px;">Today\'s focus</div>' +
+      '<ol style="margin:0 0 10px 18px;padding:0;font-size:13px;">' + (b.focus||[]).map(function(f){ return '<li>' + f + '</li>'; }).join('') + '</ol>' +
+      (b.why ? '<div class="card-sub" style="margin-bottom:4px;">Varför</div><div class="list-item">' + b.why + '</div>' : '') +
+      (b.kpiCheck ? '<div class="card-sub" style="margin-top:8px;margin-bottom:4px;">KPI check</div><div class="list-item">' + b.kpiCheck + '</div>' : '') +
+      (b.watchOut ? '<div class="card-sub" style="margin-top:8px;margin-bottom:4px;">Watch out</div><div class="list-item">' + b.watchOut + '</div>' : '') +
+      (b.quickWin ? '<div class="card-sub" style="margin-top:8px;margin-bottom:4px;">Quick win</div><div class="list-item">' + b.quickWin + '</div>' : '');
+  }
+
   function openGoalForm(){
     document.getElementById('goalFormOverlay').style.display = 'flex';
     var sel = document.getElementById('gf_parent');
@@ -2837,10 +2915,18 @@
     var parentG = g.parentId ? lifeGoals.filter(function(x){ return x.id === g.parentId; })[0] : null;
     var kpiHtml = (g.kpiTarget !== null && g.kpiTarget !== undefined)
       ? '<div class="card-sub" style="margin-top:4px;">KPI: ' + (g.kpiActual||0) + ' / ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + '</div>' : '';
+    var timeframeOpts = timeframeOrder.map(function(tf){ return '<option' + (g.timeframe===tf?' selected':'') + '>' + tf + '</option>'; }).join('');
+    var parentOpts = '<option value="">Inget överordnat mål</option>' + lifeGoals.filter(function(x){ return x.id !== g.id; }).map(function(x){ return '<option value="' + x.id + '"' + (g.parentId===x.id?' selected':'') + '>' + x.title + '</option>'; }).join('');
     var card = document.getElementById('goalDetailCard');
     card.innerHTML =
-      '<div class="card-label">' + g.title + '</div>' +
-      '<div class="card-sub">' + (g.category||'') + (g.timeframe ? ' · ' + g.timeframe : '') + (g.deadline ? ' · deadline ' + g.deadline : '') + '</div>' +
+      '<div class="card-label">Redigera mål</div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">' +
+        '<input type="text" id="ge_title" value="' + g.title.replace(/"/g,'&quot;') + '" onchange="editGoalField(\'title\',this.value)">' +
+        '<input type="text" id="ge_category" value="' + (g.category||'').replace(/"/g,'&quot;') + '" placeholder="Kategori" onchange="editGoalField(\'category\',this.value)">' +
+        '<select onchange="editGoalField(\'timeframe\',this.value)">' + timeframeOpts + '</select>' +
+        '<select onchange="editGoalField(\'parentId\',this.value?parseInt(this.value,10):null)">' + parentOpts + '</select>' +
+      '</div>' +
+      '<div class="card-sub">' + (g.deadline ? 'deadline ' + g.deadline : '') + '</div>' +
       (parentG ? '<div class="card-sub" style="margin-top:-8px;">Överordnat mål: ' + parentG.title + '</div>' : '') +
       kpiHtml +
       '<div class="bar" style="margin-bottom:4px;margin-top:8px;"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div>' +
@@ -2860,6 +2946,10 @@
         '<button class="change-btn" onclick="addAction()">Lägg till</button>' +
       '</div>' +
       '<button class="change-btn" style="margin-top:16px;" onclick="closeGoalDetail()">Stäng</button>';
+  }
+  function editGoalField(field, value){
+    lifeGoals[selectedGoalIdx][field] = value;
+    renderGoalsTable();
   }
   function toggleMilestone(mi){
     var g = lifeGoals[selectedGoalIdx];
