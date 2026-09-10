@@ -9,40 +9,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F3EEE4;--surface:#FFFFFF;--surface-soft:#FBF8F2;--border:#E4DCC8;
-    --text:#2C2620;--text-soft:#93897A;--accent:#BC7A67;--accent-soft:#F1DCD2;
-    --sage:#7E8F6D;--sage-soft:#E4EADF;--radius:14px;
+    --bg:#F3EFE4;--surface:#FFFFFF;--surface-soft:#F7F5EF;--border:#E7E2D3;
+    --text:#3A3327;--text-soft:#8C8574;--accent:#FB4F74;--accent-soft:#FDE1E7;
+    --sage:#65673F;--sage-soft:#EAEBDF;--radius:16px;
+    --nav-bg:#FFFFFF;--nav-text:#5D5E25;--nav-active:#FB4F74;--nav-active-text:#FFFFFF;
+    --card-border-w:0px;
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;}
+  body{
+    margin:0;color:var(--text);font-family:'Inter',-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(188,191,170,0.35), transparent 55%),
+      radial-gradient(circle at 90% 10%, rgba(251,79,116,0.14), transparent 55%),
+      radial-gradient(circle at 80% 90%, rgba(101,103,63,0.12), transparent 55%),
+      linear-gradient(160deg,#F8F4E8 0%,#F1ECDD 45%,#F6E9E4 100%);
+    background-attachment:fixed;
+  }
   .wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px;}
 
   .top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:16px;}
-  .tag{font-size:12px;color:var(--text-soft);margin-bottom:4px;}
-  .title{font-size:28px;margin:0;font-weight:600;}
-  .title em{font-family:'Lora',serif;font-style:italic;font-weight:400;color:var(--text-soft);}
-  .datebox{text-align:right;font-size:13px;color:var(--text-soft);}
+  .tag{font-size:12px;color:var(--text-soft);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
+  .title{font-size:34px;margin:0;font-weight:800;text-transform:uppercase;color:var(--text);letter-spacing:.01em;}
+  .title em{font-family:'Inter',sans-serif;font-style:normal;font-weight:800;color:var(--text);text-transform:uppercase;}
+  .datebox{text-align:right;font-size:13px;color:var(--text);font-weight:600;text-transform:uppercase;}
   .weeknav{display:flex;align-items:center;gap:10px;margin-top:6px;justify-content:flex-end;}
-  .weeknav button{background:none;border:none;cursor:pointer;color:var(--text-soft);font-size:15px;padding:2px 6px;}
-  .weeknav button:hover{color:var(--text);}
+  .weeknav button{background:none;border:none;cursor:pointer;color:var(--text);font-size:15px;padding:2px 6px;}
+  .weeknav button:hover{opacity:.8;}
   .weeknav span{font-size:13px;color:var(--text);}
 
-  .tabs{display:flex;gap:6px;margin:22px 0 26px;flex-wrap:wrap;}
-  .tab{border:1px solid var(--border);background:var(--surface);font-size:13px;padding:7px 15px;border-radius:20px;cursor:pointer;color:var(--text-soft);transition:background .15s,color .15s;}
-  .tab:hover{background:var(--surface-soft);}
-  .tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .tabs{display:flex;gap:8px;margin:22px 0 26px;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;}
+  .tab{border:none;background:var(--nav-bg);font-size:12px;font-weight:600;padding:9px 18px;border-radius:999px;cursor:pointer;color:var(--nav-text);transition:background .15s,color .15s;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+  .tab:hover{background:#f2f2f2;}
+  .tab.active{background:var(--nav-active);color:var(--nav-active-text);}
 
   .view{display:none;}
   .view.active{display:block;}
 
-  .quote{text-align:center;font-family:'Lora',serif;font-style:italic;font-size:16px;color:var(--text-soft);padding:16px 0 26px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+  .quote{text-align:center;font-family:'Lora',serif;font-style:italic;font-size:16px;color:var(--text);padding:16px 0 26px;border-bottom:1px solid var(--border);margin-bottom:24px;}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
   @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
 
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
-  .card-label{font-size:12px;color:var(--text-soft);margin-bottom:2px;}
+  .card{background:var(--surface);border:none;border-radius:24px;padding:22px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.10);}
+  .card-label{font-size:12px;color:var(--text);font-weight:600;margin-bottom:2px;}
   .card-sub{font-size:11px;color:var(--text-soft);margin-bottom:14px;}
+
 
   .goal-list{list-style:none;margin:0 0 12px;padding:0;font-size:14px;display:flex;flex-direction:column;gap:8px;}
   .goal-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -75,8 +86,10 @@
   @media (max-width:640px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
   .stat{background:var(--surface-soft);border-radius:10px;padding:14px;}
   .stat .lbl{font-size:11px;color:var(--text-soft);}
-  .stat .val{font-size:20px;font-weight:600;margin-top:4px;}
-  .stat .sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+  .stat{position:relative;}
+  .stat-icon{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 5px rgba(0,0,0,.08);}
+  .stat .val{font-size:24px;font-weight:700;margin-top:4px;}
+  .stat .sub{font-size:10px;color:var(--sage);margin-top:6px;display:inline-block;background:var(--sage-soft);padding:2px 9px;border-radius:999px;font-weight:600;}
   .breakdown{display:flex;flex-direction:column;gap:10px;}
   .breakdown-row{display:flex;align-items:center;gap:12px;}
   .breakdown-row .name{font-size:13px;width:110px;flex-shrink:0;}
@@ -98,6 +111,9 @@
 
   .barchart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:8px;}
   .barchart .bar{flex:1;background:var(--surface-soft);border-radius:4px 4px 0 0;}
+  .bar-track{flex:1;height:100%;background:var(--surface-soft);border-radius:6px 6px 0 0;display:flex;align-items:flex-end;overflow:hidden;}
+  .bar-fill-v{width:100%;background:var(--border);border-radius:6px 6px 0 0;transition:height .3s;}
+  .bar-fill-v.hi{background:var(--accent);}
   .barchart .bar.hi{background:var(--accent);}
   .barchart-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text-soft);margin-top:6px;}
 
@@ -119,12 +135,12 @@
   .goal-quad-card{background:var(--surface-soft);border-radius:10px;padding:12px;min-height:64px;}
   .goal-quad-card .cat-name{font-size:12px;font-weight:600;margin-bottom:8px;}
 
-  .arkiv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
-  @media (max-width:640px){.arkiv-grid{grid-template-columns:repeat(2,1fr);}}
-  .arkiv-box{border-radius:12px;padding:14px;cursor:pointer;border:2px solid var(--cat-color);background:var(--surface);transition:background .15s;}
-  .arkiv-box.active{background:var(--cat-color-soft);}
-  .arkiv-box .arkiv-title{font-weight:700;font-size:15px;color:var(--cat-color);margin-bottom:8px;}
-  .arkiv-box .arkiv-sub{font-size:11px;color:var(--text-soft);padding:2px 0;}
+  .arkiv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+  @media (max-width:640px){.arkiv-grid{grid-template-columns:1fr;}}
+  .arkiv-box{border-radius:18px;padding:20px 14px;cursor:pointer;border:none;background:var(--cat-color-soft);text-align:center;transition:transform .12s,box-shadow .12s;}
+  .arkiv-box.active{background:var(--cat-color);}
+  .arkiv-box.active .arkiv-title{color:#fff;}
+  .arkiv-box .arkiv-title{font-weight:700;font-size:15px;color:var(--cat-color);}
 
   .recipe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
   @media (max-width:640px){.recipe-grid{grid-template-columns:1fr 1fr;}}
@@ -168,13 +184,13 @@
   .mood-btn.active{background:var(--accent-soft);border-color:var(--accent);}
   .mood-btn .lbl{display:block;font-size:10px;color:var(--text-soft);margin-top:3px;}
   .day-selector{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
-  .day-sel{border:1px solid var(--border);background:var(--surface-soft);border-radius:14px;padding:7px 12px;font-size:12px;cursor:pointer;color:var(--text-soft);text-align:center;line-height:1.5;}
-  .day-sel.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .day-sel{border:none;background:var(--nav-bg);border-radius:999px;padding:9px 14px;font-size:12px;font-weight:600;cursor:pointer;color:var(--nav-text);text-align:center;line-height:1.5;}
+  .day-sel.active{background:var(--nav-active);border-color:var(--nav-active);color:#fff;}
   .mood-summary{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
   .mood-chip{font-size:12px;background:var(--surface-soft);border-radius:20px;padding:5px 12px;color:var(--text-soft);}
 
-  .saved-box{border:1px solid var(--sage);background:var(--sage-soft);border-radius:10px;padding:14px;}
-  .saved-box-head{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--sage);font-weight:500;margin-bottom:8px;}
+  .saved-box{border:none;background:linear-gradient(135deg,var(--accent-soft),#fff);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(251,79,116,.18);}
+  .saved-box-head{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px;}
   .saved-box-head i{font-style:normal;}
   .saved-box-text{font-size:13px;color:var(--text);white-space:pre-wrap;margin-bottom:10px;}
 
@@ -187,7 +203,8 @@
   .measure-summary{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-bottom:10px;}
   .measure-summary span b{color:var(--text-soft);font-weight:400;font-size:11px;display:block;}
 
-  .week-nav-mini{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-soft);margin-bottom:2px;}
+  .week-nav-mini{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-soft);margin-bottom:2px;text-align:center;}
+  .week-nav-mini .wk-num{font-weight:700;font-size:14px;color:var(--text);}
   .week-nav-mini button{background:var(--surface-soft);border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text-soft);font-size:14px;padding:2px 8px;}
   .week-nav-mini button:hover{color:var(--text);}
   #datePicker{border:1px solid var(--border);border-radius:8px;padding:6px 9px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text);}
@@ -201,7 +218,8 @@
   .cal-day-col.today{border-color:var(--accent);background:var(--accent-soft);}
   .cal-day-head{font-size:11px;color:var(--text-soft);margin-bottom:6px;font-weight:600;}
   .cal-day-col.today .cal-day-head{color:var(--accent);}
-  .cal-event{font-size:11px;padding:4px 0;border-top:1px solid var(--border);line-height:1.3;}
+  .cal-event{font-size:10px;padding:5px 8px;line-height:1.3;background:var(--accent-soft);color:var(--accent);border-radius:10px;margin-bottom:4px;font-weight:600;}
+  .cal-event .t{color:var(--accent);opacity:.85;font-size:9px;display:block;font-weight:500;}
   .cal-event:first-child{border-top:none;}
   .cal-event .t{color:var(--text-soft);font-size:10px;display:block;}
   .session-row{display:flex;align-items:center;gap:12px;background:var(--surface-soft);border-radius:10px;padding:10px 12px;}
@@ -210,6 +228,92 @@
   .session-stat{font-size:16px;font-weight:600;color:var(--accent);margin-top:1px;}
   .session-day{font-size:11px;color:var(--text-soft);margin-left:auto;}
   #weekPicker,#quarterPicker{border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text-soft);margin-left:8px;}
+  .save-btn,.change-btn,.add-row button,.cat-tab,.day-sel,.week-nav-mini button,
+  #datePicker,#monthPicker,#weekPicker,#quarterPicker,#yearPicker{
+    border-radius:999px !important;
+  }
+
+  input[type="text"],input[type="number"],input[type="date"],input[type="email"],select{
+    border:1px solid var(--border) !important;
+    border-radius:14px !important;
+    padding:11px 16px !important;
+    font-size:14px !important;
+    background:#fff !important;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);
+    transition:box-shadow .15s,border-color .15s;
+  }
+  input[type="text"]:focus,input[type="number"]:focus,input[type="date"]:focus,select:focus{
+    outline:none;border-color:var(--accent) !important;box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  textarea{border-radius:16px !important;padding:14px 16px !important;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+
+  .add-row{display:flex;gap:10px;}
+
+  .list-item{font-size:13px;padding:12px 16px;border:none;background:var(--surface-soft);border-radius:14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+  .list-item:last-child{margin-bottom:0;}
+
+  .task-list{gap:8px !important;}
+  .task-list li{background:var(--surface-soft);border-radius:14px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:0;}
+  .goal-row{background:var(--surface-soft);border-radius:14px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,.04);border-bottom:none !important;margin-bottom:8px;}
+  .goal-row:last-child{margin-bottom:0;}
+
+  .card-label{font-size:13px;letter-spacing:.02em;margin-bottom:4px;}
+  .card-sub{margin-bottom:16px;}
+
+  .card{box-shadow:0 10px 28px rgba(58,51,39,.08),0 2px 6px rgba(58,51,39,.04) !important;border:1px solid rgba(58,51,39,.06) !important;}
+
+  .tab{box-shadow:0 2px 6px rgba(0,0,0,.06) !important;transition:transform .12s,box-shadow .12s !important;}
+  .tab:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.1) !important;}
+  .tab.active{box-shadow:0 4px 12px rgba(251,79,116,.35) !important;}
+
+  .save-btn{background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 80%,black)) !important;box-shadow:0 3px 10px rgba(251,79,116,.3),inset 0 1px 0 rgba(255,255,255,.25) !important;transition:transform .12s,box-shadow .12s;}
+  .save-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(251,79,116,.35),inset 0 1px 0 rgba(255,255,255,.25) !important;}
+  .change-btn{box-shadow:0 2px 5px rgba(0,0,0,.06) !important;background:#fff !important;transition:transform .12s;}
+  .change-btn:hover{transform:translateY(-1px);}
+
+  .day-sel{box-shadow:0 2px 6px rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s;}
+  .day-sel:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(0,0,0,.1);}
+  .day-sel.active{box-shadow:0 5px 14px rgba(251,79,116,.4) !important;}
+
+  .cal-day-col{box-shadow:0 3px 10px rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s;}
+  .cal-day-col:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.1);}
+  .cal-day-col.today{box-shadow:0 5px 14px rgba(251,79,116,.3) !important;}
+
+  .habit-box{box-shadow:0 2px 4px rgba(0,0,0,.08);}
+  .mood-btn{box-shadow:0 3px 8px rgba(0,0,0,.06) !important;}
+  .status-pill{transition:transform .12s;}
+  .status-pill:hover{transform:translateY(-1px);}
+  .cat-tab{box-shadow:0 2px 5px rgba(0,0,0,.06);}
+
+  .list-item,.task-list li,.goal-row{transition:transform .12s,box-shadow .12s;}
+  .list-item:hover,.task-list li:hover,.goal-row:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.08);}
+
+  .stat,.recipe-card,.session-row,.goal-quad-card,.gp-card,.arkiv-box{box-shadow:0 3px 10px rgba(0,0,0,.06) !important;transition:transform .12s;}
+  .recipe-card:hover,.arkiv-box:hover{transform:translateY(-2px);}
+
+  .bar{height:9px;background:var(--surface-soft);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.12);}
+  .bar-fill{height:9px;background:linear-gradient(90deg,var(--nav-active),#F08BC4);border-radius:999px;transition:width .3s ease;}
+
+  .task-list li .box{width:18px;height:18px;border-radius:999px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;background:rgba(255,255,255,.35);}
+  .task-list li.done .box{box-shadow:0 2px 6px rgba(0,0,0,.15);}
+
+  .status-pill{border:none;background:#fff;font-size:11px;padding:6px 13px;border-radius:999px;cursor:pointer;color:var(--nav-text);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+  .status-pill.active{background:var(--nav-active);color:#fff;}
+
+  .stat{background:var(--surface-soft);border-radius:16px;padding:14px;box-shadow:0 3px 10px rgba(0,0,0,.06) !important;}
+
+  .goal-row .box{width:18px;height:18px;border-radius:999px;border:2px solid var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;background:rgba(255,255,255,.35);}
+
+  .habit-box{width:24px;height:24px;border-radius:999px;border:2px solid var(--border);background:rgba(255,255,255,.35);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:#fff;transition:all .15s;}
+  .habit-box.done{box-shadow:0 2px 6px rgba(0,0,0,.15);}
+
+  .mood-btn{border:1px solid var(--border);background:var(--sage-soft);border-radius:20px;padding:10px 8px;font-size:22px;cursor:pointer;flex:1;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:all .15s;}
+  .mood-btn.active{background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+
+  .session-icon{width:36px;height:36px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.1);}
+
+  .recipe-card,.session-row,.goal-quad-card,.gp-card,.arkiv-box{box-shadow:0 2px 8px rgba(0,0,0,.06);}
 </style>
 </head>
 <body>
@@ -217,11 +321,10 @@
 
   <div class="top-row">
     <div>
-      <div class="tag">livsdashboard</div>
-      <h1 class="title">Julia <em id="viewSubtitle">— denna vecka</em></h1>
+      <h1 class="title">Julia - Lifedashboard</h1>
+      <div class="tag" id="viewSubtitle" style="margin-top:4px;">— denna vecka</div>
     </div>
     <div class="datebox">
-      onsdag<br>9 september 2026 · Stockholm
       <div class="weeknav" id="weekNavBox">
         <button onclick="shiftWeek(-1)">‹</button>
         <span id="weekLabel">Denna vecka</span>
@@ -232,21 +335,22 @@
   </div>
 
   <div class="tabs" id="tabRow">
-    <div class="tab" data-view="dagligen" onclick="switchView('dagligen')">Dagligen</div>
-    <div class="tab active" data-view="week" onclick="switchView('week')">Week</div>
-    <div class="tab" data-view="month" onclick="switchView('month')">Month</div>
-    <div class="tab" data-view="quarter" onclick="switchView('quarter')">Quarter</div>
-    <div class="tab" data-view="dosed" onclick="switchView('dosed')">Dosed</div>
-    <div class="tab" data-view="tiktok" onclick="switchView('tiktok')">TikTok</div>
-    <div class="tab" data-view="habits" onclick="switchView('habits')">Habits</div>
-    <div class="tab" data-view="year" onclick="switchView('year')">Year</div>
-    <div class="tab" onclick="notReady()">Bucket list</div>
-    <div class="tab" data-view="arkiv" onclick="switchView('arkiv')">Arkiv</div>
-    <div class="tab" data-view="mal" onclick="switchView('mal')">Mål</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div class="tab" data-view="dagligen" onclick="switchView('dagligen')">Daily</div>
+      <div class="tab active" data-view="week" onclick="switchView('week')">Week</div>
+      <div class="tab" data-view="month" onclick="switchView('month')">Monthly</div>
+      <div class="tab" data-view="quarter" onclick="switchView('quarter')">Quarterly</div>
+      <div class="tab" data-view="year" onclick="switchView('year')">Yearly</div>
+      <div class="tab" data-view="habits" onclick="switchView('habits')">Habits</div>
+      <div class="tab" data-view="mal" onclick="switchView('mal')">Goals</div>
+      <div class="tab" data-view="arkiv" onclick="switchView('arkiv')">Archive</div>
+      <div class="tab" data-view="bucketlist" onclick="switchView('bucketlist')">Bucket list</div>
+      <div class="tab" data-view="tiktok" onclick="switchView('tiktok')">TikTok</div>
+      <div class="tab" data-view="dosed" onclick="switchView('dosed')">Dosed</div>
+    </div>
   </div>
 
   <div class="view active" id="view-week">
-    <div class="quote">"win or win, it's only cringe until it works"</div>
 
     <div class="grid2">
       <div class="card">
@@ -321,6 +425,24 @@
     </div>
 
     <div class="card">
+      <div class="card-label">Träning & sömn denna vecka</div>
+      <div class="stat-grid" id="weekStatGrid">
+        <div class="stat"><div class="stat-icon">🏋️</div><div class="lbl">Pass</div><div class="val" id="weekStatPass">—</div></div>
+        <div class="stat"><div class="stat-icon">👣</div><div class="lbl">Steg</div><div class="val" id="weekStatSteps">—</div></div>
+        <div class="stat"><div class="stat-icon">🔥</div><div class="lbl">Energi</div><div class="val" id="weekStatEnergy">—</div></div>
+        <div class="stat"><div class="stat-icon">💤</div><div class="lbl">Snittsömn</div><div class="val" id="weekStatSleep">—</div></div>
+      </div>
+      <div class="barchart" id="weekSleepBars" style="height:60px;margin-top:6px;"></div>
+      <div class="barchart-labels" id="weekSleepLabels"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Veckans dagliga reflektioner</div>
+      <div class="card-sub">det du skrivit under Dagligen denna vecka, som referens när du skriver veckans reflektion</div>
+      <div id="weekDailyReflections"></div>
+    </div>
+
+    <div class="card">
       <div class="reflect-row">
         <div class="card-label" style="margin:0;">Veckans reflektion</div>
         <div style="font-size:12px;color:var(--text-soft);">9 sep 2026</div>
@@ -337,6 +459,11 @@
       <div class="card-label">Mål — veckans actions</div>
       <ul class="task-list" id="weekGoalActions"></ul>
     </div>
+
+    <div class="card">
+      <div class="card-label">Bucket list — denna vecka</div>
+      <ul class="task-list" id="weekBucketItems"></ul>
+    </div>
   </div>
 
   <div class="view" id="view-dagligen">
@@ -349,6 +476,13 @@
 
       <div class="card-label" id="dailyHabitLabel">75 Hard — Ons</div>
       <ul class="task-list" id="dailyHabitList" style="margin-bottom:18px;"></ul>
+
+      <div class="card-label" id="dailyTodoLabel">To do — Onsdag</div>
+      <ul class="task-list" id="dailyTodoList" style="margin-bottom:18px;"></ul>
+      <div class="add-row" style="margin-bottom:18px;">
+        <input type="text" id="dailyTodoInput" placeholder="Ny task för idag...">
+        <button onclick="addDailyTodo()">Lägg till</button>
+      </div>
 
       <div class="card-label">Mål — dagens actions</div>
       <ul class="task-list" id="dailyGoalActions" style="margin-bottom:18px;"></ul>
@@ -384,13 +518,13 @@
     <div class="card">
       <div class="card-label">Träning denna månad</div>
       <div class="stat-grid" id="monthStatGrid">
-        <div class="stat"><div class="lbl">Pass totalt</div><div class="val" id="statPassTotal">—</div><div class="sub" id="statPassSub"></div></div>
-        <div class="stat"><div class="lbl">Steg totalt</div><div class="val" id="statStepsTotal">—</div><div class="sub" id="statStepsSub"></div></div>
-        <div class="stat"><div class="lbl">Aktiv energi</div><div class="val" id="statEnergyTotal">—</div><div class="sub" id="statEnergySub"></div></div>
-        <div class="stat"><div class="lbl">Snittvikt</div><div class="val" id="statWeight">— kg</div><div class="sub">senaste mätning</div></div>
+        <div class="stat"><div class="stat-icon">🏋️</div><div class="lbl">Pass totalt</div><div class="val" id="statPassTotal">—</div><div class="sub" id="statPassSub"></div></div>
+        <div class="stat"><div class="stat-icon">👣</div><div class="lbl">Steg totalt</div><div class="val" id="statStepsTotal">—</div><div class="sub" id="statStepsSub"></div></div>
+        <div class="stat"><div class="stat-icon">🔥</div><div class="lbl">Aktiv energi</div><div class="val" id="statEnergyTotal">—</div><div class="sub" id="statEnergySub"></div></div>
+        <div class="stat"><div class="stat-icon">⚖️</div><div class="lbl">Snittvikt</div><div class="val" id="statWeight">— kg</div><div class="sub">senaste mätning</div></div>
       </div>
       <div class="breakdown" id="monthBreakdown"></div>
-      <div class="source-note"><div class="dot"></div>Hämtas automatiskt från Apple Health via samma pipeline som veckovyn — passtyp, steg och energi grupperas per kalendermånad.</div>
+      <div class="source-note" id="healthSourceNote"><div class="dot"></div>Hämtas automatiskt från Apple Health via samma pipeline som veckovyn — passtyp, steg och energi grupperas per kalendermånad.</div>
     </div>
 
     <div class="card">
@@ -411,6 +545,11 @@
     <div class="card">
       <div class="card-label">Mål — månadens actions</div>
       <ul class="task-list" id="monthGoalActions"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Bucket list — denna månad</div>
+      <ul class="task-list" id="monthBucketItems"></ul>
     </div>
 
     <div class="card">
@@ -438,37 +577,28 @@
         <div class="card-label">Träningskonsistens</div>
         <div class="card-sub">senaste 13 veckorna</div>
         <div class="barchart">
-          <div class="bar" style="height:10%;"></div><div class="bar" style="height:15%;"></div><div class="bar" style="height:8%;"></div>
-          <div class="bar" style="height:20%;"></div><div class="bar" style="height:12%;"></div><div class="bar" style="height:6%;"></div>
-          <div class="bar hi" style="height:70%;"></div><div class="bar hi" style="height:85%;"></div><div class="bar hi" style="height:75%;"></div>
-          <div class="bar hi" style="height:60%;"></div><div class="bar" style="height:15%;"></div><div class="bar hi" style="height:90%;"></div>
-          <div class="bar hi" style="height:80%;"></div>
+          <div class="bar-track"><div class="bar-fill-v" style="height:10%;"></div></div><div class="bar-track"><div class="bar-fill-v" style="height:15%;"></div></div><div class="bar-track"><div class="bar-fill-v" style="height:8%;"></div></div>
+          <div class="bar-track"><div class="bar-fill-v" style="height:20%;"></div></div><div class="bar-track"><div class="bar-fill-v" style="height:12%;"></div></div><div class="bar-track"><div class="bar-fill-v" style="height:6%;"></div></div>
+          <div class="bar-track"><div class="bar-fill-v hi" style="height:70%;"></div></div><div class="bar-track"><div class="bar-fill-v hi" style="height:85%;"></div></div><div class="bar-track"><div class="bar-fill-v hi" style="height:75%;"></div></div>
+          <div class="bar-track"><div class="bar-fill-v hi" style="height:60%;"></div></div><div class="bar-track"><div class="bar-fill-v" style="height:15%;"></div></div><div class="bar-track"><div class="bar-fill-v hi" style="height:90%;"></div></div>
+          <div class="bar-track"><div class="bar-fill-v hi" style="height:80%;"></div></div>
         </div>
         <div class="barchart-labels"><span>12 veckor sedan</span><span>denna vecka</span></div>
       </div>
 
       <div class="card">
         <div class="card-label" id="econQuarterLabel">Ekonomi Q4 2026</div>
-        <div class="card-sub">Dosed-budget och sparande</div>
-        <div class="fin-row">
-          <div class="fin-top"><span>Dosed-budget använd</span><span>0 kr</span></div>
-          <div class="fin-track"><div class="fin-fill" style="width:0%;"></div></div>
-          <div class="fin-bottom"><span>0% använt</span><span>0 kr kvar</span></div>
-        </div>
+        <div class="card-sub">Sparande</div>
         <div class="fin-row">
           <div class="fin-top"><span>Sparmål</span></div>
-          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-            <div id="savingsJarSvg" style="width:90px;flex-shrink:0;"></div>
-            <div style="flex:1;min-width:150px;">
-              <div style="display:flex;gap:6px;margin-bottom:8px;">
-                <input type="number" id="savedAmountInput" placeholder="Sparat kr" oninput="updateSavingsJar()" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:12px;font-family:inherit;background:var(--surface-soft);">
-                <input type="number" id="savingsGoalInput" placeholder="Mål kr" oninput="updateSavingsJar()" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:12px;font-family:inherit;background:var(--surface-soft);">
-              </div>
-              <div style="font-size:12px;color:var(--text-soft);" id="savingsJarLabel">0 / 0 kr · 0%</div>
-            </div>
+          <div id="savingsGoalsList" style="margin-top:10px;"></div>
+          <div class="add-row" style="margin-top:10px;flex-wrap:wrap;">
+            <input type="text" id="sg_name" placeholder="Namn (t.ex. Buffert)" style="flex:2;min-width:110px;">
+            <input type="number" id="sg_saved" placeholder="Sparat kr" style="flex:1;min-width:80px;">
+            <input type="number" id="sg_target" placeholder="Mål kr" style="flex:1;min-width:80px;">
+            <button onclick="addSavingsGoal()">Lägg till</button>
           </div>
         </div>
-        <div class="fin-net"><span>Netto (sparat − Dosed-utgifter)</span><span>0 kr</span></div>
       </div>
     </div>
 
@@ -481,6 +611,7 @@
         <div class="cat-tab active" data-cat="Dosed" onclick="switchCat(this)">Dosed</div>
         <div class="cat-tab" data-cat="Hälsa" onclick="switchCat(this)">Hälsa</div>
         <div class="cat-tab" data-cat="Ekonomi" onclick="switchCat(this)">Ekonomi</div>
+        <div class="cat-tab" data-cat="TikTok" onclick="switchCat(this)">TikTok</div>
         <div class="cat-tab" data-cat="Personligt" onclick="switchCat(this)">Personligt</div>
       </div>
       <div class="add-row">
@@ -524,6 +655,11 @@
     <div class="card">
       <div class="card-label">Mål — kvartalets actions</div>
       <ul class="task-list" id="quarterGoalActions"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Bucket list — detta kvartal</div>
+      <ul class="task-list" id="quarterBucketItems"></ul>
     </div>
   </div>
   <div class="view" id="view-dosed">
@@ -600,22 +736,17 @@
       <div id="yearResetList"></div>
     </div>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="card-label">Årets fyra hinkar</div>
-        <ul class="goal-list" id="yearBucketList"></ul>
-        <div class="add-row">
-          <input type="text" id="yearBucketInput" placeholder="Lägg till en hink...">
-          <button onclick="addYearBucket()">Lägg till</button>
-        </div>
-      </div>
+    <div class="card">
+      <div class="card-label">Mål med deadline i år</div>
+      <div class="card-sub" id="yearGoalsSub">mål från Mål-sidan vars deadline faller i det valda året</div>
+      <ul class="task-list" id="yearGoalsList"></ul>
+    </div>
 
-      <div class="card">
-        <div class="card-label">Årets tasks</div>
-        <div style="font-size:22px;font-weight:600;">42 <span style="font-size:12px;color:var(--text-soft);font-weight:400;">/ 60 klara</span></div>
-        <div class="bar" style="margin-top:10px;"><div class="bar-fill" style="width:70%;"></div></div>
-        <div class="card-sub" style="margin-top:10px;margin-bottom:0;">exempeldata — kopplas till riktig taskhistorik i tekniska passet</div>
-      </div>
+    <div class="card">
+      <div class="card-label">Årets tasks</div>
+      <div style="font-size:22px;font-weight:600;">42 <span style="font-size:12px;color:var(--text-soft);font-weight:400;">/ 60 klara</span></div>
+      <div class="bar" style="margin-top:10px;"><div class="bar-fill" style="width:70%;"></div></div>
+      <div class="card-sub" style="margin-top:10px;margin-bottom:0;">exempeldata — kopplas till riktig taskhistorik i tekniska passet</div>
     </div>
 
     <div class="card">
@@ -628,6 +759,13 @@
       <div class="card-sub">andel ifyllda habits per månad</div>
       <div class="barchart" id="yearHabitsBars"></div>
       <div class="barchart-labels" id="yearHabitsLabels"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Alla habits — kombinerad graf</div>
+      <div class="card-sub">hur varje vana håller sig genom året, en linje per vana</div>
+      <div id="yearCombinedChart"></div>
+      <div id="yearCombinedLegend" style="margin-top:10px;"></div>
     </div>
 
     <div class="card">
@@ -724,6 +862,8 @@
         <div class="cat-tab" id="goalViewTable" onclick="setGoalView('table')">Tabell</div>
         <div class="cat-tab" id="goalViewTree" onclick="setGoalView('tree')">Träd</div>
       </div>
+      <div class="card-sub" style="margin-top:10px;margin-bottom:6px;">Sortera på år</div>
+      <div class="cat-tabs" id="goalYearFilterRow"></div>
       <div class="recipe-grid" id="goalsCardGrid"></div>
       <div id="goalsTableWrap" style="display:none;overflow-x:auto;">
         <table class="habit-table" id="goalsTable" style="min-width:760px;"></table>
@@ -748,6 +888,19 @@
         <button class="change-btn" onclick="closeGoalForm()">Avbryt</button>
       </div>
     </div>
+  </div>
+
+  <div class="view" id="view-bucketlist">
+    <div class="card">
+      <div class="card-label">Bucket list</div>
+      <div class="card-sub">skriv vad du vill klara av — kategoriseras automatiskt. Sätt en deadline så dyker den upp i vecko-/månads-/kvartalsgenomgången när det närmar sig.</div>
+      <div class="add-row" style="flex-wrap:wrap;">
+        <input type="text" id="bl_text" placeholder="T.ex. Resa till Japan, Nå 65kg, Starta eget..." style="flex:2;min-width:180px;">
+        <input type="date" id="bl_deadline" style="flex:1;min-width:130px;">
+        <button onclick="addBucketItem()">Lägg till</button>
+      </div>
+    </div>
+    <div id="bucketListGroups"></div>
   </div>
 
   <div id="studyFormOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
@@ -808,7 +961,7 @@
 <script>
   var days7 = ['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
 
-  var subtitles = { week: '— denna vecka', dagligen: '— dagligen', month: '— september', quarter: '— Q4 2026', dosed: '— dosed', tiktok: '— tiktok', habits: '— habits', year: '— 2026', arkiv: '— arkiv', mal: '— mål' };
+  var subtitles = { week: '— denna vecka', dagligen: '— dagligen', month: '— september', quarter: '— Q4 2026', dosed: '— dosed', tiktok: '— tiktok', habits: '— habits', year: '— 2026', arkiv: '— arkiv', mal: '— mål', bucketlist: '— bucket list' };
   function switchView(name){
     document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
     document.getElementById('view-' + name).classList.add('active');
@@ -850,33 +1003,39 @@
 
   var challengeStart = '2026-08-31';
   var challengeEnd = '2026-11-09';
-  var jarIdCounter = 0;
-  function buildJarSVG(pct, color){
-    jarIdCounter++;
-    var clipId = 'jarclip' + jarIdCounter;
-    var w = 100, h = 130;
-    var bodyX = 15, bodyY = 35, bodyW = 70, bodyH = 90, bodyRx = 14;
-    var liquidH = bodyH * (pct/100);
-    var liquidY = bodyY + bodyH - liquidH;
-    return '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:auto;display:block;">' +
-      '<defs><clipPath id="' + clipId + '"><rect x="' + bodyX + '" y="' + bodyY + '" width="' + bodyW + '" height="' + bodyH + '" rx="' + bodyRx + '"></rect></clipPath></defs>' +
-      '<rect x="' + (w/2-15) + '" y="14" width="30" height="24" rx="5" fill="none" stroke="var(--border)" stroke-width="2.5"></rect>' +
-      (liquidH > 0 ? '<g clip-path="url(#' + clipId + ')">' +
-        '<rect x="' + bodyX + '" y="' + liquidY + '" width="' + bodyW + '" height="' + liquidH + '" fill="' + color + '" opacity="0.85"></rect>' +
-        '<path d="M' + bodyX + ',' + liquidY + ' Q' + (bodyX+bodyW*0.25) + ',' + (liquidY-4) + ' ' + (bodyX+bodyW*0.5) + ',' + liquidY + ' T' + (bodyX+bodyW) + ',' + liquidY + '" fill="none" stroke="' + color + '" stroke-width="2" opacity="0.9"></path>' +
-        '</g>' : '') +
-      '<rect x="' + bodyX + '" y="' + bodyY + '" width="' + bodyW + '" height="' + bodyH + '" rx="' + bodyRx + '" fill="none" stroke="var(--border)" stroke-width="2.5"></rect>' +
-      '</svg>';
+  var savingsGoals = [];
+  var savingsColors = ['#FB4F74','#65673F','#4F86C6','#D6A85A','#8E7CC3','#5FA8A0'];
+  var lastSavingsAllDone = false;
+  function renderSavingsGoals(){
+    var el = document.getElementById('savingsGoalsList');
+    if(!el) return;
+    if(savingsGoals.length === 0){
+      el.innerHTML = '<div class="list-empty">Inga sparmål ännu — lägg till ditt första.</div>';
+      return;
+    }
+    el.innerHTML = savingsGoals.map(function(g, i){
+      var pct = g.target > 0 ? Math.min(100, Math.round((g.saved/g.target)*100)) : 0;
+      var color = savingsColors[i % savingsColors.length];
+      return '<div style="margin-bottom:12px;">' +
+        '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="font-weight:600;">' + g.name + '</span><span style="color:var(--text-soft);">' + g.saved.toLocaleString('sv-SE') + ' / ' + g.target.toLocaleString('sv-SE') + ' kr · ' + pct + '%</span></div>' +
+        '<div class="bar"><div class="bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>' +
+        '</div>';
+    }).join('');
+    var allDone = savingsGoals.length > 0 && savingsGoals.every(function(g){ return g.target > 0 && g.saved >= g.target; });
+    if(allDone && !lastSavingsAllDone) celebrate();
+    lastSavingsAllDone = allDone;
+    saveAll();
   }
-  var lastSavingsPct = 0;
-  function updateSavingsJar(){
-    var saved = parseFloat(document.getElementById('savedAmountInput').value) || 0;
-    var goal = parseFloat(document.getElementById('savingsGoalInput').value) || 0;
-    var pct = goal > 0 ? Math.min(100, Math.round((saved/goal)*100)) : 0;
-    document.getElementById('savingsJarSvg').innerHTML = buildJarSVG(pct, '#4F86C6');
-    document.getElementById('savingsJarLabel').textContent = saved.toLocaleString('sv-SE') + ' / ' + goal.toLocaleString('sv-SE') + ' kr · ' + pct + '%';
-    if(pct === 100 && lastSavingsPct < 100) celebrate();
-    lastSavingsPct = pct;
+  function addSavingsGoal(){
+    var name = document.getElementById('sg_name').value.trim();
+    var saved = parseFloat(document.getElementById('sg_saved').value) || 0;
+    var target = parseFloat(document.getElementById('sg_target').value) || 0;
+    if(!name) return;
+    savingsGoals.push({ name: name, saved: saved, target: target });
+    document.getElementById('sg_name').value = '';
+    document.getElementById('sg_saved').value = '';
+    document.getElementById('sg_target').value = '';
+    renderSavingsGoals();
   }
 
   function celebrate(){
@@ -1001,6 +1160,7 @@
   function toggleDayTask(d,i){
     tasksByDay[d][i].done = !tasksByDay[d][i].done;
     renderTaskDays();
+    if(typeof renderDailyTodo === 'function') renderDailyTodo();
   }
   function addDayTask(d){
     var input = document.getElementById('taskInput_' + d);
@@ -1009,6 +1169,35 @@
     tasksByDay[d].push({t: val, done:false});
     renderTaskDays();
     document.getElementById('taskInput_' + d).focus();
+    if(typeof renderDailyTodo === 'function') renderDailyTodo();
+  }
+  function currentDailyDayLabel(){
+    var idx = (new Date(selectedDate + 'T00:00:00').getDay() + 6) % 7;
+    return days7[idx];
+  }
+  function renderDailyTodo(){
+    var labelEl = document.getElementById('dailyTodoLabel');
+    var listEl = document.getElementById('dailyTodoList');
+    if(!labelEl || !listEl) return;
+    var d = currentDailyDayLabel();
+    labelEl.textContent = 'To do — ' + d;
+    var tasks = tasksByDay[d] || [];
+    listEl.innerHTML = tasks.length
+      ? tasks.map(function(task, i){
+          return '<li class="' + (task.done ? 'done' : '') + '" onclick="toggleDayTask(\'' + d + '\',' + i + ')">' +
+            '<span class="box">' + (task.done ? '✓' : '') + '</span><span class="t">' + task.t + '</span></li>';
+        }).join('')
+      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga tasks för ' + d + ' ännu — lägg till en, eller skriv in i Veckans tasks.</li>';
+  }
+  function addDailyTodo(){
+    var input = document.getElementById('dailyTodoInput');
+    var val = input.value.trim();
+    if(!val) return;
+    var d = currentDailyDayLabel();
+    tasksByDay[d].push({ t: val, done:false });
+    input.value = '';
+    renderDailyTodo();
+    renderTaskDays();
   }
 
   var calEvents = [];
@@ -1039,9 +1228,10 @@
       var dayEvents = fetchedCalendarEvents.filter(function(ev){ return (ev.start||'').slice(0,10) === dk; })
         .sort(function(a,b){ return (a.start||'').localeCompare(b.start||''); });
       var eventsHtml = dayEvents.length
-        ? dayEvents.map(function(ev){
+        ? dayEvents.map(function(ev, ei){
             var timePart = ev.start.length > 10 ? ev.start.slice(11,16) : 'Hela dagen';
-            return '<div class="cal-event"><span class="t">' + timePart + '</span>' + ev.summary + '</div>';
+            var c = cardPalette[ei % cardPalette.length];
+            return '<div class="cal-event" style="background:' + c.bg + ';color:' + c.fg + ';"><span class="t" style="color:' + c.fg + ';">' + timePart + '</span>' + ev.summary + '</div>';
           }).join('')
         : '';
       return '<div class="cal-day-col' + (dk === todayKey ? ' today' : '') + '">' +
@@ -1096,7 +1286,7 @@
   }
   function refreshWeekNav(){
     var dates = getWeekDates(weekOffset);
-    document.getElementById('weekLabel').textContent = 'Vecka ' + isoWeekNumber(dates[0]) + ' · ' + formatShort(dates[0]) + ' – ' + formatShort(dates[6]) + (weekOffset === 0 ? ' · denna vecka' : '');
+    document.getElementById('weekLabel').textContent = 'Vecka ' + isoWeekNumber(dates[0]) + (weekOffset === 0 ? ' · denna veckan' : '');
     document.getElementById('weekPicker').value = weekOffset;
   }
   function populateWeekPicker(){
@@ -1161,7 +1351,7 @@
         days7[i] + (dk === todayKey ? ' · idag' : '') + '<br><span style="font-size:9px;opacity:.8;">' + formatShort(d) + '</span></div>';
     }).join('');
     document.getElementById('daySelector').innerHTML =
-      '<div class="week-nav-mini"><button onclick="shiftDagligenWeek(-1)">‹</button><span>' + formatShort(viewedWeekDates[0]) + ' – ' + formatShort(viewedWeekDates[6]) + '</span><button onclick="shiftDagligenWeek(1)">›</button></div>' +
+      '<div class="week-nav-mini"><button onclick="shiftDagligenWeek(-1)">‹</button><span><span class="wk-num">v.' + isoWeekNumber(viewedWeekDates[0]) + '</span><br>' + formatShort(viewedWeekDates[0]) + ' – ' + formatShort(viewedWeekDates[6]) + '</span><button onclick="shiftDagligenWeek(1)">›</button></div>' +
       '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px;">' + pills + '</div>' +
       '<input type="date" id="datePicker" value="' + selectedDate + '" onchange="pickDate(this.value)">';
   }
@@ -1187,6 +1377,7 @@
     renderDaySelector();
     renderMoodRow();
     renderDailyHabits();
+    renderDailyTodo();
     renderDailyNoteArea();
     renderMeasureSection();
   }
@@ -1210,6 +1401,8 @@
     entry.saved = true;
     renderDailyNoteArea();
     renderWeekMoodSummary();
+    renderWeekDailyReflections();
+    celebrate();
   }
   function editDailyLog(){
     getDailyEntry(selectedDate).saved = false;
@@ -1226,6 +1419,21 @@
     getDailyEntry(selectedDate).mood = key;
     renderMoodRow();
   }
+  function renderWeekDailyReflections(){
+    var el = document.getElementById('weekDailyReflections');
+    if(!el) return;
+    var moodByKey = {};
+    moods.forEach(function(m){ moodByKey[m.key] = m.emoji; });
+    var rows = REAL_WEEK_DATES.map(function(dt){
+      var dk = isoDate(dt);
+      var entry = dailyLog[dk];
+      if(!entry || !entry.note) return '';
+      var idx = (dt.getDay()+6)%7;
+      return '<div class="list-item"><div style="font-size:11px;color:var(--text-soft);margin-bottom:3px;">' + days7[idx] + ' ' + formatShort(dt) + (entry.mood ? ' ' + (moodByKey[entry.mood]||'') : '') + '</div>' + entry.note + '</div>';
+    }).filter(Boolean);
+    el.innerHTML = rows.length ? rows.join('') : '<div class="list-empty">Inga dagliga reflektioner skrivna än denna vecka.</div>';
+  }
+
   function renderWeekMoodSummary(){
     var counts = {};
     moods.forEach(function(m){ counts[m.key] = 0; });
@@ -1439,7 +1647,7 @@
       bars.push({ label: 'v' + isoWeekNumber(dates[0]), pct: habitPctForDates(dates), isNow: i === 0 });
     }
     document.getElementById('habitsWeeklyBars').innerHTML = bars.map(function(b){
-      return '<div class="bar' + (b.isNow ? ' hi' : (b.pct >= 60 ? ' hi' : '')) + '" style="height:' + Math.max(b.pct,3) + '%;" title="' + b.label + ': ' + b.pct + '%"></div>';
+      return '<div class="bar-track"><div class="bar-fill-v' + (b.isNow ? ' hi' : (b.pct >= 60 ? ' hi' : '')) + '" style="height:' + Math.max(b.pct,3) + '%;" title="' + b.label + ': ' + b.pct + '%"></div></div>';
     }).join('');
     document.getElementById('habitsWeeklyLabels').innerHTML = '<span>' + bars[0].label + '</span><span>' + bars[bars.length-1].label + ' · nu</span>';
   }
@@ -1456,7 +1664,7 @@
       bars.push({ label: monthNamesShort[d.getMonth()], pct: habitPctForDates(dates), isNow: i === 0 });
     }
     document.getElementById('habitsMonthlyBars').innerHTML = bars.map(function(b){
-      return '<div class="bar' + (b.isNow ? ' hi' : (b.pct >= 60 ? ' hi' : '')) + '" style="height:' + Math.max(b.pct,3) + '%;" title="' + b.label + ': ' + b.pct + '%"></div>';
+      return '<div class="bar-track"><div class="bar-fill-v' + (b.isNow ? ' hi' : (b.pct >= 60 ? ' hi' : '')) + '" style="height:' + Math.max(b.pct,3) + '%;" title="' + b.label + ': ' + b.pct + '%"></div></div>';
     }).join('');
     document.getElementById('habitsMonthlyLabels').innerHTML = '<span>' + bars[0].label + '</span><span>' + bars[bars.length-1].label + ' · nu</span>';
   }
@@ -1474,6 +1682,7 @@
       try { delete window[cbName]; } catch(e){}
       renderSessionsAndSleep();
       renderYearSessionsAndSleep();
+      renderWeekTrainingSleep();
     };
     var tag = document.createElement('script');
     tag.src = HEALTH_ENDPOINT + '?action=health&callback=' + cbName;
@@ -1516,6 +1725,49 @@
     return '🏋️';
   }
 
+  function renderWeekTrainingSleep(){
+    var passEl = document.getElementById('weekStatPass');
+    if(!passEl) return;
+    if(!healthLoaded){
+      passEl.textContent = '—';
+      return;
+    }
+    var wkStart = isoDate(REAL_WEEK_DATES[0]);
+    var wkEnd = isoDate(REAL_WEEK_DATES[6]);
+    var workouts = workoutsInRange(wkStart, wkEnd);
+    document.getElementById('weekStatPass').textContent = workouts.length;
+    var steps = metricSumInRange('step_count', wkStart, wkEnd);
+    document.getElementById('weekStatSteps').textContent = steps !== null ? Math.round(steps).toLocaleString('sv-SE') : '—';
+    var energy = metricSumInRange('active_energy', wkStart, wkEnd);
+    document.getElementById('weekStatEnergy').textContent = energy !== null ? Math.round(energy).toLocaleString('sv-SE') + ' cal' : '—';
+
+    var sleepMetric = metricByName('sleep_analysis');
+    var weekdayShort3c = ['mån','tis','ons','tor','fre','lör','sön'];
+    var vals = [], labels = [];
+    if(sleepMetric){
+      REAL_WEEK_DATES.forEach(function(dt, i){
+        var dk = isoDate(dt);
+        var pt = sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) === dk; })[0];
+        if(pt){ vals.push(pt.totalSleep); labels.push(weekdayShort3c[i]); }
+      });
+    }
+    var sleepEl = document.getElementById('weekStatSleep');
+    var barsEl = document.getElementById('weekSleepBars');
+    if(vals.length === 0){
+      sleepEl.textContent = '—';
+      if(barsEl) barsEl.innerHTML = '';
+      document.getElementById('weekSleepLabels').innerHTML = '';
+    } else {
+      var avg = vals.reduce(function(a,b){ return a+b; },0) / vals.length;
+      sleepEl.textContent = avg.toFixed(1) + ' h';
+      var maxH = Math.max(9.5, Math.max.apply(null, vals) + 0.5);
+      barsEl.innerHTML = vals.map(function(v){
+        return '<div class="bar-track"><div class="bar-fill-v' + (v>=8?' hi':'') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div></div>';
+      }).join('');
+      document.getElementById('weekSleepLabels').innerHTML = labels.map(function(d){ return '<span>' + d + '</span>'; }).join('');
+    }
+  }
+
   function renderSessionsAndSleep(){
     var today = new Date();
     var y = today.getFullYear(), m = today.getMonth();
@@ -1535,6 +1787,12 @@
     if(!healthLoaded){
       if(listEl) listEl.innerHTML = '<div class="list-empty">Hämtar hälsodata... (fungerar när sidan är publicerad på GitHub Pages)</div>';
       return;
+    }
+    var srcNoteEl = document.getElementById('healthSourceNote');
+    if(srcNoteEl){
+      srcNoteEl.innerHTML = healthLoaded === 'demo'
+        ? '<div class="dot" style="background:var(--accent);"></div>Exempeldata visas — kunde inte hämta riktig hälsodata just nu (fungerar på GitHub Pages).'
+        : '<div class="dot"></div>Hämtas automatiskt från Apple Health via samma pipeline som veckovyn — passtyp, steg och energi grupperas per kalendermånad.';
     }
 
     var workouts = workoutsInRange(monthStart, monthEnd).sort(function(a,b){ return (b.start||'').localeCompare(a.start||''); });
@@ -1602,7 +1860,7 @@
       } else {
         var maxH = Math.max(9.5, Math.max.apply(null, sleepVals) + 0.5);
         barsEl.innerHTML = sleepVals.map(function(v){
-          return '<div class="bar' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div>';
+          return '<div class="bar-track"><div class="bar-fill-v' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div></div>';
         }).join('');
         document.getElementById('sleepLabels').innerHTML = sleepDayLabels.map(function(d){ return '<span>' + d + '</span>'; }).join('');
         var avg = sleepVals.reduce(function(a,b){ return a+b; },0) / sleepVals.length;
@@ -1620,7 +1878,21 @@
     document.getElementById('yearLabel').textContent = currentYear();
     document.getElementById('yearPicker').value = currentYear();
     renderYearReset();
-    renderYearBuckets();
+    renderYearGoals();
+  }
+  function renderYearGoals(){
+    var el = document.getElementById('yearGoalsList');
+    var subEl = document.getElementById('yearGoalsSub');
+    if(!el) return;
+    var y = currentYear();
+    if(subEl) subEl.textContent = 'mål från Mål-sidan vars deadline faller i ' + y;
+    var idxs = lifeGoals.map(function(g, i){ return i; }).filter(function(i){ return goalYearOf(lifeGoals[i]) === y; });
+    el.innerHTML = idxs.length === 0
+      ? '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga mål med deadline i ' + y + ' ännu.</li>'
+      : idxs.map(function(i){
+          var g = lifeGoals[i];
+          return '<li class="' + (g.completed?'done':'') + '" onclick="toggleGoalCompleted(' + i + ');renderYearGoals();"><span class="box">' + (g.completed?'✓':'') + '</span><span class="t">' + g.title + ' <span style="color:var(--text-soft);font-size:11px;">— ' + g.progress + '% · ' + g.deadline + '</span></span></li>';
+        }).join('');
   }
   function populateYearPicker(){
     var picker = document.getElementById('yearPicker');
@@ -1653,26 +1925,6 @@
   }
   function saveYearReset(i, val){ ensureYear(currentYear()).resets[i] = val; }
 
-  function renderYearBuckets(){
-    var y = currentYear();
-    var data = ensureYear(y);
-    document.getElementById('yearBucketList').innerHTML = data.buckets.map(function(b, i){
-      return '<li><span>' + b + '</span><span class="x" onclick="removeYearBucket(' + i + ')">×</span></li>';
-    }).join('');
-  }
-  function addYearBucket(){
-    var input = document.getElementById('yearBucketInput');
-    var val = input.value.trim();
-    if(!val) return;
-    ensureYear(currentYear()).buckets.push(val);
-    input.value = '';
-    renderYearBuckets();
-  }
-  function removeYearBucket(i){
-    ensureYear(currentYear()).buckets.splice(i,1);
-    renderYearBuckets();
-  }
-
   function renderYearHabitsBars(){
     var monthLabels = [];
     var bars = [];
@@ -1686,9 +1938,61 @@
       monthLabels.push(monthNamesShort[m]);
     }
     document.getElementById('yearHabitsBars').innerHTML = bars.map(function(pct){
-      return '<div class="bar' + (pct >= 60 ? ' hi' : '') + '" style="height:' + Math.max(pct,3) + '%;" title="' + pct + '%"></div>';
+      return '<div class="bar-track"><div class="bar-fill-v' + (pct >= 60 ? ' hi' : '') + '" style="height:' + Math.max(pct,3) + '%;" title="' + pct + '%"></div></div>';
     }).join('');
     document.getElementById('yearHabitsLabels').innerHTML = '<span>' + monthLabels[0] + '</span><span>' + monthLabels[11] + '</span>';
+    renderYearCombinedChart();
+  }
+
+  function renderYearCombinedChart(){
+    var chartEl = document.getElementById('yearCombinedChart');
+    var legendEl = document.getElementById('yearCombinedLegend');
+    if(!chartEl) return;
+    var y = currentYear();
+    var monthPct = {};
+    allHabitRows.forEach(function(h){ monthPct[h] = []; });
+    for(var m = 0; m < 12; m++){
+      var daysInM = new Date(y, m+1, 0).getDate();
+      allHabitRows.forEach(function(h){
+        var done = 0;
+        for(var d = 1; d <= daysInM; d++){
+          var dk = y + '-' + pad2(m+1) + '-' + pad2(d);
+          if(habitState[h] && habitState[h][dk]) done++;
+        }
+        monthPct[h].push(Math.round((done/daysInM)*100));
+      });
+    }
+    var palette = ['#BC7A67','#7E8F6D','#8E7CC3','#4F86C6','#D6A85A','#C97B9A','#5FA8A0','#B85C5C','#7C9E5C','#A88BC9'];
+    var w = 700, h = 220, padL = 28, padR = 10, padT = 10, padB = 22;
+    var plotW = w - padL - padR, plotH = h - padT - padB;
+    var stepX = plotW / 11;
+    var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:auto;display:block;">';
+    [0,25,50,75,100].forEach(function(v){
+      var yy = padT + plotH - (v/100)*plotH;
+      svg += '<line x1="' + padL + '" y1="' + yy + '" x2="' + (w-padR) + '" y2="' + yy + '" stroke="#E4DCC8" stroke-width="1"></line>';
+      svg += '<text x="2" y="' + (yy+3) + '" font-size="8" fill="#93897A">' + v + '</text>';
+    });
+    monthNamesShort.forEach(function(mn, i){
+      var x = padL + i*stepX;
+      svg += '<text x="' + x + '" y="' + (h-6) + '" font-size="8" fill="#93897A" text-anchor="middle">' + mn + '</text>';
+    });
+    allHabitRows.forEach(function(hrow, i){
+      var color = palette[i % palette.length];
+      var pts = monthPct[hrow].map(function(v, mi){
+        var x = padL + mi*stepX;
+        var yy = padT + plotH - (v/100)*plotH;
+        return x.toFixed(1) + ',' + yy.toFixed(1);
+      }).join(' ');
+      svg += '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="1.8" opacity="0.85"></polyline>';
+    });
+    svg += '</svg>';
+    chartEl.innerHTML = svg;
+    if(legendEl){
+      legendEl.innerHTML = allHabitRows.map(function(hrow, i){
+        var color = palette[i % palette.length];
+        return '<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;margin-right:12px;margin-bottom:5px;"><span style="width:9px;height:9px;border-radius:50%;background:' + color + ';display:inline-block;"></span>' + hrow + '</span>';
+      }).join('');
+    }
   }
 
   function renderYearSessionsAndSleep(){
@@ -1706,7 +2010,7 @@
     var sleepVals = [7.1, 6.9, 7.4, 7.6, 7.2, 6.8, 7.9, 8.1, 7.7, 7.0, 6.6, 7.3];
     var maxH = 9;
     document.getElementById('yearSleepBars').innerHTML = sleepVals.map(function(v){
-      return '<div class="bar' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div>';
+      return '<div class="bar-track"><div class="bar-fill-v' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div></div>';
     }).join('');
     document.getElementById('yearSleepLabels').innerHTML = monthNamesShort.map(function(m){ return '<span>' + m + '</span>'; }).join('');
     var avg = sleepVals.reduce(function(a,b){ return a+b; },0) / sleepVals.length;
@@ -1715,10 +2019,9 @@
   }
 
   var arkivCategories = [
-    { key:'recept', name:'Recept', color:'#BC7A67', colorSoft:'#F1DCD2', subs:['Alla recept','Favoriter','Att testa'] },
-    { key:'matideer', name:'Matidéer', color:'#7E8F6D', colorSoft:'#E4EADF', subs:['Idébank','Veckomeny'] },
-    { key:'bocker', name:'Böcker', color:'#4F86C6', colorSoft:'#DCE6F0', subs:['Läser nu','Lästa','Vill läsa'] },
-    { key:'studera', name:'Studera', color:'#8E7CC3', colorSoft:'#E3D9EF', subs:['Anteckningar','Att göra'] }
+    { key:'recept', name:'Recept', color:'#BC7A67', colorSoft:'#F1DCD2' },
+    { key:'bocker', name:'Böcker', color:'#4F86C6', colorSoft:'#DCE6F0' },
+    { key:'studera', name:'Studera', color:'#8E7CC3', colorSoft:'#E3D9EF' }
   ];
   var arkivData = {};
   arkivCategories.forEach(function(c){ arkivData[c.key] = []; });
@@ -1728,7 +2031,6 @@
     document.getElementById('arkivGrid').innerHTML = arkivCategories.map(function(c){
       return '<div class="arkiv-box' + (c.key === currentArkivCat ? ' active' : '') + '" style="--cat-color:' + c.color + ';--cat-color-soft:' + c.colorSoft + ';" onclick="selectArkivCat(\'' + c.key + '\')">' +
         '<div class="arkiv-title">' + c.name + '</div>' +
-        c.subs.map(function(s){ return '<div class="arkiv-sub">' + s + '</div>'; }).join('') +
         '</div>';
     }).join('');
   }
@@ -1986,6 +2288,45 @@
     if(!categoryColorMap[cat]) categoryColorMap[cat] = categoryPalette[Object.keys(categoryColorMap).length % categoryPalette.length];
     return categoryColorMap[cat];
   }
+  var goalYearFilter = 'alla';
+  function goalYearOf(g){
+    if(!g.deadline) return null;
+    return parseInt(g.deadline.slice(0,4), 10);
+  }
+  function filteredGoalIndices(){
+    var thisYear = new Date().getFullYear();
+    return lifeGoals.map(function(g, i){ return i; }).filter(function(i){
+      var g = lifeGoals[i];
+      if(goalYearFilter === 'alla') return true;
+      if(goalYearFilter === 'none') return !g.deadline;
+      if(goalYearFilter === 'later'){
+        var y = goalYearOf(g);
+        return y && y > thisYear + 1;
+      }
+      return goalYearOf(g) === parseInt(goalYearFilter, 10);
+    });
+  }
+  function renderGoalYearFilterRow(){
+    var el = document.getElementById('goalYearFilterRow');
+    if(!el) return;
+    var years = {};
+    lifeGoals.forEach(function(g){ var y = goalYearOf(g); if(y) years[y] = true; });
+    var thisYear = new Date().getFullYear();
+    var yearList = Object.keys(years).map(Number).filter(function(y){ return y <= thisYear + 1; }).sort();
+    var hasLater = Object.keys(years).map(Number).some(function(y){ return y > thisYear + 1; });
+    var opts = [{ key:'alla', label:'Alla' }].concat(yearList.map(function(y){ return { key:String(y), label:String(y) }; }));
+    if(hasLater) opts.push({ key:'later', label:'Längre fram' });
+    opts.push({ key:'none', label:'Ingen deadline' });
+    el.innerHTML = opts.map(function(o){
+      return '<div class="cat-tab' + (goalYearFilter === o.key ? ' active' : '') + '" onclick="setGoalYearFilter(\'' + o.key + '\')">' + o.label + '</div>';
+    }).join('');
+  }
+  function setGoalYearFilter(key){
+    goalYearFilter = key;
+    renderGoalYearFilterRow();
+    renderGoalsTable();
+  }
+
   function setGoalView(v){
     goalView = v;
     document.getElementById('goalViewCards').classList.toggle('active', v==='cards');
@@ -1997,6 +2338,8 @@
     renderGoalsTable();
   }
   function renderGoalsTable(){
+    renderGoalYearFilterRow();
+    if(typeof renderYearGoals === 'function') renderYearGoals();
     if(goalView === 'cards'){
       renderGoalCards();
     } else if(goalView === 'table'){
@@ -2007,16 +2350,18 @@
   }
   function renderGoalTree(){
     var wrap = document.getElementById('goalTreeWrap');
-    if(lifeGoals.length === 0){ wrap.innerHTML = '<div class="list-empty">Inga mål ännu — lägg till ditt första.</div>'; return; }
+    var idxs = filteredGoalIndices();
+    if(idxs.length === 0){ wrap.innerHTML = '<div class="list-empty">Inga mål i den här perioden.</div>'; return; }
     var w = 700, h = 380;
     var originX = w/2, originY = h-20;
     var trunkTopY = originY - 70;
-    var n = lifeGoals.length;
+    var n = idxs.length;
     var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:auto;display:block;">';
     svg += '<line x1="' + originX + '" y1="' + originY + '" x2="' + originX + '" y2="' + trunkTopY + '" stroke="#BFA98F" stroke-width="6" stroke-linecap="round"></line>';
-    lifeGoals.forEach(function(g, i){
+    idxs.forEach(function(i, pos){
+      var g = lifeGoals[i];
       var c = cardPalette[i % cardPalette.length];
-      var t = n > 1 ? i / (n-1) : 0.5;
+      var t = n > 1 ? pos / (n-1) : 0.5;
       var endX = originX + (t - 0.5) * 2 * 260;
       var endY = trunkTopY - (50 + (g.progress/100) * 170) + Math.abs(t-0.5) * 30;
       var ctrlX = (originX + endX) / 2;
@@ -2034,8 +2379,10 @@
   }
   function renderGoalCards(){
     var grid = document.getElementById('goalsCardGrid');
-    if(lifeGoals.length === 0){ grid.innerHTML = '<div class="list-empty">Inga mål ännu — lägg till ditt första.</div>'; return; }
-    grid.innerHTML = lifeGoals.map(function(g, i){
+    var idxs = filteredGoalIndices();
+    if(idxs.length === 0){ grid.innerHTML = '<div class="list-empty">Inga mål i den här perioden.</div>'; return; }
+    grid.innerHTML = idxs.map(function(i){
+      var g = lifeGoals[i];
       var c = cardPalette[i % cardPalette.length];
       return '<div class="recipe-card" style="background:' + c.bg + ';border:none;padding:14px;cursor:pointer;" onclick="openGoalDetail(' + i + ')">' +
         '<div style="font-size:13px;font-weight:600;color:' + c.fg + ';margin-bottom:10px;">' + g.title + '</div>' +
@@ -2046,11 +2393,13 @@
   }
   function renderGoalTableRows(){
     var table = document.getElementById('goalsTable');
-    if(lifeGoals.length === 0){
-      table.innerHTML = '<tr><td class="rowlabel" style="padding:10px 0;">Inga mål ännu — lägg till ditt första.</td></tr>';
+    var idxs = filteredGoalIndices();
+    if(idxs.length === 0){
+      table.innerHTML = '<tr><td class="rowlabel" style="padding:10px 0;">Inga mål i den här perioden.</td></tr>';
       return;
     }
-    var rows = lifeGoals.map(function(g, i){
+    var rows = idxs.map(function(i){
+      var g = lifeGoals[i];
       var expanded = !!expandedGoals[i];
       var arrow = g.milestones.length ? '<span onclick="event.stopPropagation();toggleGoalExpand(' + i + ')" style="cursor:pointer;display:inline-block;width:14px;">' + (expanded ? '▾' : '▸') + '</span>' : '<span style="display:inline-block;width:14px;"></span>';
       var mainRow = '<tr>' +
@@ -2329,21 +2678,24 @@
     'Dosed': [ {t:'Färdig visuell identitet', done:false}, {t:'Fysisk mockup klar', done:false} ],
     'Hälsa': [ {t:'Slutföra 75 Hard', done:false} ],
     'Ekonomi': [],
+    'TikTok': [],
     'Personligt': []
   };
   var currentCat = 'Dosed';
-  var catOrder = ['Dosed','Hälsa','Ekonomi','Personligt'];
+  var catOrder = ['Dosed','Hälsa','Ekonomi','TikTok','Personligt'];
+  var catColors = { 'Dosed':'#8E7CC3', 'Hälsa':'#65673F', 'Ekonomi':'#D6A85A', 'TikTok':'#FB4F74', 'Personligt':'#4F86C6' };
   function renderGoals(){
     var quad = document.getElementById('q_goalQuad');
     quad.innerHTML = catOrder.map(function(cat){
       var list = goals[cat];
+      var color = catColors[cat] || 'var(--text)';
       var body = list.length === 0
         ? '<div class="empty">Inga mål ännu</div>'
         : list.map(function(g, i){
             return '<div class="goal-row' + (g.done ? ' done' : '') + '" onclick="toggleGoal(\'' + cat + '\',' + i + ')">' +
               '<div class="box">' + (g.done ? '✓' : '') + '</div><span class="t">' + g.t + '</span></div>';
           }).join('');
-      return '<div class="goal-quad-card"><div class="cat-name">' + cat + '</div>' + body + '</div>';
+      return '<div class="goal-quad-card" style="border-left:4px solid ' + color + ';"><div class="cat-name" style="color:' + color + ';">' + cat + '</div>' + body + '</div>';
     }).join('');
     var total = 0, done = 0;
     Object.keys(goals).forEach(function(k){ goals[k].forEach(function(g){ total++; if(g.done) done++; }); });
@@ -2432,6 +2784,89 @@
     input.value = '';
     renderWins();
   }
+  var bucketCategories = [
+    { key:'resa', name:'Resa', color:'#4F86C6', colorSoft:'#DCE6F0', keywords:['resa','resor','åka','flyg','semester','utomlands','backpack'] },
+    { key:'halsa', name:'Hälsa', color:'#65673F', colorSoft:'#EAEBDF', keywords:['hälsa','träna','vikt','kropp','löp','yoga','kost','sova','kg'] },
+    { key:'pengar', name:'Pengar', color:'#D6A85A', colorSoft:'#F3E7D0', keywords:['pengar','spara','ekonomi','investera','lön','budget','kr','buffert'] },
+    { key:'foretag', name:'Företag', color:'#8E7CC3', colorSoft:'#E3D9EF', keywords:['dosed','företag','jobb','karriär','business','kund','tiktok','follow','följare'] },
+    { key:'personligt', name:'Personligt', color:'#FB4F74', colorSoft:'#FDE1E7', keywords:['relation','familj','vän','hobby','lära','lär mig','skriv'] },
+    { key:'ovrigt', name:'Övrigt', color:'#8C8574', colorSoft:'#EDEAE0', keywords:[] }
+  ];
+  var bucketItems = [];
+  function categorizeBucketText(text){
+    var lower = text.toLowerCase();
+    for(var i = 0; i < bucketCategories.length - 1; i++){
+      var cat = bucketCategories[i];
+      if(cat.keywords.some(function(k){ return lower.indexOf(k) > -1; })) return cat.key;
+    }
+    return 'ovrigt';
+  }
+  function renderBucketList(){
+    var el = document.getElementById('bucketListGroups');
+    if(!el) return;
+    var groups = {};
+    bucketItems.forEach(function(item, i){
+      if(!groups[item.category]) groups[item.category] = [];
+      groups[item.category].push(i);
+    });
+    var html = bucketCategories.map(function(cat){
+      var idxs = groups[cat.key];
+      if(!idxs || idxs.length === 0) return '';
+      var rows = idxs.map(function(i){
+        var item = bucketItems[i];
+        return '<div class="goal-row' + (item.done?' done':'') + '" onclick="toggleBucketItem(' + i + ')">' +
+          '<div class="box">' + (item.done?'✓':'') + '</div>' +
+          '<span class="t">' + item.text + (item.deadline ? ' <span style="color:var(--text-soft);font-size:11px;">— ' + item.deadline + '</span>' : '') + '</span></div>';
+      }).join('');
+      return '<div class="card"><div class="card-label" style="color:' + cat.color + ';">' + cat.name + '</div>' + rows + '</div>';
+    }).join('');
+    el.innerHTML = html || '<div class="card"><div class="list-empty">Inget i bucket listen ännu — lägg till något du vill klara av.</div></div>';
+    saveAll();
+    renderAllBucketPeriodWidgets();
+  }
+  function addBucketItem(){
+    var input = document.getElementById('bl_text');
+    var text = input.value.trim();
+    if(!text) return;
+    var deadline = document.getElementById('bl_deadline').value;
+    bucketItems.push({ text:text, category:categorizeBucketText(text), deadline:deadline, done:false });
+    input.value = '';
+    document.getElementById('bl_deadline').value = '';
+    renderBucketList();
+  }
+  function toggleBucketItem(i){
+    bucketItems[i].done = !bucketItems[i].done;
+    if(bucketItems[i].done) celebrate();
+    renderBucketList();
+  }
+  function bucketItemsDueInRange(startStr, endStr){
+    return bucketItems.filter(function(item){ return item.deadline && item.deadline >= startStr && item.deadline <= endStr && !item.done; });
+  }
+  function renderBucketPeriodWidget(containerId, startStr, endStr){
+    var el = document.getElementById(containerId);
+    if(!el) return;
+    var items = bucketItemsDueInRange(startStr, endStr);
+    el.innerHTML = items.length === 0
+      ? '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga bucket list-mål med deadline i den här perioden.</li>'
+      : items.map(function(item){
+          var i = bucketItems.indexOf(item);
+          return '<li onclick="toggleBucketItem(' + i + ')"><span class="box"></span><span class="t">' + item.text + ' <span style="color:var(--text-soft);font-size:11px;">— ' + item.deadline + '</span></span></li>';
+        }).join('');
+  }
+  function renderAllBucketPeriodWidgets(){
+    renderBucketPeriodWidget('weekBucketItems', isoDate(REAL_WEEK_DATES[0]), isoDate(REAL_WEEK_DATES[6]));
+    var today = new Date();
+    var monthStart = today.getFullYear() + '-' + pad2(today.getMonth()+1) + '-01';
+    var monthEnd = today.getFullYear() + '-' + pad2(today.getMonth()+1) + '-' + pad2(new Date(today.getFullYear(), today.getMonth()+1, 0).getDate());
+    renderBucketPeriodWidget('monthBucketItems', monthStart, monthEnd);
+    var qInfo = quarterInfoFor(quarterOffset);
+    var qStartMonth = (qInfo.q - 1) * 3;
+    var qStart = qInfo.year + '-' + pad2(qStartMonth+1) + '-01';
+    var qEndDate = new Date(qInfo.year, qStartMonth+3, 0);
+    var qEnd = qInfo.year + '-' + pad2(qEndDate.getMonth()+1) + '-' + pad2(qEndDate.getDate());
+    renderBucketPeriodWidget('quarterBucketItems', qStart, qEnd);
+  }
+
   var quarterIdeas = [];
   function renderIdeas(){
     var el = document.getElementById('q_ideaList');
@@ -2445,15 +2880,15 @@
     var val = input.value.trim();
     if(!val) return;
     quarterIdeas.push(val);
+    bucketItems.push({ text:val, category:categorizeBucketText(val), deadline:'', done:false });
     input.value = '';
     renderIdeas();
+    renderBucketList();
   }
 
   var STORAGE_KEY = 'livsdashboard_v1';
   function saveAll(){
     try{
-      var savedInput = document.getElementById('savedAmountInput');
-      var goalInput = document.getElementById('savingsGoalInput');
       var reflInput = document.getElementById('w_reflectionText');
       var state = {
         weekGoals: weekGoals, habitState: habitState, tasksByDay: tasksByDay, calEvents: calEvents,
@@ -2462,19 +2897,15 @@
         goals: goals, quarterBooks: quarterBooks, quarterWins: quarterWins, quarterIdeas: quarterIdeas,
         dosedLog: dosedLog, tiktokLog: tiktokLog, arkivData: arkivData, recipes: recipes,
         studyPlans: studyPlans, books: books, lifeGoals: lifeGoals, goalActionIdCounter: goalActionIdCounter,
-        monthlyData: monthlyData, yearData: yearData,
+        monthlyData: monthlyData, yearData: yearData, savingsGoals: savingsGoals, bucketItems: bucketItems,
         weekOffset: weekOffset, quarterOffset: quarterOffset, yearOffset: yearOffset, dagligenWeekOffset: dagligenWeekOffset,
         selectedDate: selectedDate, currentCat: currentCat, currentArkivCat: currentArkivCat,
         bookFilter: bookFilter, recipeView: recipeView, goalView: goalView,
-        categoryColorMap: categoryColorMap,
-        savedAmount: savedInput ? savedInput.value : '',
-        savingsGoalVal: goalInput ? goalInput.value : ''
+        categoryColorMap: categoryColorMap
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch(e){ /* lagring otillgänglig eller full — misslyckas tyst */ }
   }
-  var restoredSavedAmount = '';
-  var restoredSavingsGoal = '';
   function loadAll(){
     try{
       var raw = localStorage.getItem(STORAGE_KEY);
@@ -2512,8 +2943,8 @@
       if(s.recipeView) recipeView = s.recipeView;
       if(s.goalView) goalView = s.goalView;
       if(s.categoryColorMap) categoryColorMap = s.categoryColorMap;
-      restoredSavedAmount = s.savedAmount || '';
-      restoredSavingsGoal = s.savingsGoalVal || '';
+      if(s.savingsGoals) savingsGoals = s.savingsGoals;
+      if(s.bucketItems) bucketItems = s.bucketItems;
     } catch(e){ /* korrupt data — kör vidare med standardvärden */ }
   }
   var saveDebounceTimer = null;
@@ -2528,6 +2959,108 @@
 
   loadAll();
 
+  function seedIfEmpty(){
+    if(weekGoals.length === 0){
+      weekGoals.push('Träna 5 gånger', 'Klar med Dosed-förpackning', 'Filma 3 TikTok-klipp');
+    }
+    if(lifeGoals.length === 0){
+      lifeGoals.push(
+        { title:'Gå ner till 65kg', category:'Hälsa & fitness', completed:false, progress:67, deadline:'2026-12-31',
+          milestones:[{title:'Nå 69 kg',done:true},{title:'Nå 67 kg',done:true},{title:'Nå 65 kg',done:false}],
+          actions:[{id:++goalActionIdCounter,text:'Väga mig varje söndag',freq:'Veckovis',done:true},{id:++goalActionIdCounter,text:'Hålla kaloriunderskott',freq:'Dagligen',done:false}] },
+        { title:'Nå 5000 följare på TikTok', category:'Karriär & professionellt', completed:false, progress:20, deadline:'2026-12-31',
+          milestones:[{title:'1000 följare',done:true},{title:'3000 följare',done:false},{title:'5000 följare',done:false}],
+          actions:[{id:++goalActionIdCounter,text:'Posta ett klipp',freq:'Dagligen',done:false},{id:++goalActionIdCounter,text:'Planera veckans innehåll',freq:'Veckovis',done:false}] },
+        { title:'Klara 3 strikta pull-ups', category:'Hälsa & fitness', completed:true, progress:100, deadline:'2026-12-31', milestones:[], actions:[] }
+      );
+    }
+    if(Object.values(habitState).every(function(h){ return Object.keys(h).length === 0; })){
+      var seedDays = REAL_WEEK_DATES.slice(0,4).map(function(d){ return isoDate(d); });
+      seedDays.forEach(function(dk, i){
+        habitState['🥗 Hållt diet'][dk] = true;
+        habitState['📖 Läst 10 sidor'][dk] = i % 2 === 0;
+        habitState['🚫 Ingen alkohol'][dk] = true;
+        habitState['🚶 Promenad 30-45 min'][dk] = i < 3;
+        habitState['🏋️ Träning inne 30-45 min'][dk] = i % 2 === 1;
+        habitState['📝 Dokumenterat dagen'][dk] = true;
+        habitState['🧘 Meditation'][dk] = i < 2;
+      });
+    }
+    if(recipes.length === 0){
+      recipes.push(
+        { title:'Overnight oats', imageUrl:'', course:'Frukost', calories:'350', carbs:'45', fat:'10', protein:'12', time:'10 min', servings:'1', ingredients:['Havregryn','Skyr','Bär','Chiafrön'], equipment:['Burk'], steps:['Blanda allt','Ställ i kylen över natten'], rating:'4' },
+        { title:'Kycklingbowl med quinoa', imageUrl:'', course:'Middag', calories:'520', carbs:'42', fat:'14', protein:'38', time:'25 min', servings:'2', ingredients:['Kycklingfilé','Quinoa','Broccoli','Avokado'], equipment:['Stekpanna','Kastrull'], steps:['Koka quinoa','Stek kyckling','Blanda ihop'], rating:'5' }
+      );
+    }
+    if(books.length === 0){
+      books.push(
+        { title:'Atomic Habits', author:'James Clear', cover:'', genre:'Självutveckling', status:'Läser', progress:60, rating:0 },
+        { title:'Wabi Sabi', author:'Beth Kempton', cover:'', genre:'Mindfulness', status:'Läst', progress:100, rating:4 }
+      );
+    }
+    if(studyPlans.length === 0){
+      studyPlans.push(
+        { title:'Psykologi 1: Kapitel 3', type:'Begreppsrepetition', lecture:'Föreläsning 2', status:'Pågår', start:'2026-09-09', end:'2026-09-13' },
+        { title:'Marknadsföring: Modul 2', type:'Problemlösning', lecture:'Öva-modul', status:'Inte påbörjad', start:'2026-09-15', end:'' }
+      );
+    }
+    if(quarterBooks.length === 0) quarterBooks.push('Atomic Habits');
+    if(quarterWins.length === 0) quarterWins.push('Klarade första 75 Hard-veckan', 'Publicerade Dosed-teaser på TikTok');
+    if(quarterIdeas.length === 0) quarterIdeas.push('Samarbete med lokal gymkedja', 'Prova en pop-up för Dosed');
+    if(bucketItems.length === 0){
+      bucketItems.push(
+        { text:'Resa till Japan', category:'resa', deadline:'2027-06-01', done:false },
+        { text:'Nå 65kg', category:'halsa', deadline:'2026-12-31', done:false },
+        { text:'Bygga 30 000 kr buffert', category:'pengar', deadline:'2026-12-31', done:false },
+        { text:'Lansera Dosed', category:'foretag', deadline:'2026-11-30', done:false }
+      );
+    }
+    if(savingsGoals.length === 0){
+      savingsGoals.push(
+        { name:'Buffert', saved:18000, target:30000 },
+        { name:'Investeringar', saved:42000, target:100000 },
+        { name:'Resor', saved:6500, target:15000 },
+        { name:'Pension', saved:9000, target:50000 }
+      );
+    }
+    if(dosedLog.length === 0) dosedLog.push('9 sep · Skickade wordmark till tryckeriet');
+    if(tiktokLog.length === 0) tiktokLog.push('9 sep · Filmade gymklipp för fredag');
+  }
+  seedIfEmpty();
+
+  var healthDemoTimeout = setTimeout(function(){
+    if(healthLoaded) return;
+    healthLoaded = 'demo';
+    var today = new Date();
+    var y = today.getFullYear(), m = today.getMonth();
+    var stepPts = [], energyPts = [], sleepPts = [];
+    for(var i = 1; i <= 10; i++){
+      var d = new Date(y, m, i);
+      var dstr = isoDate(d) + ' 12:00:00 +0200';
+      stepPts.push({ date: dstr, qty: 6000 + Math.round(Math.random()*6000) });
+      energyPts.push({ date: dstr, qty: 250 + Math.round(Math.random()*200) });
+    }
+    for(var j = 6; j >= 0; j--){
+      var sd = new Date(); sd.setDate(sd.getDate()-j);
+      sleepPts.push({ date: isoDate(sd) + ' 00:00:00 +0200', totalSleep: 6.2 + Math.random()*2.5 });
+    }
+    healthData.metrics = [
+      { name:'step_count', units:'count', data: stepPts },
+      { name:'active_energy', units:'kcal', data: energyPts },
+      { name:'weight_body_mass', units:'kg', data: [{ date: isoDate(new Date(y,m,8))+' 08:00:00 +0200', qty: 66.4 }] },
+      { name:'sleep_analysis', units:'hr', data: sleepPts }
+    ];
+    healthData.workouts = [
+      { name:'Yoga', start: isoDate(new Date(y,m,8))+' 20:48:00 +0200', duration: 900 },
+      { name:'Utomhusgång', start: isoDate(new Date(y,m,7))+' 07:30:00 +0200', duration: 1800 },
+      { name:'Styrketräning', start: isoDate(new Date(y,m,5))+' 17:00:00 +0200', duration: 2700 },
+      { name:'Löpning', start: isoDate(new Date(y,m,3))+' 06:45:00 +0200', duration: 1500 }
+    ];
+    renderSessionsAndSleep();
+    renderYearSessionsAndSleep();
+    renderWeekTrainingSleep();
+  }, 2500);
+
   renderWeekGoals();
   renderHabitTable();
   renderTaskDays();
@@ -2536,21 +3069,24 @@
   renderDaySelector();
   renderMoodRow();
   renderDailyHabits();
+  renderDailyTodo();
   renderDailyNoteArea();
   renderMeasureSection();
   renderWeekMoodSummary();
+  renderWeekDailyReflections();
   renderMonthAccordion();
   renderPrevMonthCard();
   renderSessionsAndSleep();
+  renderWeekTrainingSleep();
   fetchHealthData();
   fetchCalendarData();
   populateMonthPicker();
   populateWeekPicker();
   refreshWeekNav();
   populateQuarterPicker();
-  document.getElementById('savedAmountInput').value = restoredSavedAmount;
-  document.getElementById('savingsGoalInput').value = restoredSavingsGoal;
-  updateSavingsJar();
+  refreshQuarterNav();
+  renderSavingsGoals();
+  renderBucketList();
   renderHabitsView();
   populateYearPicker();
   refreshYearNav();
