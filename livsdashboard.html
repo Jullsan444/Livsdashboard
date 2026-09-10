@@ -1,0 +1,2410 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livsdashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3EEE4;--surface:#FFFFFF;--surface-soft:#FBF8F2;--border:#E4DCC8;
+    --text:#2C2620;--text-soft:#93897A;--accent:#BC7A67;--accent-soft:#F1DCD2;
+    --sage:#7E8F6D;--sage-soft:#E4EADF;--radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px;}
+
+  .top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:16px;}
+  .tag{font-size:12px;color:var(--text-soft);margin-bottom:4px;}
+  .title{font-size:28px;margin:0;font-weight:600;}
+  .title em{font-family:'Lora',serif;font-style:italic;font-weight:400;color:var(--text-soft);}
+  .datebox{text-align:right;font-size:13px;color:var(--text-soft);}
+  .weeknav{display:flex;align-items:center;gap:10px;margin-top:6px;justify-content:flex-end;}
+  .weeknav button{background:none;border:none;cursor:pointer;color:var(--text-soft);font-size:15px;padding:2px 6px;}
+  .weeknav button:hover{color:var(--text);}
+  .weeknav span{font-size:13px;color:var(--text);}
+
+  .tabs{display:flex;gap:6px;margin:22px 0 26px;flex-wrap:wrap;}
+  .tab{border:1px solid var(--border);background:var(--surface);font-size:13px;padding:7px 15px;border-radius:20px;cursor:pointer;color:var(--text-soft);transition:background .15s,color .15s;}
+  .tab:hover{background:var(--surface-soft);}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .quote{text-align:center;font-family:'Lora',serif;font-style:italic;font-size:16px;color:var(--text-soft);padding:16px 0 26px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+  .card-label{font-size:12px;color:var(--text-soft);margin-bottom:2px;}
+  .card-sub{font-size:11px;color:var(--text-soft);margin-bottom:14px;}
+
+  .goal-list{list-style:none;margin:0 0 12px;padding:0;font-size:14px;display:flex;flex-direction:column;gap:8px;}
+  .goal-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .goal-list li .x{cursor:pointer;color:var(--text-soft);font-size:13px;opacity:0;transition:opacity .15s;}
+  .goal-list li:hover .x{opacity:1;}
+  .empty-note{font-size:13px;color:var(--text-soft);font-style:italic;margin-bottom:10px;}
+  .add-row{display:flex;gap:8px;}
+  .add-row input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--surface-soft);}
+  .add-row button{border:1px solid var(--border);background:var(--surface-soft);border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;color:var(--text-soft);}
+  .add-row button:hover{color:var(--text);}
+
+  .task-list{list-style:none;margin:0 0 8px;padding:0;font-size:13px;display:flex;flex-direction:column;gap:7px;}
+  .task-list li{display:flex;align-items:center;gap:9px;cursor:pointer;}
+  .task-list li .box{width:15px;height:15px;border-radius:4px;border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;}
+  .task-list li.done .box{background:var(--sage);border-color:var(--sage);}
+  .task-list li.done span.t{text-decoration:line-through;color:var(--text-soft);}
+
+  .status-row{display:flex;gap:6px;margin-top:12px;}
+  .status-pill{border:1px solid var(--border);background:var(--surface-soft);font-size:11px;padding:5px 11px;border-radius:20px;cursor:pointer;color:var(--text-soft);}
+  .status-pill.active{background:var(--sage-soft);border-color:var(--sage);color:var(--sage);}
+
+  textarea{width:100%;min-height:70px;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical;background:var(--surface-soft);color:var(--text);}
+  .reflect-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .save-btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:7px 16px;font-size:13px;cursor:pointer;margin-top:10px;}
+  .save-btn:hover{opacity:.9;}
+  .saved-note{font-size:12px;color:var(--sage);margin-left:10px;}
+  .change-btn{border:1px solid var(--border);background:var(--surface-soft);font-size:12px;padding:5px 12px;border-radius:20px;cursor:pointer;color:var(--text-soft);}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+  @media (max-width:640px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--surface-soft);border-radius:10px;padding:14px;}
+  .stat .lbl{font-size:11px;color:var(--text-soft);}
+  .stat .val{font-size:20px;font-weight:600;margin-top:4px;}
+  .stat .sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+  .breakdown{display:flex;flex-direction:column;gap:10px;}
+  .breakdown-row{display:flex;align-items:center;gap:12px;}
+  .breakdown-row .name{font-size:13px;width:110px;flex-shrink:0;}
+  .breakdown-row .track{flex:1;height:8px;background:var(--surface-soft);border-radius:4px;overflow:hidden;}
+  .breakdown-row .fill{height:8px;border-radius:4px;background:var(--accent);}
+  .breakdown-row .count{font-size:12px;color:var(--text-soft);width:56px;text-align:right;flex-shrink:0;}
+  .source-note{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-soft);margin-top:14px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--sage);flex-shrink:0;}
+
+  .acc-item{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .acc-head{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;font-size:14px;}
+  .acc-head .radio{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;}
+  .acc-item.open .radio{border-color:var(--accent);background:var(--accent);}
+  .acc-head .q{flex:1;}
+  .acc-head .chev{color:var(--text-soft);font-size:12px;transition:transform .15s;}
+  .acc-item.open .chev{transform:rotate(180deg);}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .2s ease;padding:0 16px;}
+  .acc-item.open .acc-body{max-height:160px;padding-bottom:14px;}
+
+  .barchart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:8px;}
+  .barchart .bar{flex:1;background:var(--surface-soft);border-radius:4px 4px 0 0;}
+  .barchart .bar.hi{background:var(--accent);}
+  .barchart-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text-soft);margin-top:6px;}
+
+  .fin-row{margin-bottom:16px;}
+  .fin-row:last-child{margin-bottom:0;}
+  .fin-top{display:flex;justify-content:space-between;font-size:13px;font-weight:500;margin-bottom:6px;}
+  .fin-track{height:6px;background:var(--surface-soft);border-radius:4px;overflow:hidden;}
+  .fin-fill{height:6px;background:var(--accent);border-radius:4px;}
+  .fin-bottom{display:flex;justify-content:space-between;font-size:11px;color:var(--text-soft);margin-top:4px;}
+  .fin-net{display:flex;justify-content:space-between;font-size:13px;padding-top:12px;border-top:1px solid var(--border);margin-top:14px;}
+
+  .cat-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+  .cat-tab{border:1px solid var(--border);background:var(--surface-soft);font-size:12px;padding:6px 14px;border-radius:20px;cursor:pointer;color:var(--text-soft);}
+  .cat-tab.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+  .goal-panel{min-height:70px;margin-bottom:12px;}
+  .goal-panel .empty{font-size:13px;color:var(--text-soft);font-style:italic;}
+  .goal-quad{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  @media (max-width:640px){.goal-quad{grid-template-columns:1fr;}}
+  .goal-quad-card{background:var(--surface-soft);border-radius:10px;padding:12px;min-height:64px;}
+  .goal-quad-card .cat-name{font-size:12px;font-weight:600;margin-bottom:8px;}
+
+  .arkiv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+  @media (max-width:640px){.arkiv-grid{grid-template-columns:repeat(2,1fr);}}
+  .arkiv-box{border-radius:12px;padding:14px;cursor:pointer;border:2px solid var(--cat-color);background:var(--surface);transition:background .15s;}
+  .arkiv-box.active{background:var(--cat-color-soft);}
+  .arkiv-box .arkiv-title{font-weight:700;font-size:15px;color:var(--cat-color);margin-bottom:8px;}
+  .arkiv-box .arkiv-sub{font-size:11px;color:var(--text-soft);padding:2px 0;}
+
+  .recipe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+  @media (max-width:640px){.recipe-grid{grid-template-columns:1fr 1fr;}}
+  .recipe-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;background:var(--surface-soft);}
+  .recipe-img{width:100%;height:90px;object-fit:cover;display:block;}
+  .recipe-img-empty{display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--accent-soft);}
+  .recipe-card-body{padding:8px;}
+  .recipe-card-title{font-size:12px;font-weight:600;}
+  .recipe-card-meta{font-size:11px;color:var(--text-soft);margin-top:2px;}
+  #recipeFormOverlay select,#recipeFormOverlay input,#recipeFormOverlay textarea,
+  #studyFormOverlay select,#studyFormOverlay input,
+  #bookFormOverlay select,#bookFormOverlay input,
+  #goalFormOverlay select,#goalFormOverlay input{border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--surface-soft);color:var(--text);width:100%;}
+  #recipeFormOverlay textarea{min-height:50px;}
+  .goal-row{display:flex;align-items:center;gap:10px;font-size:14px;padding:7px 0;border-bottom:1px solid var(--border);}
+  .goal-row:last-child{border-bottom:none;}
+  .goal-row .box{width:15px;height:15px;border-radius:4px;border:1px solid var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;}
+  .goal-row.done .box{background:var(--sage);border-color:var(--sage);}
+  .goal-row.done span.t{text-decoration:line-through;color:var(--text-soft);}
+  .list-item{font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .list-item:last-child{border-bottom:none;}
+  .list-empty{font-size:12px;color:var(--text-soft);font-style:italic;margin-bottom:10px;}
+
+  .habit-table{width:100%;font-size:12px;border-collapse:collapse;}
+  .habit-table td{padding:7px 3px;text-align:center;}
+  .habit-table td.rowlabel{text-align:left;color:var(--text-soft);padding-right:10px;white-space:nowrap;font-size:12px;}
+  .habit-box{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:var(--surface-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:#fff;}
+  .habit-box.done{background:var(--accent);border-color:var(--accent);}
+  .habit-head{font-size:11px;color:var(--text-soft);}
+  .habit-percent{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
+  .habit-percent .pct{font-size:22px;font-weight:600;}
+
+  .day-block{padding:11px 0;border-bottom:1px solid var(--border);}
+  .day-block:last-child{border-bottom:none;}
+  .day-block .day-head{font-size:12px;color:var(--text-soft);margin-bottom:7px;font-weight:500;}
+  .day-block .add-row{margin-top:7px;}
+  .day-block .add-row input,.day-block .add-row button{font-size:12px;padding:6px 9px;}
+
+  .mood-row{display:flex;gap:8px;margin:6px 0 16px;}
+  .mood-btn{border:1px solid var(--border);background:var(--surface-soft);border-radius:10px;padding:10px 8px;font-size:22px;cursor:pointer;flex:1;text-align:center;}
+  .mood-btn.active{background:var(--accent-soft);border-color:var(--accent);}
+  .mood-btn .lbl{display:block;font-size:10px;color:var(--text-soft);margin-top:3px;}
+  .day-selector{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+  .day-sel{border:1px solid var(--border);background:var(--surface-soft);border-radius:14px;padding:7px 12px;font-size:12px;cursor:pointer;color:var(--text-soft);text-align:center;line-height:1.5;}
+  .day-sel.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .mood-summary{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+  .mood-chip{font-size:12px;background:var(--surface-soft);border-radius:20px;padding:5px 12px;color:var(--text-soft);}
+
+  .saved-box{border:1px solid var(--sage);background:var(--sage-soft);border-radius:10px;padding:14px;}
+  .saved-box-head{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--sage);font-weight:500;margin-bottom:8px;}
+  .saved-box-head i{font-style:normal;}
+  .saved-box-text{font-size:13px;color:var(--text);white-space:pre-wrap;margin-bottom:10px;}
+
+  .measure-box{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:18px;background:var(--surface-soft);}
+  .measure-note{font-size:13px;color:var(--text-soft);font-style:italic;}
+  .measure-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 12px;}
+  @media (max-width:640px){.measure-grid{grid-template-columns:repeat(2,1fr);}}
+  .measure-field label{display:block;font-size:11px;color:var(--text-soft);margin-bottom:4px;}
+  .measure-field input{width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:13px;font-family:inherit;background:var(--surface);}
+  .measure-summary{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-bottom:10px;}
+  .measure-summary span b{color:var(--text-soft);font-weight:400;font-size:11px;display:block;}
+
+  .week-nav-mini{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-soft);margin-bottom:2px;}
+  .week-nav-mini button{background:var(--surface-soft);border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text-soft);font-size:14px;padding:2px 8px;}
+  .week-nav-mini button:hover{color:var(--text);}
+  #datePicker{border:1px solid var(--border);border-radius:8px;padding:6px 9px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text);}
+  #monthPicker{border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text-soft);margin-left:8px;}
+  .gp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  @media (max-width:640px){.gp-grid{grid-template-columns:1fr;}}
+  .gp-card{background:var(--surface-soft);border:1px solid var(--border);border-radius:10px;padding:8px;}
+  .gp-title{font-size:11px;color:var(--text-soft);margin-bottom:4px;}
+  .session-row{display:flex;align-items:center;gap:12px;background:var(--surface-soft);border-radius:10px;padding:10px 12px;}
+  .session-icon{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .session-name{font-size:12px;color:var(--text-soft);}
+  .session-stat{font-size:16px;font-weight:600;color:var(--accent);margin-top:1px;}
+  .session-day{font-size:11px;color:var(--text-soft);margin-left:auto;}
+  #weekPicker,#quarterPicker{border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text-soft);margin-left:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top-row">
+    <div>
+      <div class="tag">livsdashboard</div>
+      <h1 class="title">Julia <em id="viewSubtitle">— denna vecka</em></h1>
+    </div>
+    <div class="datebox">
+      onsdag<br>9 september 2026 · Stockholm
+      <div class="weeknav" id="weekNavBox">
+        <button onclick="shiftWeek(-1)">‹</button>
+        <span id="weekLabel">Denna vecka</span>
+        <button onclick="shiftWeek(1)">›</button>
+        <select id="weekPicker" onchange="pickWeek(this.value)"></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabRow">
+    <div class="tab" data-view="dagligen" onclick="switchView('dagligen')">Dagligen</div>
+    <div class="tab active" data-view="week" onclick="switchView('week')">Week</div>
+    <div class="tab" data-view="month" onclick="switchView('month')">Month</div>
+    <div class="tab" data-view="quarter" onclick="switchView('quarter')">Quarter</div>
+    <div class="tab" data-view="dosed" onclick="switchView('dosed')">Dosed</div>
+    <div class="tab" data-view="tiktok" onclick="switchView('tiktok')">TikTok</div>
+    <div class="tab" data-view="habits" onclick="switchView('habits')">Habits</div>
+    <div class="tab" data-view="year" onclick="switchView('year')">Year</div>
+    <div class="tab" onclick="notReady()">Bucket list</div>
+    <div class="tab" data-view="arkiv" onclick="switchView('arkiv')">Arkiv</div>
+    <div class="tab" data-view="mal" onclick="switchView('mal')">Mål</div>
+  </div>
+
+  <div class="view active" id="view-week">
+    <div class="quote">"win or win, it's only cringe until it works"</div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-label">Veckans mål</div>
+        <ul class="goal-list" id="w_goalList"></ul>
+        <div class="empty-note" id="w_goalEmpty">Inga mål ännu — lägg till dina egna här.</div>
+        <div class="add-row">
+          <input type="text" id="w_goalInput" placeholder="Lägg till ett mål...">
+          <button onclick="addGoalW()">Lägg till</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label" id="hardCardLabel">75 Hard</div>
+        <div class="habit-percent"><span class="pct" id="habitPct">0%</span><span style="font-size:11px;color:var(--text-soft);">ifyllt denna vecka</span></div>
+        <div class="bar" style="margin-top:0;margin-bottom:14px;"><div class="bar-fill" id="habitBar" style="width:0%;"></div></div>
+        <table class="habit-table" id="habitTable"></table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Veckans tasks</div>
+      <div id="taskDays"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-label">Dosed — just nu</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:14px;font-weight:500;">Iconografi — koncept 2</div>
+            <div style="font-size:12px;color:var(--text-soft);margin-top:2px;">Halvton-mönster på förpackning</div>
+          </div>
+          <button class="change-btn" onclick="notReady()">Byt</button>
+        </div>
+        <div class="status-row">
+          <div class="status-pill active" onclick="setStatus(this)">Pågår</div>
+          <div class="status-pill" onclick="setStatus(this)">Pausad</div>
+          <div class="status-pill" onclick="setStatus(this)">Klar</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">TikTok — just nu</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:14px;font-weight:500;">Gymklipp — söndagens set</div>
+            <div style="font-size:12px;color:var(--text-soft);margin-top:2px;">Filmat, ej klippt än</div>
+          </div>
+          <button class="change-btn" onclick="notReady()">Byt</button>
+        </div>
+        <div class="status-row">
+          <div class="status-pill" onclick="setStatus(this)">Idé</div>
+          <div class="status-pill active" onclick="setStatus(this)">Filmat</div>
+          <div class="status-pill" onclick="setStatus(this)">Klippt</div>
+          <div class="status-pill" onclick="setStatus(this)">Postat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Kalender</div>
+      <div class="card-sub">manuellt tillagt tills iCal-import kopplas in</div>
+      <div id="calList">
+        <div class="list-item">12 sep · Fotografering — Dosed mockup, 14:00</div>
+      </div>
+      <div class="add-row">
+        <input type="text" id="calInput" placeholder="Lägg till händelse (datum + vad)...">
+        <button onclick="addCalEvent()">Lägg till</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="reflect-row">
+        <div class="card-label" style="margin:0;">Veckans reflektion</div>
+        <div style="font-size:12px;color:var(--text-soft);">9 sep 2026</div>
+      </div>
+      <textarea id="w_reflectionText" placeholder="Hur går veckan..."></textarea>
+      <div>
+        <button class="save-btn" onclick="saveReflectionW()">Spara</button>
+        <span class="saved-note" id="w_savedNote" style="display:none;">Sparad</span>
+      </div>
+      <div class="mood-summary" id="weekMoodSummary"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Mål — veckans actions</div>
+      <ul class="task-list" id="weekGoalActions"></ul>
+    </div>
+  </div>
+
+  <div class="view" id="view-dagligen">
+    <div class="card">
+      <div class="card-label">Vilken dag fyller du i?</div>
+      <div class="day-selector" id="daySelector"></div>
+
+      <div class="card-label">Hur mår du idag?</div>
+      <div class="mood-row" id="moodRow"></div>
+
+      <div class="card-label" id="dailyHabitLabel">75 Hard — Ons</div>
+      <ul class="task-list" id="dailyHabitList" style="margin-bottom:18px;"></ul>
+
+      <div class="card-label">Mål — dagens actions</div>
+      <ul class="task-list" id="dailyGoalActions" style="margin-bottom:18px;"></ul>
+
+      <div id="measureSection"></div>
+
+      <div class="card-label">Dagens reflektion</div>
+      <div id="dailyNoteEditArea">
+        <textarea id="dailyNote" placeholder="Vad hände idag..."></textarea>
+        <div>
+          <button class="save-btn" onclick="saveDailyLog()">Spara</button>
+        </div>
+      </div>
+      <div id="dailyNoteSavedArea" class="saved-box" style="display:none;">
+        <div class="saved-box-head"><i>✓</i> Reflektion sparad</div>
+        <div class="saved-box-text" id="dailyNoteSavedText"></div>
+        <button class="change-btn" onclick="editDailyLog()">Ändra</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-month">
+    <div class="top-row" style="margin-bottom:16px;">
+      <div></div>
+      <div class="weeknav" id="monthNavBox" style="margin-top:0;">
+        <button onclick="shiftMonth(-1)">‹</button>
+        <span id="monthLabel">September 2026</span>
+        <button onclick="shiftMonth(1)">›</button>
+        <select id="monthPicker" onchange="pickMonth(this.value)"></select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Träning denna månad</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="lbl">Pass totalt</div><div class="val">18</div><div class="sub">av 22 dagar</div></div>
+        <div class="stat"><div class="lbl">Steg totalt</div><div class="val">241 300</div><div class="sub">~10 970/dag</div></div>
+        <div class="stat"><div class="lbl">Aktiv energi</div><div class="val">8 640 cal</div><div class="sub">~392/dag</div></div>
+        <div class="stat"><div class="lbl">Snittvikt</div><div class="val">— kg</div><div class="sub">senaste mätning</div></div>
+      </div>
+      <div class="breakdown">
+        <div class="breakdown-row"><div class="name">Styrka</div><div class="track"><div class="fill" style="width:70%;"></div></div><div class="count">12 pass</div></div>
+        <div class="breakdown-row"><div class="name">Cardio / löpning</div><div class="track"><div class="fill" style="width:29%;"></div></div><div class="count">5 pass</div></div>
+        <div class="breakdown-row"><div class="name">Rörlighet / stretch</div><div class="track"><div class="fill" style="width:6%;"></div></div><div class="count">1 pass</div></div>
+      </div>
+      <div class="source-note"><div class="dot"></div>Hämtas automatiskt från Apple Health via samma pipeline som veckovyn — passtyp, steg och energi grupperas per kalendermånad.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Sessioner</div>
+      <div class="card-sub">september 2026 · exempeldata, riktiga passnamn kräver backend-utökningen</div>
+      <div id="sessionsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Sömn</div>
+      <div class="card-sub" id="sleepAvgLabel">Snitt: 7h 7min</div>
+      <div class="barchart" id="sleepBars" style="height:70px;"></div>
+      <div class="barchart-labels" id="sleepLabels"></div>
+    </div>
+
+    <div class="card" id="prevMonthCard"></div>
+
+    <div class="card">
+      <div class="card-label">Mål — månadens actions</div>
+      <ul class="task-list" id="monthGoalActions"></ul>
+    </div>
+
+    <div class="card">
+      <div class="reflect-row">
+        <div class="card-label" style="margin:0;">Monthly reflection</div>
+        <button class="change-btn" onclick="requestAiFollowup()">Få AI-uppföljning</button>
+      </div>
+      <div id="accList"></div>
+    </div>
+  </div>
+
+  <div class="view" id="view-quarter">
+    <div class="top-row" style="margin-bottom:16px;">
+      <div></div>
+      <div class="weeknav" id="quarterNavBox" style="margin-top:0;">
+        <button onclick="shiftQuarter(-1)">‹</button>
+        <span id="quarterLabel">Q4 2026</span>
+        <button onclick="shiftQuarter(1)">›</button>
+        <select id="quarterPicker" onchange="pickQuarter(this.value)"></select>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-label">Träningskonsistens</div>
+        <div class="card-sub">senaste 13 veckorna</div>
+        <div class="barchart">
+          <div class="bar" style="height:10%;"></div><div class="bar" style="height:15%;"></div><div class="bar" style="height:8%;"></div>
+          <div class="bar" style="height:20%;"></div><div class="bar" style="height:12%;"></div><div class="bar" style="height:6%;"></div>
+          <div class="bar hi" style="height:70%;"></div><div class="bar hi" style="height:85%;"></div><div class="bar hi" style="height:75%;"></div>
+          <div class="bar hi" style="height:60%;"></div><div class="bar" style="height:15%;"></div><div class="bar hi" style="height:90%;"></div>
+          <div class="bar hi" style="height:80%;"></div>
+        </div>
+        <div class="barchart-labels"><span>12 veckor sedan</span><span>denna vecka</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label" id="econQuarterLabel">Ekonomi Q4 2026</div>
+        <div class="card-sub">Dosed-budget och sparande</div>
+        <div class="fin-row">
+          <div class="fin-top"><span>Dosed-budget använd</span><span>0 kr</span></div>
+          <div class="fin-track"><div class="fin-fill" style="width:0%;"></div></div>
+          <div class="fin-bottom"><span>0% använt</span><span>0 kr kvar</span></div>
+        </div>
+        <div class="fin-row">
+          <div class="fin-top"><span>Sparmål</span></div>
+          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+            <div id="savingsJarSvg" style="width:90px;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:150px;">
+              <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <input type="number" id="savedAmountInput" placeholder="Sparat kr" oninput="updateSavingsJar()" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:12px;font-family:inherit;background:var(--surface-soft);">
+                <input type="number" id="savingsGoalInput" placeholder="Mål kr" oninput="updateSavingsJar()" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:12px;font-family:inherit;background:var(--surface-soft);">
+              </div>
+              <div style="font-size:12px;color:var(--text-soft);" id="savingsJarLabel">0 / 0 kr · 0%</div>
+            </div>
+          </div>
+        </div>
+        <div class="fin-net"><span>Netto (sparat − Dosed-utgifter)</span><span>0 kr</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Kvartalsmål</div>
+      <div class="card-sub" id="q_goalCountLabel">Q4 2026 · 0/0 klara</div>
+      <div class="goal-quad" id="q_goalQuad"></div>
+      <div class="card-sub" style="margin-bottom:6px;">Lägg till mål i:</div>
+      <div class="cat-tabs">
+        <div class="cat-tab active" data-cat="Dosed" onclick="switchCat(this)">Dosed</div>
+        <div class="cat-tab" data-cat="Hälsa" onclick="switchCat(this)">Hälsa</div>
+        <div class="cat-tab" data-cat="Ekonomi" onclick="switchCat(this)">Ekonomi</div>
+        <div class="cat-tab" data-cat="Personligt" onclick="switchCat(this)">Personligt</div>
+      </div>
+      <div class="add-row">
+        <input type="text" id="q_goalInput" placeholder="Lägg till ett mål...">
+        <button onclick="addGoalQ()">Lägg till</button>
+      </div>
+    </div>
+
+    <div class="grid3">
+      <div class="card">
+        <div class="card-label">Kvartalets vinster</div>
+        <div class="card-sub" id="winsQuarterLabel">Q4 2026</div>
+        <div id="q_winsList"><div class="list-empty" id="q_winsEmpty">Inga vinster loggade än — börja fira framstegen.</div></div>
+        <div class="add-row">
+          <input type="text" id="q_winInput" placeholder="Logga en vinst...">
+          <button onclick="addWin()">Lägg till</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Läsning</div>
+        <div class="card-sub">Q4 2026 · 0 böcker</div>
+        <div id="q_booksList"><div class="list-empty" id="q_booksEmpty">Inga böcker klara än — markera en som klar när du är där.</div></div>
+        <div class="add-row">
+          <input type="text" id="q_bookInput" placeholder="Lägg till en bok...">
+          <button onclick="addBook()">Lägg till</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Idé-parkering</div>
+        <div class="card-sub">fånga det nu, agera senare</div>
+        <div id="q_ideaList"><div class="list-empty" id="q_ideaEmpty">Idé-parkeringen är tom.</div></div>
+        <div class="add-row">
+          <input type="text" id="q_ideaInput" placeholder="Släpp en idé...">
+          <button onclick="addIdea()">Lägg till</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Mål — kvartalets actions</div>
+      <ul class="task-list" id="quarterGoalActions"></ul>
+    </div>
+  </div>
+  <div class="view" id="view-dosed">
+    <div class="card">
+      <div class="card-label">Dosed — logg</div>
+      <div class="card-sub">fritt loggade uppdateringar, kopplas till veckovyn senare</div>
+      <div id="dosedList"><div class="list-empty" id="dosedEmpty">Inget loggat än.</div></div>
+      <div class="add-row">
+        <input type="text" id="dosedInput" placeholder="Vad hände med Dosed idag...">
+        <button onclick="addDosedEntry()">Lägg till</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-tiktok">
+    <div class="card">
+      <div class="card-label">TikTok — logg</div>
+      <div class="card-sub">fritt loggade idéer/klipp, kopplas till veckovyn senare</div>
+      <div id="tiktokList"><div class="list-empty" id="tiktokEmpty">Inget loggat än.</div></div>
+      <div class="add-row">
+        <input type="text" id="tiktokInput" placeholder="Idé, klipp eller status...">
+        <button onclick="addTiktokEntry()">Lägg till</button>
+      </div>
+    </div>
+  </div>
+  <div class="view" id="view-habits">
+    <div class="card">
+      <div class="card-label">Denna vecka — alla habits</div>
+      <div class="card-sub">75 Hard är samma data som Week/Dagligen — kryssar du här syns det där också</div>
+      <div style="overflow-x:auto;">
+        <table class="habit-table" id="habitsFullTable" style="min-width:1100px;"></table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Alla habits ihop — hela månaden</div>
+      <div class="card-sub">daglig procent, alla habits tillsammans</div>
+      <div id="habitCombinedChart"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Var för sig</div>
+      <div class="card-sub">samma månad, per enskild vana</div>
+      <div class="gp-grid" id="habitIndividualGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Vecka för vecka</div>
+      <div class="card-sub">andel ifyllda habits per vecka, senaste 10 veckorna</div>
+      <div class="barchart" id="habitsWeeklyBars"></div>
+      <div class="barchart-labels" id="habitsWeeklyLabels"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Månad för månad</div>
+      <div class="card-sub">andel ifyllda habits per månad, senaste 6 månaderna</div>
+      <div class="barchart" id="habitsMonthlyBars"></div>
+      <div class="barchart-labels" id="habitsMonthlyLabels"></div>
+    </div>
+  </div>
+  <div class="view" id="view-year">
+    <div class="top-row" style="margin-bottom:16px;">
+      <div></div>
+      <div class="weeknav" id="yearNavBox" style="margin-top:0;">
+        <button onclick="shiftYear(-1)">‹</button>
+        <span id="yearLabel">2026</span>
+        <button onclick="shiftYear(1)">›</button>
+        <select id="yearPicker" onchange="pickYear(this.value)"></select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Reset — när du känner dig vilse</div>
+      <div id="yearResetList"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-label">Årets fyra hinkar</div>
+        <ul class="goal-list" id="yearBucketList"></ul>
+        <div class="add-row">
+          <input type="text" id="yearBucketInput" placeholder="Lägg till en hink...">
+          <button onclick="addYearBucket()">Lägg till</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Årets tasks</div>
+        <div style="font-size:22px;font-weight:600;">42 <span style="font-size:12px;color:var(--text-soft);font-weight:400;">/ 60 klara</span></div>
+        <div class="bar" style="margin-top:10px;"><div class="bar-fill" style="width:70%;"></div></div>
+        <div class="card-sub" style="margin-top:10px;margin-bottom:0;">exempeldata — kopplas till riktig taskhistorik i tekniska passet</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Mål — årets actions</div>
+      <ul class="task-list" id="yearGoalActions"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Habits — hela året</div>
+      <div class="card-sub">andel ifyllda habits per månad</div>
+      <div class="barchart" id="yearHabitsBars"></div>
+      <div class="barchart-labels" id="yearHabitsLabels"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Sessioner — höjdpunkter</div>
+      <div class="card-sub">exempeldata, riktiga passnamn kräver backend-utökningen</div>
+      <div id="yearSessionsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Sömn — månad för månad</div>
+      <div class="card-sub" id="yearSleepAvgLabel">Snitt: 7h 7min</div>
+      <div class="barchart" id="yearSleepBars" style="height:70px;"></div>
+      <div class="barchart-labels" id="yearSleepLabels"></div>
+    </div>
+  </div>
+  <div class="view" id="view-arkiv">
+    <div class="arkiv-grid" id="arkivGrid"></div>
+
+    <div class="card">
+      <div class="card-label" id="arkivCurrentLabel">Recept</div>
+
+      <div id="arkivGenericBlock" style="display:none;">
+        <div id="arkivList"></div>
+        <div class="add-row">
+          <input type="text" id="arkivInput" placeholder="Lägg till...">
+          <button onclick="addArkivEntry()">Lägg till</button>
+        </div>
+      </div>
+
+      <div id="recipeBlock">
+        <div class="cat-tabs">
+          <div class="cat-tab active" id="recipeViewDeck" onclick="setRecipeView('deck')">Deck</div>
+          <div class="cat-tab" id="recipeViewDetailed" onclick="setRecipeView('detailed')">Detaljerad</div>
+        </div>
+        <div id="recipeDeckView"></div>
+        <div id="recipeDetailedView" style="display:none;"></div>
+        <button class="save-btn" onclick="openRecipeForm()">+ Nytt recept</button>
+        <div class="card-sub" style="margin-top:10px;margin-bottom:0;">Klistra in en länk för att auto-hämta ett recept kräver en backend-koppling (kan inte läsa externa sidor direkt härifrån) — läggs i tekniska passet. Manuellt + bild via bildlänk funkar redan.</div>
+      </div>
+
+      <div id="studyBlock" style="display:none;">
+        <div style="overflow-x:auto;">
+          <table class="habit-table" id="studyTable" style="min-width:600px;"></table>
+        </div>
+        <button class="save-btn" onclick="openStudyForm()">+ Ny studieplan</button>
+      </div>
+
+      <div id="bookBlock" style="display:none;">
+        <div class="cat-tabs">
+          <div class="cat-tab active" data-bf="alla" onclick="setBookFilter(this,'alla')">Alla</div>
+          <div class="cat-tab" data-bf="Läser" onclick="setBookFilter(this,'Läser')">Läser nu</div>
+          <div class="cat-tab" data-bf="Vill läsa" onclick="setBookFilter(this,'Vill läsa')">Vill läsa</div>
+          <div class="cat-tab" data-bf="Läst" onclick="setBookFilter(this,'Läst')">Läst</div>
+        </div>
+        <div class="recipe-grid" id="bookGrid"></div>
+        <button class="save-btn" onclick="openBookForm()">+ Ny bok</button>
+        <div class="card-sub" style="margin-top:10px;margin-bottom:0;">Omslag/författare hämtas via Google Books när du söker — fungerar när sidan är publicerad på GitHub Pages (kan vara blockerat i denna förhandsvisning).</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bookFormOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:14px;padding:22px;max-width:420px;width:90%;max-height:85vh;overflow-y:auto;">
+      <div class="card-label" style="margin-bottom:12px;">Ny bok</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <input type="text" id="bf_title" placeholder="Titel">
+        <input type="text" id="bf_author" placeholder="Författare (valfritt)">
+        <button class="change-btn" onclick="searchBookCover()">Sök omslag & författare</button>
+        <input type="text" id="bf_cover" placeholder="Omslagsbild-URL (fylls i automatiskt vid sök)">
+        <input type="text" id="bf_genre" placeholder="Genre">
+        <select id="bf_status"><option value="Vill läsa">Vill läsa</option><option value="Läser">Läser</option><option value="Läst">Läst</option></select>
+        <input type="number" id="bf_progress" placeholder="Sida/procent klar (0-100)" min="0" max="100">
+        <select id="bf_rating"><option value="0">Inget betyg</option><option value="1">★</option><option value="2">★★</option><option value="3">★★★</option><option value="4">★★★★</option><option value="5">★★★★★</option></select>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button class="save-btn" onclick="saveBookForm()">Spara</button>
+        <button class="change-btn" onclick="closeBookForm()">Avbryt</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-mal">
+    <div class="card">
+      <div class="card-label">AI-uppdelning</div>
+      <div class="card-sub">beskriv målet och när du vill nå det — får förslag på hur det bryts ner i årliga/kvartalsvisa/månadsvisa/veckovisa actions</div>
+      <textarea id="aiGoalInput" placeholder="T.ex. Jag vill nå 5000 följare på TikTok innan 31 december 2026..."></textarea>
+      <button class="save-btn" style="margin-top:8px;" onclick="requestAiGoalSplit()">Föreslå uppdelning</button>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Mål</div>
+      <div class="cat-tabs">
+        <div class="cat-tab active" id="goalViewCards" onclick="setGoalView('cards')">Kort</div>
+        <div class="cat-tab" id="goalViewTable" onclick="setGoalView('table')">Tabell</div>
+        <div class="cat-tab" id="goalViewTree" onclick="setGoalView('tree')">Träd</div>
+      </div>
+      <div class="recipe-grid" id="goalsCardGrid"></div>
+      <div id="goalsTableWrap" style="display:none;overflow-x:auto;">
+        <table class="habit-table" id="goalsTable" style="min-width:760px;"></table>
+      </div>
+      <div id="goalTreeWrap" style="display:none;"></div>
+      <button class="save-btn" onclick="openGoalForm()">+ Nytt mål</button>
+    </div>
+    <div class="card" id="goalDetailCard" style="display:none;"></div>
+  </div>
+
+  <div id="goalFormOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:14px;padding:22px;max-width:400px;width:90%;max-height:85vh;overflow-y:auto;">
+      <div class="card-label" style="margin-bottom:12px;">Nytt mål</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <input type="text" id="gf_title" placeholder="Titel (t.ex. Gå ner till 65kg)">
+        <input type="text" id="gf_category" placeholder="Kategori (t.ex. Hälsa & fitness)">
+        <input type="number" id="gf_progress" placeholder="Progress % (0-100)" min="0" max="100">
+        <input type="date" id="gf_deadline">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button class="save-btn" onclick="saveGoalForm()">Spara</button>
+        <button class="change-btn" onclick="closeGoalForm()">Avbryt</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="studyFormOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:14px;padding:22px;max-width:420px;width:90%;max-height:85vh;overflow-y:auto;">
+      <div class="card-label" style="margin-bottom:12px;">Ny studieplan</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <input type="text" id="sf_title" placeholder="Titel (t.ex. Psykologi: kapitel 3)">
+        <input type="text" id="sf_type" placeholder="Typ (t.ex. Begreppsrepetition, Problemlösning)">
+        <input type="text" id="sf_lecture" placeholder="Föreläsning/kapitel">
+        <select id="sf_status"><option value="Inte påbörjad">Inte påbörjad</option><option value="Pågår">Pågår</option><option value="Klar">Klar</option></select>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="date" id="sf_start">
+          <input type="date" id="sf_end">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button class="save-btn" onclick="saveStudyForm()">Spara</button>
+        <button class="change-btn" onclick="closeStudyForm()">Avbryt</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="recipeFormOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:14px;padding:22px;max-width:460px;width:90%;max-height:85vh;overflow-y:auto;">
+      <div class="card-label" style="margin-bottom:12px;">Nytt recept</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <input type="text" id="rf_title" placeholder="Titel">
+        <input type="text" id="rf_image" placeholder="Bildlänk (URL, valfritt)">
+        <select id="rf_course">
+          <option>Frukost</option><option>Lunch</option><option>Middag</option><option>Förrätt</option><option>Mellanmål</option><option>Efterrätt</option>
+        </select>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="number" id="rf_calories" placeholder="Kcal">
+          <input type="text" id="rf_time" placeholder="Tid (t.ex. 15 min)">
+          <input type="number" id="rf_carbs" placeholder="Kolhydrater g">
+          <input type="number" id="rf_fat" placeholder="Fett g">
+          <input type="number" id="rf_protein" placeholder="Protein g">
+          <input type="number" id="rf_servings" placeholder="Antal port.">
+        </div>
+        <textarea id="rf_ingredients" placeholder="Ingredienser, en per rad"></textarea>
+        <textarea id="rf_equipment" placeholder="Utrustning, en per rad"></textarea>
+        <textarea id="rf_steps" placeholder="Gör så här, en rad per steg"></textarea>
+        <select id="rf_rating"><option value="1">★</option><option value="2">★★</option><option value="3" selected>★★★</option><option value="4">★★★★</option><option value="5">★★★★★</option></select>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button class="save-btn" onclick="saveRecipeForm()">Spara</button>
+        <button class="change-btn" onclick="closeRecipeForm()">Avbryt</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="recipeDetailOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
+    <div id="recipeDetailContent" style="background:var(--surface);border-radius:14px;padding:22px;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;"></div>
+  </div>
+
+</div>
+
+<script>
+  var days7 = ['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
+
+  var subtitles = { week: '— denna vecka', dagligen: '— dagligen', month: '— september', quarter: '— Q4 2026', dosed: '— dosed', tiktok: '— tiktok', habits: '— habits', year: '— 2026', arkiv: '— arkiv', mal: '— mål' };
+  function switchView(name){
+    document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+    document.getElementById('view-' + name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelector('.tab[data-view="' + name + '"]').classList.add('active');
+    document.getElementById('viewSubtitle').textContent = subtitles[name];
+    document.getElementById('weekNavBox').style.display = (name === 'week') ? 'flex' : 'none';
+  }
+  function notReady(){
+    alert('Den här vyn är inte byggd än — vi tar den nästa.');
+  }
+
+  var weekGoals = [];
+  function renderWeekGoals(){
+    var listEl = document.getElementById('w_goalList');
+    var emptyEl = document.getElementById('w_goalEmpty');
+    emptyEl.style.display = weekGoals.length === 0 ? 'block' : 'none';
+    listEl.innerHTML = weekGoals.map(function(g, i){
+      return '<li><span>' + g + '</span><span class="x" onclick="removeGoalW(' + i + ')">×</span></li>';
+    }).join('');
+  }
+  function addGoalW(){
+    var input = document.getElementById('w_goalInput');
+    var val = input.value.trim();
+    if(!val) return;
+    weekGoals.push(val);
+    input.value = '';
+    renderWeekGoals();
+  }
+  function removeGoalW(i){ weekGoals.splice(i,1); renderWeekGoals(); }
+
+  var hard75Rows = ['🥗 Hållt diet','📖 Läst 10 sidor','🚫 Ingen alkohol','🚶 Promenad 30-45 min','🏋️ Träning inne 30-45 min','📝 Dokumenterat dagen'];
+  var otherRows = ['🧘 Meditation','🎵 Jobbat med TikTok','🧪 Jobbat med Dosed'];
+  var stretchRows = ['🤸 Kvällsstretch'];
+  var allHabitRows = hard75Rows.concat(otherRows, stretchRows);
+  var permanentRows = hard75Rows.filter(function(h){ return h !== '🥗 Hållt diet'; }).concat(otherRows, stretchRows);
+  var habitState = {};
+  allHabitRows.forEach(function(h){ habitState[h] = {}; });
+
+  var challengeStart = '2026-08-31';
+  var challengeEnd = '2026-11-09';
+  var jarIdCounter = 0;
+  function buildJarSVG(pct, color){
+    jarIdCounter++;
+    var clipId = 'jarclip' + jarIdCounter;
+    var w = 100, h = 130;
+    var bodyX = 15, bodyY = 35, bodyW = 70, bodyH = 90, bodyRx = 14;
+    var liquidH = bodyH * (pct/100);
+    var liquidY = bodyY + bodyH - liquidH;
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:auto;display:block;">' +
+      '<defs><clipPath id="' + clipId + '"><rect x="' + bodyX + '" y="' + bodyY + '" width="' + bodyW + '" height="' + bodyH + '" rx="' + bodyRx + '"></rect></clipPath></defs>' +
+      '<rect x="' + (w/2-15) + '" y="14" width="30" height="24" rx="5" fill="none" stroke="var(--border)" stroke-width="2.5"></rect>' +
+      (liquidH > 0 ? '<g clip-path="url(#' + clipId + ')">' +
+        '<rect x="' + bodyX + '" y="' + liquidY + '" width="' + bodyW + '" height="' + liquidH + '" fill="' + color + '" opacity="0.85"></rect>' +
+        '<path d="M' + bodyX + ',' + liquidY + ' Q' + (bodyX+bodyW*0.25) + ',' + (liquidY-4) + ' ' + (bodyX+bodyW*0.5) + ',' + liquidY + ' T' + (bodyX+bodyW) + ',' + liquidY + '" fill="none" stroke="' + color + '" stroke-width="2" opacity="0.9"></path>' +
+        '</g>' : '') +
+      '<rect x="' + bodyX + '" y="' + bodyY + '" width="' + bodyW + '" height="' + bodyH + '" rx="' + bodyRx + '" fill="none" stroke="var(--border)" stroke-width="2.5"></rect>' +
+      '</svg>';
+  }
+  var lastSavingsPct = 0;
+  function updateSavingsJar(){
+    var saved = parseFloat(document.getElementById('savedAmountInput').value) || 0;
+    var goal = parseFloat(document.getElementById('savingsGoalInput').value) || 0;
+    var pct = goal > 0 ? Math.min(100, Math.round((saved/goal)*100)) : 0;
+    document.getElementById('savingsJarSvg').innerHTML = buildJarSVG(pct, '#4F86C6');
+    document.getElementById('savingsJarLabel').textContent = saved.toLocaleString('sv-SE') + ' / ' + goal.toLocaleString('sv-SE') + ' kr · ' + pct + '%';
+    if(pct === 100 && lastSavingsPct < 100) celebrate();
+    lastSavingsPct = pct;
+  }
+
+  function celebrate(){
+    var colors = ['#BC7A67','#7E8F6D','#8E7CC3','#4F86C6','#D6A85A'];
+    var container = document.createElement('div');
+    container.style.position = 'fixed';
+    container.style.inset = '0';
+    container.style.pointerEvents = 'none';
+    container.style.zIndex = '3000';
+    container.style.overflow = 'hidden';
+    document.body.appendChild(container);
+    for(var i = 0; i < 26; i++){
+      var dot = document.createElement('div');
+      var size = 6 + Math.random()*7;
+      dot.style.position = 'absolute';
+      dot.style.left = (45 + Math.random()*10) + '%';
+      dot.style.top = '38%';
+      dot.style.width = size + 'px';
+      dot.style.height = size + 'px';
+      dot.style.background = colors[Math.floor(Math.random()*colors.length)];
+      dot.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      dot.style.opacity = '0.9';
+      dot.style.transition = 'transform 900ms ease-out, opacity 900ms ease-out';
+      container.appendChild(dot);
+      (function(el){
+        var dx = (Math.random()-0.5) * 420;
+        var dy = 180 + Math.random()*260;
+        var rot = Math.random()*360;
+        requestAnimationFrame(function(){
+          el.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot + 'deg)';
+          el.style.opacity = '0';
+        });
+      })(dot);
+    }
+    setTimeout(function(){ container.remove(); }, 1000);
+  }
+
+  function isInChallenge(dateStr){ return dateStr >= challengeStart && dateStr <= challengeEnd; }
+
+  function computeStreak(h, refDateStr){
+    var count = 0;
+    var d = new Date(refDateStr + 'T00:00:00');
+    while(true){
+      var dk = isoDate(d);
+      if(habitState[h] && habitState[h][dk]){ count++; d.setDate(d.getDate()-1); } else break;
+    }
+    return count;
+  }
+  function flameHTML(n){
+    if(n < 2) return '';
+    var size = Math.min(16, 10 + n);
+    return ' <span style="font-size:' + size + 'px;" title="' + n + ' dagar i rad">🔥<span style="font-size:9px;vertical-align:super;">' + n + '</span></span>';
+  }
+
+  function renderHabitTable(){
+    var table = document.getElementById('habitTable');
+    var anyInRange = REAL_WEEK_DATES.some(function(dt){ return isInChallenge(isoDate(dt)); });
+    var rows = anyInRange ? hard75Rows : permanentRows;
+    document.getElementById('hardCardLabel').textContent = anyInRange ? '75 Hard' : 'Habits';
+
+    var html = '<tr><td></td>' + days7.map(function(d){ return '<td class="habit-head">' + d + '</td>'; }).join('') + '</tr>';
+    rows.forEach(function(h){
+      html += '<tr><td class="rowlabel">' + h + flameHTML(computeStreak(h, isoDate(new Date()))) + '</td>' + REAL_WEEK_DATES.map(function(dt){
+        var dk = isoDate(dt);
+        if(anyInRange && !isInChallenge(dk)) return '<td><div class="habit-box" style="opacity:.3;cursor:default;"></div></td>';
+        var done = habitState[h][dk];
+        return '<td><div class="habit-box' + (done ? ' done' : '') + '" onclick="toggleHabit(\'' + h + '\',\'' + dk + '\')">' + (done ? '✓' : '') + '</div></td>';
+      }).join('') + '</tr>';
+    });
+    table.innerHTML = html;
+    updateHabitPct(rows, anyInRange);
+  }
+  function toggleHabit(h,dk){
+    habitState[h][dk] = !habitState[h][dk];
+    renderHabitTable();
+    renderDailyHabits();
+    if(typeof renderHabitsView === 'function') renderHabitsView();
+  }
+  function renderDailyHabits(){
+    var labelEl = document.getElementById('dailyHabitLabel');
+    var listEl = document.getElementById('dailyHabitList');
+    if(!labelEl || !listEl) return;
+    var inChallenge = isInChallenge(selectedDate);
+    var rows = inChallenge ? hard75Rows : permanentRows;
+    labelEl.textContent = (inChallenge ? '75 Hard' : 'Habits') + ' — ' + dayLabelFor(selectedDate);
+    listEl.innerHTML = rows.map(function(h){
+      var done = habitState[h][selectedDate];
+      return '<li class="' + (done ? 'done' : '') + '" onclick="toggleHabit(\'' + h + '\',\'' + selectedDate + '\')">' +
+        '<span class="box">' + (done ? '✓' : '') + '</span><span class="t">' + h + flameHTML(computeStreak(h, selectedDate)) + '</span></li>';
+    }).join('');
+  }
+  var lastHabitPct = 0;
+  function updateHabitPct(rows, restrictToChallenge){
+    var total = 0, done = 0;
+    rows.forEach(function(h){ REAL_WEEK_DATES.forEach(function(dt){ if(restrictToChallenge && !isInChallenge(isoDate(dt))) return; total++; if(habitState[h][isoDate(dt)]) done++; }); });
+    var pct = total ? Math.round((done/total)*100) : 0;
+    document.getElementById('habitPct').textContent = pct + '%';
+    document.getElementById('habitBar').style.width = pct + '%';
+    if(pct === 100 && lastHabitPct < 100) celebrate();
+    lastHabitPct = pct;
+  }
+
+  var tasksByDay = {};
+  days7.forEach(function(d){ tasksByDay[d] = []; });
+  tasksByDay['Ons'] = [{t:'Skicka wordmark till tryck', done:false}];
+
+  function renderTaskDays(){
+    var container = document.getElementById('taskDays');
+    container.innerHTML = days7.map(function(d){
+      var tasks = tasksByDay[d];
+      var listHtml = tasks.map(function(task, i){
+        return '<li class="' + (task.done ? 'done' : '') + '" onclick="toggleDayTask(\'' + d + '\',' + i + ')">' +
+          '<span class="box">' + (task.done ? '✓' : '') + '</span><span class="t">' + task.t + '</span></li>';
+      }).join('');
+      return '<div class="day-block">' +
+        '<div class="day-head">' + d + '</div>' +
+        '<ul class="task-list">' + listHtml + '</ul>' +
+        '<div class="add-row"><input type="text" id="taskInput_' + d + '" placeholder="Vad ska göras ' + d + '..."><button onclick="addDayTask(\'' + d + '\')">Lägg till</button></div>' +
+        '</div>';
+    }).join('');
+  }
+  function toggleDayTask(d,i){
+    tasksByDay[d][i].done = !tasksByDay[d][i].done;
+    renderTaskDays();
+  }
+  function addDayTask(d){
+    var input = document.getElementById('taskInput_' + d);
+    var val = input.value.trim();
+    if(!val) return;
+    tasksByDay[d].push({t: val, done:false});
+    renderTaskDays();
+    document.getElementById('taskInput_' + d).focus();
+  }
+
+  var calEvents = ['12 sep · Fotografering — Dosed mockup, 14:00'];
+  function renderCalEvents(){
+    var el = document.getElementById('calList');
+    el.innerHTML = calEvents.length
+      ? calEvents.map(function(e){ return '<div class="list-item">' + e + '</div>'; }).join('')
+      : '<div class="list-empty">Inga händelser ännu.</div>';
+    saveAll();
+  }
+  function addCalEvent(){
+    var input = document.getElementById('calInput');
+    var val = input.value.trim();
+    if(!val) return;
+    calEvents.push(val);
+    input.value = '';
+    renderCalEvents();
+  }
+
+  function setStatus(el){
+    var siblings = el.parentElement.querySelectorAll('.status-pill');
+    siblings.forEach(function(s){ s.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  var weekReflectionText = '';
+  function saveReflectionW(){
+    weekReflectionText = document.getElementById('w_reflectionText').value;
+    var note = document.getElementById('w_savedNote');
+    note.style.display = 'inline';
+    setTimeout(function(){ note.style.display = 'none'; }, 2000);
+    saveAll();
+  }
+  function isoWeekNumber(d){
+    var date = new Date(d.getTime());
+    date.setHours(0,0,0,0);
+    date.setDate(date.getDate() + 3 - ((date.getDay()+6)%7));
+    var week1 = new Date(date.getFullYear(), 0, 4);
+    return 1 + Math.round(((date - week1) / 86400000 - 3 + ((week1.getDay()+6)%7)) / 7);
+  }
+  var weekOffset = 0;
+  function shiftWeek(dir){
+    weekOffset += dir;
+    refreshWeekNav();
+  }
+  function pickWeek(val){
+    weekOffset = parseInt(val, 10);
+    refreshWeekNav();
+  }
+  function refreshWeekNav(){
+    var dates = getWeekDates(weekOffset);
+    document.getElementById('weekLabel').textContent = 'Vecka ' + isoWeekNumber(dates[0]) + ' · ' + formatShort(dates[0]) + ' – ' + formatShort(dates[6]) + (weekOffset === 0 ? ' · denna vecka' : '');
+    document.getElementById('weekPicker').value = weekOffset;
+  }
+  function populateWeekPicker(){
+    var picker = document.getElementById('weekPicker');
+    var opts = [];
+    for(var o = -18; o <= 18; o++){
+      var dates = getWeekDates(o);
+      opts.push('<option value="' + o + '">Vecka ' + isoWeekNumber(dates[0]) + ' · ' + formatShort(dates[0]) + ' – ' + formatShort(dates[6]) + '</option>');
+    }
+    picker.innerHTML = opts.join('');
+    picker.value = weekOffset;
+  }
+
+  var moods = [
+    {key:'glad', emoji:'😊', label:'Glad'},
+    {key:'arg', emoji:'😠', label:'Arg'},
+    {key:'neutral', emoji:'😐', label:'Neutral'},
+    {key:'ledsen', emoji:'😢', label:'Ledsen'},
+    {key:'angest', emoji:'😰', label:'Ångest'}
+  ];
+  var monthNamesShort = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+  function formatShort(d){ return d.getDate() + ' ' + monthNamesShort[d.getMonth()]; }
+  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+  function isoDate(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); }
+  function getMonday(d){
+    var dow = d.getDay();
+    var mondayOffset = (dow === 0) ? -6 : 1 - dow;
+    var m = new Date(d);
+    m.setDate(d.getDate() + mondayOffset);
+    m.setHours(0,0,0,0);
+    return m;
+  }
+  function getWeekDates(offset){
+    var monday = getMonday(new Date());
+    monday.setDate(monday.getDate() + offset*7);
+    var dates = [];
+    for(var i=0;i<7;i++){ var d = new Date(monday); d.setDate(monday.getDate()+i); dates.push(d); }
+    return dates;
+  }
+  var REAL_WEEK_DATES = getWeekDates(0);
+  var dagligenWeekOffset = 0;
+  var viewedWeekDates = getWeekDates(0);
+  var selectedDate = isoDate(new Date());
+
+  function dayLabelFor(dateStr){
+    var d = new Date(dateStr + 'T00:00:00');
+    var idx = (d.getDay() + 6) % 7;
+    return days7[idx] + ' ' + formatShort(d);
+  }
+
+  var dailyLog = {};
+  function getDailyEntry(dk){
+    if(!dailyLog[dk]) dailyLog[dk] = {mood:null, note:'', saved:false};
+    return dailyLog[dk];
+  }
+
+  function renderDaySelector(){
+    var todayKey = isoDate(new Date());
+    var pills = viewedWeekDates.map(function(d, i){
+      var dk = isoDate(d);
+      return '<div class="day-sel' + (dk === selectedDate ? ' active' : '') + '" onclick="selectDate(\'' + dk + '\')">' +
+        days7[i] + (dk === todayKey ? ' · idag' : '') + '<br><span style="font-size:9px;opacity:.8;">' + formatShort(d) + '</span></div>';
+    }).join('');
+    document.getElementById('daySelector').innerHTML =
+      '<div class="week-nav-mini"><button onclick="shiftDagligenWeek(-1)">‹</button><span>' + formatShort(viewedWeekDates[0]) + ' – ' + formatShort(viewedWeekDates[6]) + '</span><button onclick="shiftDagligenWeek(1)">›</button></div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px;">' + pills + '</div>' +
+      '<input type="date" id="datePicker" value="' + selectedDate + '" onchange="pickDate(this.value)">';
+  }
+  function shiftDagligenWeek(dir){
+    dagligenWeekOffset += dir;
+    viewedWeekDates = getWeekDates(dagligenWeekOffset);
+    renderDaySelector();
+  }
+  function pickDate(val){
+    if(!val) return;
+    selectedDate = val;
+    var picked = new Date(val + 'T00:00:00');
+    var diffDays = Math.round((getMonday(picked) - getMonday(new Date())) / 86400000);
+    dagligenWeekOffset = Math.round(diffDays / 7);
+    viewedWeekDates = getWeekDates(dagligenWeekOffset);
+    refreshDagligen();
+  }
+  function selectDate(dk){
+    selectedDate = dk;
+    refreshDagligen();
+  }
+  function refreshDagligen(){
+    renderDaySelector();
+    renderMoodRow();
+    renderDailyHabits();
+    renderDailyNoteArea();
+    renderMeasureSection();
+  }
+  function renderDailyNoteArea(){
+    var entry = getDailyEntry(selectedDate);
+    var editArea = document.getElementById('dailyNoteEditArea');
+    var savedArea = document.getElementById('dailyNoteSavedArea');
+    if(entry.saved && entry.note){
+      editArea.style.display = 'none';
+      savedArea.style.display = 'block';
+      document.getElementById('dailyNoteSavedText').textContent = entry.note;
+    } else {
+      editArea.style.display = 'block';
+      savedArea.style.display = 'none';
+      document.getElementById('dailyNote').value = entry.note || '';
+    }
+  }
+  function saveDailyLog(){
+    var entry = getDailyEntry(selectedDate);
+    entry.note = document.getElementById('dailyNote').value.trim();
+    entry.saved = true;
+    renderDailyNoteArea();
+    renderWeekMoodSummary();
+  }
+  function editDailyLog(){
+    getDailyEntry(selectedDate).saved = false;
+    renderDailyNoteArea();
+  }
+  function renderMoodRow(){
+    var current = getDailyEntry(selectedDate).mood;
+    document.getElementById('moodRow').innerHTML = moods.map(function(m){
+      var active = current === m.key;
+      return '<div class="mood-btn' + (active ? ' active' : '') + '" onclick="selectMood(\'' + m.key + '\')">' + m.emoji + '<span class="lbl">' + m.label + '</span></div>';
+    }).join('');
+  }
+  function selectMood(key){
+    getDailyEntry(selectedDate).mood = key;
+    renderMoodRow();
+  }
+  function renderWeekMoodSummary(){
+    var counts = {};
+    moods.forEach(function(m){ counts[m.key] = 0; });
+    REAL_WEEK_DATES.forEach(function(dt){
+      var entry = dailyLog[isoDate(dt)];
+      if(entry && entry.mood) counts[entry.mood]++;
+    });
+    var chips = moods.filter(function(m){ return counts[m.key] > 0; })
+      .map(function(m){ return '<span class="mood-chip">' + m.emoji + ' ' + m.label + ' × ' + counts[m.key] + '</span>'; });
+    document.getElementById('weekMoodSummary').innerHTML = chips.length
+      ? chips.join('')
+      : '<span class="mood-chip">Inga humör registrerade än denna vecka</span>';
+  }
+
+  var measureFields = [
+    {key:'weight', label:'Vikt (kg)'},
+    {key:'arm', label:'Överarm (cm)'},
+    {key:'waist', label:'Midja (cm)'},
+    {key:'thigh', label:'Lår (cm)'},
+    {key:'chest', label:'Bröst (cm)'},
+    {key:'hips', label:'Höfter (cm)'}
+  ];
+  var measurementsLog = [];
+
+  function weekKeyFor(dateStr){
+    return isoDate(getMonday(new Date(dateStr + 'T00:00:00')));
+  }
+  function renderMeasureSection(){
+    var container = document.getElementById('measureSection');
+    var dow = new Date(selectedDate + 'T00:00:00').getDay();
+    if(dow !== 0){
+      container.innerHTML = '<div class="measure-box"><div class="measure-note">Mätningar (vikt + mått) loggas på söndagar — välj en söndag i dagväljaren eller datumfältet ovan för att fylla i.</div></div>';
+      return;
+    }
+    var wk = weekKeyFor(selectedDate);
+    var existing = measurementsLog.filter(function(m){ return m.weekKey === wk; })[0];
+    if(existing){
+      container.innerHTML = '<div class="measure-box">' +
+        '<div class="card-label" style="margin-bottom:8px;">Söndagsmätning — sparad</div>' +
+        '<div class="measure-summary">' + measureFields.map(function(f){
+          return '<span>' + (existing.values[f.key] || '—') + '<b>' + f.label + '</b></span>';
+        }).join('') + '</div>' +
+        '<button class="change-btn" onclick="editMeasureForWeek(\'' + wk + '\')">Ändra</button>' +
+        '</div>';
+    } else {
+      container.innerHTML = '<div class="measure-box">' +
+        '<div class="card-label" style="margin-bottom:2px;">Söndagsmätning</div>' +
+        '<div class="measure-grid">' + measureFields.map(function(f){
+          return '<div class="measure-field"><label>' + f.label + '</label><input type="number" step="0.1" id="measure_' + f.key + '"></div>';
+        }).join('') + '</div>' +
+        '<button class="save-btn" onclick="saveMeasureForWeek()">Spara mätning</button>' +
+        '</div>';
+    }
+  }
+  function saveMeasureForWeek(){
+    var values = {};
+    measureFields.forEach(function(f){
+      var v = document.getElementById('measure_' + f.key).value;
+      if(v) values[f.key] = v;
+    });
+    measurementsLog.push({ weekKey: weekKeyFor(selectedDate), date: selectedDate, values: values });
+    renderMeasureSection();
+  }
+  function editMeasureForWeek(wk){
+    measurementsLog = measurementsLog.filter(function(m){ return m.weekKey !== wk; });
+    renderMeasureSection();
+  }
+
+  function renderHabitsView(){
+    var table = document.getElementById('habitsFullTable');
+    if(!table) return;
+
+    var today = new Date();
+    var y = today.getFullYear(), m = today.getMonth();
+    var totalDays = new Date(y, m+1, 0).getDate();
+    var monthDates = [];
+    for(var d = 1; d <= totalDays; d++){ monthDates.push(new Date(y, m, d)); }
+    var weekdayShort3 = ['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
+    var bandColors = ['#DCE6F0','#E3D9EF','#F3DCE0','#DCEAE0','#F2E6C9'];
+
+    var groups = [];
+    for(var i = 0; i < monthDates.length; i += 7){ groups.push(monthDates.slice(i, i+7)); }
+
+    var bandRow = '<tr><td class="rowlabel"></td>' + groups.map(function(g, gi){
+      return '<td colspan="' + g.length + '" style="background:' + bandColors[gi % bandColors.length] + ';text-align:center;font-size:11px;font-weight:600;padding:5px 2px;color:var(--text);">Vecka ' + (gi+1) + '</td>';
+    }).join('') + '</tr>';
+
+    var dayRow = '<tr><td></td>' + monthDates.map(function(dt){
+      var idx = (dt.getDay() + 6) % 7;
+      return '<td class="habit-head" style="font-size:10px;line-height:1.4;">' + weekdayShort3[idx] + '<br>' + dt.getDate() + '</td>';
+    }).join('') + '</tr>';
+
+    function section(rows){
+      var html = '';
+      rows.forEach(function(h){
+        html += '<tr><td class="rowlabel">' + h + flameHTML(computeStreak(h, isoDate(new Date()))) + '</td>' + monthDates.map(function(dt){
+          var dk = isoDate(dt);
+          var done = habitState[h][dk];
+          return '<td><div class="habit-box' + (done ? ' done' : '') + '" onclick="toggleHabit(\'' + h + '\',\'' + dk + '\')">' + (done ? '✓' : '') + '</div></td>';
+        }).join('') + '</tr>';
+      });
+      return html;
+    }
+
+    var html = bandRow + dayRow;
+    html += section(hard75Rows);
+    html += section(otherRows);
+    html += section(stretchRows);
+    table.innerHTML = html;
+
+    renderHabitsWeeklyBars();
+    renderHabitsMonthlyBars();
+    renderHabitGraphPaper();
+    if(typeof renderYearHabitsBars === 'function') renderYearHabitsBars();
+  }
+
+  var gpIdCounter = 0;
+  function buildGraphSVG(values, maxVal, color, totalDays, showLabels, filled){
+    gpIdCounter++;
+    var patId = 'gp' + gpIdCounter;
+    var w = 700, h = showLabels ? 150 : 64;
+    var padL = 8, padR = 8, padT = 8, padB = showLabels ? 18 : 8;
+    var plotW = w - padL - padR, plotH = h - padT - padB;
+    var stepX = plotW / ((totalDays - 1) || 1);
+    var pts = values.map(function(v, i){
+      var x = padL + i * stepX;
+      var y = padT + plotH - (v / maxVal) * plotH;
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    var area = '';
+    if(filled){
+      var lastX = padL + (values.length - 1) * stepX;
+      var baseY = padT + plotH;
+      area = '<polygon points="' + pts + ' ' + lastX.toFixed(1) + ',' + baseY.toFixed(1) + ' ' + padL.toFixed(1) + ',' + baseY.toFixed(1) + '" fill="' + color + '" fill-opacity="0.22" stroke="none"></polygon>';
+    }
+    var circles = filled ? '' : values.map(function(v, i){
+      var x = padL + i * stepX;
+      var y = padT + plotH - (v / maxVal) * plotH;
+      return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.3" fill="' + color + '"></circle>';
+    }).join('');
+    var labels = '';
+    if(showLabels){
+      for(var d = 1; d <= totalDays; d += 5){
+        var x = padL + (d-1) * stepX;
+        labels += '<text x="' + x.toFixed(1) + '" y="' + (h-4) + '" font-size="8" fill="#93897A">' + d + '</text>';
+      }
+    }
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:' + h + 'px;display:block;">' +
+      '<defs><pattern id="' + patId + '" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M14 0H0V14" fill="none" stroke="#E4DCC8" stroke-width="1"></path></pattern></defs>' +
+      '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="url(#' + patId + ')"></rect>' +
+      area +
+      '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="1.6"></polyline>' +
+      circles + labels +
+      '</svg>';
+  }
+  function renderHabitGraphPaper(){
+    var combinedEl = document.getElementById('habitCombinedChart');
+    var gridEl = document.getElementById('habitIndividualGrid');
+    if(!combinedEl || !gridEl) return;
+
+    var today = new Date();
+    var y = today.getFullYear(), m = today.getMonth();
+    var totalDays = new Date(y, m+1, 0).getDate();
+    var dayDates = [];
+    for(var d = 1; d <= totalDays; d++){ dayDates.push(new Date(y, m, d)); }
+
+    var combinedVals = dayDates.map(function(dt){
+      var dk = isoDate(dt);
+      var done = 0;
+      allHabitRows.forEach(function(h){ if(habitState[h][dk]) done++; });
+      return Math.round((done / allHabitRows.length) * 100);
+    });
+    var combinedDone = 0, combinedTotal = totalDays * allHabitRows.length;
+    dayDates.forEach(function(dt){
+      var dk = isoDate(dt);
+      allHabitRows.forEach(function(h){ if(habitState[h][dk]) combinedDone++; });
+    });
+    var combinedPct = Math.round((combinedDone / combinedTotal) * 100);
+    combinedEl.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">' +
+      '<span style="font-size:20px;font-weight:600;">' + combinedPct + '%</span>' +
+      '<span style="font-size:12px;color:var(--text-soft);">' + combinedDone + ' / ' + combinedTotal + ' ifyllda kryss denna månad</span>' +
+      '</div>' + buildGraphSVG(combinedVals, 100, '#BC7A67', totalDays, true, true);
+
+    var palette = ['#BC7A67','#7E8F6D','#8E7CC3','#4F86C6','#D6A85A','#C97B9A','#5FA8A0','#B85C5C','#7C9E5C','#A88BC9'];
+    gridEl.innerHTML = allHabitRows.map(function(h, i){
+      var vals = dayDates.map(function(dt){ return habitState[h][isoDate(dt)] ? 100 : 0; });
+      var doneCount = vals.filter(function(v){ return v === 100; }).length;
+      var pct = Math.round((doneCount / totalDays) * 100);
+      var color = palette[i % palette.length];
+      return '<div class="gp-card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">' +
+        '<div class="gp-title" style="margin-bottom:0;">' + h + '</div>' +
+        '<div style="font-size:11px;color:var(--text-soft);">' + doneCount + '/' + totalDays + ' · ' + pct + '%</div></div>' +
+        buildGraphSVG(vals, 100, color, totalDays, false) + '</div>';
+    }).join('');
+  }
+
+  function habitPctForDates(dates){
+    var total = 0, done = 0;
+    allHabitRows.forEach(function(h){
+      dates.forEach(function(dt){ total++; if(habitState[h][isoDate(dt)]) done++; });
+    });
+    return total ? Math.round((done/total)*100) : 0;
+  }
+
+  function renderHabitsWeeklyBars(){
+    var numWeeks = 10;
+    var bars = [];
+    for(var i = numWeeks - 1; i >= 0; i--){
+      var dates = getWeekDates(-i);
+      bars.push({ label: 'v' + isoWeekNumber(dates[0]), pct: habitPctForDates(dates), isNow: i === 0 });
+    }
+    document.getElementById('habitsWeeklyBars').innerHTML = bars.map(function(b){
+      return '<div class="bar' + (b.isNow ? ' hi' : (b.pct >= 60 ? ' hi' : '')) + '" style="height:' + Math.max(b.pct,3) + '%;" title="' + b.label + ': ' + b.pct + '%"></div>';
+    }).join('');
+    document.getElementById('habitsWeeklyLabels').innerHTML = '<span>' + bars[0].label + '</span><span>' + bars[bars.length-1].label + ' · nu</span>';
+  }
+
+  function renderHabitsMonthlyBars(){
+    var numMonths = 6;
+    var bars = [];
+    var today = new Date();
+    for(var i = numMonths - 1; i >= 0; i--){
+      var d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      var daysInMonth = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+      var dates = [];
+      for(var day = 1; day <= daysInMonth; day++){ dates.push(new Date(d.getFullYear(), d.getMonth(), day)); }
+      bars.push({ label: monthNamesShort[d.getMonth()], pct: habitPctForDates(dates), isNow: i === 0 });
+    }
+    document.getElementById('habitsMonthlyBars').innerHTML = bars.map(function(b){
+      return '<div class="bar' + (b.isNow ? ' hi' : (b.pct >= 60 ? ' hi' : '')) + '" style="height:' + Math.max(b.pct,3) + '%;" title="' + b.label + ': ' + b.pct + '%"></div>';
+    }).join('');
+    document.getElementById('habitsMonthlyLabels').innerHTML = '<span>' + bars[0].label + '</span><span>' + bars[bars.length-1].label + ' · nu</span>';
+  }
+
+  function renderSessionsAndSleep(){
+    var sessions = [
+      { icon:'🧘', name:'Yoga', stat:'9 kcal', day:'tisdag' },
+      { icon:'🚶', name:'Utomhusgång', stat:'2,11 km', day:'tisdag' },
+      { icon:'🤸', name:'Nedvarvning', stat:'12 kcal', day:'måndag' },
+      { icon:'🚶', name:'Utomhusgång', stat:'6,57 km', day:'söndag' },
+      { icon:'🚶', name:'Utomhusgång', stat:'9,83 km', day:'lördag' }
+    ];
+    var listEl = document.getElementById('sessionsList');
+    if(listEl){
+      listEl.innerHTML = sessions.map(function(s){
+        return '<div class="session-row"><div class="session-icon">' + s.icon + '</div>' +
+          '<div><div class="session-name">' + s.name + '</div><div class="session-stat">' + s.stat + '</div></div>' +
+          '<div class="session-day">' + s.day + '</div></div>';
+      }).join('');
+    }
+
+    var sleepVals = [7.2, 6.8, 8.1, 7.6, 6.5, 7.8, 9.3];
+    var sleepDayLabels = ['tors','fre','lör','sön','mån','tis','ons'];
+    var barsEl = document.getElementById('sleepBars');
+    if(barsEl){
+      var maxH = 9.5;
+      barsEl.innerHTML = sleepVals.map(function(v){
+        return '<div class="bar' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div>';
+      }).join('');
+      document.getElementById('sleepLabels').innerHTML = sleepDayLabels.map(function(d){ return '<span>' + d + '</span>'; }).join('');
+      var avg = sleepVals.reduce(function(a,b){ return a+b; },0) / sleepVals.length;
+      var h = Math.floor(avg), min = Math.round((avg-h)*60);
+      document.getElementById('sleepAvgLabel').textContent = 'Snitt: ' + h + 'h ' + min + 'min';
+    }
+  }
+
+  var yearOffset = 0;
+  function currentYear(){ return new Date().getFullYear() + yearOffset; }
+  function shiftYear(dir){ yearOffset += dir; refreshYearNav(); }
+  function pickYear(val){ yearOffset = parseInt(val,10) - new Date().getFullYear(); refreshYearNav(); }
+  function refreshYearNav(){
+    document.getElementById('yearLabel').textContent = currentYear();
+    document.getElementById('yearPicker').value = currentYear();
+    renderYearReset();
+    renderYearBuckets();
+  }
+  function populateYearPicker(){
+    var picker = document.getElementById('yearPicker');
+    var opts = [];
+    var base = new Date().getFullYear();
+    for(var o = -5; o <= 5; o++){ opts.push('<option value="' + (base+o) + '">' + (base+o) + '</option>'); }
+    picker.innerHTML = opts.join('');
+    picker.value = currentYear();
+  }
+
+  var yearResetQuestions = [
+    'Vem sa jag ville bli i år?',
+    'Vad byggde jag som ingen annan skulle ha byggt?',
+    'Vad har jag slutat kompromissa med?',
+    'Vad är jag mest rädd för att inte hinna med?'
+  ];
+  var yearData = {};
+  function ensureYear(y){
+    if(!yearData[y]) yearData[y] = { resets: yearResetQuestions.map(function(){ return ''; }), buckets: [] };
+    return yearData[y];
+  }
+  function renderYearReset(){
+    var y = currentYear();
+    var data = ensureYear(y);
+    document.getElementById('yearResetList').innerHTML = yearResetQuestions.map(function(q, i){
+      return '<div style="padding:10px 0;border-top:1px solid var(--border);' + (i===0?'border-top:none;':'') + '">' +
+        '<div style="font-size:13px;margin-bottom:6px;">' + q + '</div>' +
+        '<textarea style="min-height:44px;" oninput="saveYearReset(' + i + ', this.value)">' + data.resets[i] + '</textarea></div>';
+    }).join('');
+  }
+  function saveYearReset(i, val){ ensureYear(currentYear()).resets[i] = val; }
+
+  function renderYearBuckets(){
+    var y = currentYear();
+    var data = ensureYear(y);
+    document.getElementById('yearBucketList').innerHTML = data.buckets.map(function(b, i){
+      return '<li><span>' + b + '</span><span class="x" onclick="removeYearBucket(' + i + ')">×</span></li>';
+    }).join('');
+  }
+  function addYearBucket(){
+    var input = document.getElementById('yearBucketInput');
+    var val = input.value.trim();
+    if(!val) return;
+    ensureYear(currentYear()).buckets.push(val);
+    input.value = '';
+    renderYearBuckets();
+  }
+  function removeYearBucket(i){
+    ensureYear(currentYear()).buckets.splice(i,1);
+    renderYearBuckets();
+  }
+
+  function renderYearHabitsBars(){
+    var monthLabels = [];
+    var bars = [];
+    var y = currentYear();
+    for(var m = 0; m < 12; m++){
+      var daysInM = new Date(y, m+1, 0).getDate();
+      var dates = [];
+      for(var d = 1; d <= daysInM; d++){ dates.push(new Date(y, m, d)); }
+      var pct = habitPctForDates(dates);
+      bars.push(pct);
+      monthLabels.push(monthNamesShort[m]);
+    }
+    document.getElementById('yearHabitsBars').innerHTML = bars.map(function(pct){
+      return '<div class="bar' + (pct >= 60 ? ' hi' : '') + '" style="height:' + Math.max(pct,3) + '%;" title="' + pct + '%"></div>';
+    }).join('');
+    document.getElementById('yearHabitsLabels').innerHTML = '<span>' + monthLabels[0] + '</span><span>' + monthLabels[11] + '</span>';
+  }
+
+  function renderYearSessionsAndSleep(){
+    var sessions = [
+      { icon:'🏋️', name:'Flest pass — september', stat:'18 pass', day:'' },
+      { icon:'🚶', name:'Längsta promenad', stat:'9,83 km', day:'6 sep' },
+      { icon:'🧘', name:'Flest yogapass', stat:'7 pass', day:'juli' }
+    ];
+    document.getElementById('yearSessionsList').innerHTML = sessions.map(function(s){
+      return '<div class="session-row"><div class="session-icon">' + s.icon + '</div>' +
+        '<div><div class="session-name">' + s.name + '</div><div class="session-stat">' + s.stat + '</div></div>' +
+        '<div class="session-day">' + s.day + '</div></div>';
+    }).join('');
+
+    var sleepVals = [7.1, 6.9, 7.4, 7.6, 7.2, 6.8, 7.9, 8.1, 7.7, 7.0, 6.6, 7.3];
+    var maxH = 9;
+    document.getElementById('yearSleepBars').innerHTML = sleepVals.map(function(v){
+      return '<div class="bar' + (v >= 8 ? ' hi' : '') + '" style="height:' + Math.round((v/maxH)*100) + '%;" title="' + v.toFixed(1) + ' h"></div>';
+    }).join('');
+    document.getElementById('yearSleepLabels').innerHTML = monthNamesShort.map(function(m){ return '<span>' + m + '</span>'; }).join('');
+    var avg = sleepVals.reduce(function(a,b){ return a+b; },0) / sleepVals.length;
+    var h = Math.floor(avg), min = Math.round((avg-h)*60);
+    document.getElementById('yearSleepAvgLabel').textContent = 'Snitt: ' + h + 'h ' + min + 'min';
+  }
+
+  var arkivCategories = [
+    { key:'recept', name:'Recept', color:'#BC7A67', colorSoft:'#F1DCD2', subs:['Alla recept','Favoriter','Att testa'] },
+    { key:'matideer', name:'Matidéer', color:'#7E8F6D', colorSoft:'#E4EADF', subs:['Idébank','Veckomeny'] },
+    { key:'bocker', name:'Böcker', color:'#4F86C6', colorSoft:'#DCE6F0', subs:['Läser nu','Lästa','Vill läsa'] },
+    { key:'studera', name:'Studera', color:'#8E7CC3', colorSoft:'#E3D9EF', subs:['Anteckningar','Att göra'] }
+  ];
+  var arkivData = {};
+  arkivCategories.forEach(function(c){ arkivData[c.key] = []; });
+  var currentArkivCat = 'recept';
+
+  function renderArkivGrid(){
+    document.getElementById('arkivGrid').innerHTML = arkivCategories.map(function(c){
+      return '<div class="arkiv-box' + (c.key === currentArkivCat ? ' active' : '') + '" style="--cat-color:' + c.color + ';--cat-color-soft:' + c.colorSoft + ';" onclick="selectArkivCat(\'' + c.key + '\')">' +
+        '<div class="arkiv-title">' + c.name + '</div>' +
+        c.subs.map(function(s){ return '<div class="arkiv-sub">' + s + '</div>'; }).join('') +
+        '</div>';
+    }).join('');
+  }
+  function selectArkivCat(key){
+    currentArkivCat = key;
+    renderArkivGrid();
+    document.getElementById('recipeBlock').style.display = 'none';
+    document.getElementById('studyBlock').style.display = 'none';
+    document.getElementById('bookBlock').style.display = 'none';
+    document.getElementById('arkivGenericBlock').style.display = 'none';
+    if(key === 'recept'){
+      document.getElementById('recipeBlock').style.display = 'block';
+      renderRecipes();
+    } else if(key === 'studera'){
+      document.getElementById('studyBlock').style.display = 'block';
+      renderStudyPlans();
+    } else if(key === 'bocker'){
+      document.getElementById('bookBlock').style.display = 'block';
+      renderBooks();
+    } else {
+      document.getElementById('arkivGenericBlock').style.display = 'block';
+      renderArkivList();
+    }
+  }
+
+  var books = [];
+  var bookFilter = 'alla';
+  function setBookFilter(el, f){
+    document.querySelectorAll('#bookBlock .cat-tab').forEach(function(t){ t.classList.remove('active'); });
+    el.classList.add('active');
+    bookFilter = f;
+    renderBooks();
+  }
+  function renderBooks(){
+    var grid = document.getElementById('bookGrid');
+    var list = bookFilter === 'alla' ? books : books.filter(function(b){ return b.status === bookFilter; });
+    if(list.length === 0){ grid.innerHTML = '<div class="list-empty">Inga böcker här än.</div>'; return; }
+    grid.innerHTML = list.map(function(b){
+      var stars = b.rating > 0 ? '★'.repeat(b.rating) + '☆'.repeat(5-b.rating) : '';
+      return '<div class="recipe-card">' +
+        (b.cover ? '<img src="' + b.cover + '" class="recipe-img">' : '<div class="recipe-img recipe-img-empty">📚</div>') +
+        '<div class="recipe-card-body">' +
+        '<div class="recipe-card-title">' + b.title + '</div>' +
+        '<div class="recipe-card-meta">' + (b.author||'') + '</div>' +
+        (b.status === 'Läser' ? '<div style="margin-top:6px;"><div style="font-size:11px;color:var(--text-soft);">' + (b.progress||0) + '%</div><div class="bar" style="margin-top:2px;"><div class="bar-fill" style="width:' + (b.progress||0) + '%;"></div></div></div>' : '') +
+        (stars ? '<div style="font-size:11px;color:var(--accent);margin-top:4px;">' + stars + '</div>' : '') +
+        '<div style="margin-top:6px;"><span style="background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:2px 7px;font-size:10px;">' + b.status + '</span>' +
+        (b.genre ? ' <span style="background:var(--surface-soft);border-radius:6px;padding:2px 7px;font-size:10px;">' + b.genre + '</span>' : '') + '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+  function openBookForm(){ document.getElementById('bookFormOverlay').style.display = 'flex'; }
+  function closeBookForm(){
+    document.getElementById('bookFormOverlay').style.display = 'none';
+    ['bf_title','bf_author','bf_cover','bf_genre','bf_progress'].forEach(function(id){ document.getElementById(id).value = ''; });
+  }
+  function searchBookCover(){
+    var title = document.getElementById('bf_title').value.trim();
+    var author = document.getElementById('bf_author').value.trim();
+    if(!title){ alert('Skriv en titel först.'); return; }
+    var q = encodeURIComponent(title + (author ? ' ' + author : ''));
+    fetch('https://www.googleapis.com/books/v1/volumes?q=' + q)
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(data.items && data.items[0]){
+          var info = data.items[0].volumeInfo;
+          if(info.authors && !author) document.getElementById('bf_author').value = info.authors.join(', ');
+          if(info.imageLinks && info.imageLinks.thumbnail) document.getElementById('bf_cover').value = info.imageLinks.thumbnail.replace('http:','https:');
+          if(info.categories && info.categories[0]) document.getElementById('bf_genre').value = info.categories[0];
+        } else {
+          alert('Hittade ingen bok med den titeln.');
+        }
+      })
+      .catch(function(){
+        alert('Kunde inte hämta bokdata just nu — funkar när sidan är publicerad på GitHub Pages, kan vara blockerat i förhandsvisningen här.');
+      });
+  }
+  function saveBookForm(){
+    var title = document.getElementById('bf_title').value.trim();
+    if(!title) return;
+    books.push({
+      title: title,
+      author: document.getElementById('bf_author').value.trim(),
+      cover: document.getElementById('bf_cover').value.trim(),
+      genre: document.getElementById('bf_genre').value.trim(),
+      status: document.getElementById('bf_status').value,
+      progress: parseInt(document.getElementById('bf_progress').value,10) || 0,
+      rating: parseInt(document.getElementById('bf_rating').value,10) || 0
+    });
+    closeBookForm();
+    renderBooks();
+  }
+
+  var studyPlans = [];
+  function statusColor(status){
+    if(status === 'Klar') return { bg:'var(--sage-soft)', fg:'var(--sage)' };
+    if(status === 'Pågår') return { bg:'#DCE6F0', fg:'#4F86C6' };
+    return { bg:'var(--surface-soft)', fg:'var(--text-soft)' };
+  }
+  function renderStudyPlans(){
+    var table = document.getElementById('studyTable');
+    if(studyPlans.length === 0){
+      table.innerHTML = '<tr><td class="rowlabel" style="padding:10px 0;">Inga studieplaner ännu — lägg till din första.</td></tr>';
+      return;
+    }
+    var rows = studyPlans.map(function(p){
+      var c = statusColor(p.status);
+      var schedule = p.start ? p.start + (p.end && p.end !== p.start ? ' → ' + p.end : '') : '';
+      return '<tr>' +
+        '<td class="rowlabel">' + p.title + '</td>' +
+        '<td><span style="background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:3px 8px;font-size:11px;">' + (p.type||'-') + '</span></td>' +
+        '<td><span style="background:var(--surface-soft);border-radius:6px;padding:3px 8px;font-size:11px;">' + (p.lecture||'-') + '</span></td>' +
+        '<td><span style="background:' + c.bg + ';color:' + c.fg + ';border-radius:6px;padding:3px 8px;font-size:11px;">' + p.status + '</span></td>' +
+        '<td style="font-size:11px;color:var(--text-soft);">' + schedule + '</td>' +
+        '</tr>';
+    }).join('');
+    table.innerHTML = '<tr><td class="rowlabel">Studieplan</td><td class="habit-head">Typ</td><td class="habit-head">Föreläsning</td><td class="habit-head">Status</td><td class="habit-head">Schema</td></tr>' + rows;
+  }
+  function openStudyForm(){ document.getElementById('studyFormOverlay').style.display = 'flex'; }
+  function closeStudyForm(){
+    document.getElementById('studyFormOverlay').style.display = 'none';
+    ['sf_title','sf_type','sf_lecture','sf_start','sf_end'].forEach(function(id){ document.getElementById(id).value = ''; });
+  }
+  function saveStudyForm(){
+    var title = document.getElementById('sf_title').value.trim();
+    if(!title) return;
+    studyPlans.push({
+      title: title,
+      type: document.getElementById('sf_type').value.trim(),
+      lecture: document.getElementById('sf_lecture').value.trim(),
+      status: document.getElementById('sf_status').value,
+      start: document.getElementById('sf_start').value,
+      end: document.getElementById('sf_end').value
+    });
+    closeStudyForm();
+    renderStudyPlans();
+  }
+
+  var recipes = [];
+  var recipeView = 'deck';
+  function setRecipeView(v){
+    recipeView = v;
+    document.getElementById('recipeViewDeck').classList.toggle('active', v === 'deck');
+    document.getElementById('recipeViewDetailed').classList.toggle('active', v === 'detailed');
+    document.getElementById('recipeDeckView').style.display = v === 'deck' ? 'block' : 'none';
+    document.getElementById('recipeDetailedView').style.display = v === 'detailed' ? 'block' : 'none';
+    renderRecipes();
+  }
+  function renderRecipes(){
+    if(recipeView === 'deck') renderRecipeDeck(); else renderRecipeDetailed();
+  }
+  function renderRecipeDeck(){
+    var el = document.getElementById('recipeDeckView');
+    if(recipes.length === 0){ el.innerHTML = '<div class="list-empty">Inga recept ännu — lägg till ditt första.</div>'; return; }
+    el.innerHTML = '<div class="recipe-grid">' + recipes.map(function(r, i){
+      return '<div class="recipe-card" onclick="openRecipeDetail(' + i + ')">' +
+        (r.imageUrl ? '<img src="' + r.imageUrl + '" class="recipe-img">' : '<div class="recipe-img recipe-img-empty">🍽️</div>') +
+        '<div class="recipe-card-body"><div class="recipe-card-title">' + r.title + '</div>' +
+        '<div class="recipe-card-meta">' + (r.time || '') + (r.calories ? ' · ' + r.calories + ' kcal' : '') + '</div></div></div>';
+    }).join('') + '</div>';
+  }
+  function renderRecipeDetailed(){
+    var el = document.getElementById('recipeDetailedView');
+    if(recipes.length === 0){ el.innerHTML = '<div class="list-empty">Inga recept ännu — lägg till ditt första.</div>'; return; }
+    var courses = {};
+    recipes.forEach(function(r, i){ var c = r.course || 'Övrigt'; if(!courses[c]) courses[c] = []; courses[c].push(i); });
+    el.innerHTML = Object.keys(courses).map(function(c){
+      var rows = courses[c].map(function(i){
+        var r = recipes[i];
+        return '<tr onclick="openRecipeDetail(' + i + ')" style="cursor:pointer;">' +
+          '<td class="rowlabel">' + r.title + '</td><td style="text-align:center;">' + (r.calories||'-') + '</td>' +
+          '<td style="text-align:center;">' + (r.carbs||'-') + '</td><td style="text-align:center;">' + (r.fat||'-') + '</td>' +
+          '<td style="text-align:center;">' + (r.protein||'-') + '</td><td style="text-align:center;">' + (r.time||'-') + '</td>' +
+          '<td style="text-align:center;">' + (r.servings||'-') + '</td></tr>';
+      }).join('');
+      return '<div style="margin-bottom:16px;overflow-x:auto;"><div style="font-weight:600;font-size:13px;margin-bottom:6px;">' + c + ' (' + courses[c].length + ')</div>' +
+        '<table class="habit-table" style="min-width:500px;"><tr><td class="rowlabel">Recept</td><td class="habit-head">Kcal</td><td class="habit-head">Kolh.</td><td class="habit-head">Fett</td><td class="habit-head">Protein</td><td class="habit-head">Tid</td><td class="habit-head">Port.</td></tr>' + rows + '</table></div>';
+    }).join('');
+  }
+  function openRecipeForm(){ document.getElementById('recipeFormOverlay').style.display = 'flex'; }
+  function closeRecipeForm(){
+    document.getElementById('recipeFormOverlay').style.display = 'none';
+    ['rf_title','rf_image','rf_calories','rf_carbs','rf_fat','rf_protein','rf_time','rf_servings','rf_ingredients','rf_equipment','rf_steps'].forEach(function(id){ document.getElementById(id).value = ''; });
+  }
+  function saveRecipeForm(){
+    var title = document.getElementById('rf_title').value.trim();
+    if(!title) return;
+    recipes.push({
+      title: title,
+      imageUrl: document.getElementById('rf_image').value.trim(),
+      course: document.getElementById('rf_course').value,
+      calories: document.getElementById('rf_calories').value,
+      carbs: document.getElementById('rf_carbs').value,
+      fat: document.getElementById('rf_fat').value,
+      protein: document.getElementById('rf_protein').value,
+      time: document.getElementById('rf_time').value,
+      servings: document.getElementById('rf_servings').value,
+      ingredients: document.getElementById('rf_ingredients').value.split('\n').map(function(s){return s.trim();}).filter(Boolean),
+      equipment: document.getElementById('rf_equipment').value.split('\n').map(function(s){return s.trim();}).filter(Boolean),
+      steps: document.getElementById('rf_steps').value.split('\n').map(function(s){return s.trim();}).filter(Boolean),
+      rating: document.getElementById('rf_rating').value
+    });
+    closeRecipeForm();
+    renderRecipes();
+  }
+  function openRecipeDetail(i){
+    var r = recipes[i];
+    var stars = '★'.repeat(parseInt(r.rating,10) || 0);
+    var html = (r.imageUrl ? '<img src="' + r.imageUrl + '" style="width:100%;border-radius:10px;margin-bottom:12px;max-height:220px;object-fit:cover;">' : '') +
+      '<div style="font-size:20px;font-weight:600;margin-bottom:4px;">' + r.title + '</div>' +
+      '<div style="font-size:13px;color:var(--accent);margin-bottom:10px;">' + stars + '</div>' +
+      '<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text-soft);margin-bottom:14px;">' +
+        '<span>🔥 ' + (r.calories||'-') + ' kcal</span><span>🍞 ' + (r.carbs||'-') + ' g</span><span>🥑 ' + (r.fat||'-') + ' g</span><span>🥩 ' + (r.protein||'-') + ' g</span>' +
+        (r.time ? '<span>⏱ ' + r.time + '</span>' : '') + (r.servings ? '<span>🍽 ' + r.servings + ' port</span>' : '') +
+      '</div>' +
+      (r.ingredients.length ? '<div style="font-size:12px;font-weight:600;margin-bottom:4px;">Ingredienser</div><ul style="font-size:13px;margin:0 0 14px;padding-left:18px;">' + r.ingredients.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul>' : '') +
+      (r.equipment.length ? '<div style="font-size:12px;font-weight:600;margin-bottom:4px;">Utrustning</div><ul style="font-size:13px;margin:0 0 14px;padding-left:18px;">' + r.equipment.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul>' : '') +
+      (r.steps.length ? '<div style="font-size:12px;font-weight:600;margin-bottom:4px;">Gör så här</div><ol style="font-size:13px;margin:0;padding-left:18px;">' + r.steps.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ol>' : '') +
+      '<button class="change-btn" style="margin-top:16px;" onclick="closeRecipeDetail()">Stäng</button>';
+    document.getElementById('recipeDetailContent').innerHTML = html;
+    document.getElementById('recipeDetailOverlay').style.display = 'flex';
+  }
+  function closeRecipeDetail(){ document.getElementById('recipeDetailOverlay').style.display = 'none'; }
+  function renderArkivList(){
+    var cat = arkivCategories.filter(function(c){ return c.key === currentArkivCat; })[0];
+    document.getElementById('arkivCurrentLabel').textContent = cat.name;
+    var list = arkivData[currentArkivCat];
+    document.getElementById('arkivList').innerHTML = list.length
+      ? list.map(function(item){ return '<div class="list-item">' + item + '</div>'; }).join('')
+      : '<div class="list-empty">Inget här än.</div>';
+  }
+  function addArkivEntry(){
+    var input = document.getElementById('arkivInput');
+    var val = input.value.trim();
+    if(!val) return;
+    arkivData[currentArkivCat].push(val);
+    input.value = '';
+    renderArkivList();
+  }
+
+  var lifeGoals = [];
+  var selectedGoalIdx = null;
+  var goalActionIdCounter = 0;
+  var goalView = 'cards';
+  var expandedGoals = {};
+  var cardPalette = [
+    { bg:'#E4EADF', fg:'#4A5D40' }, { bg:'#DCE6F0', fg:'#2E5A8C' }, { bg:'#F5E1D3', fg:'#8C5A2E' },
+    { bg:'#EAE0F3', fg:'#6B4A94' }, { bg:'#DCE6F0', fg:'#2E5A8C' }, { bg:'#E4EADF', fg:'#4A5D40' },
+    { bg:'#EAE0F3', fg:'#6B4A94' }, { bg:'#F5E1D3', fg:'#8C5A2E' }
+  ];
+  var categoryPalette = ['#E4EADF','#DCE6F0','#F5E1D3','#EAE0F3','#F1DAD3','#DCEAE0'];
+  var categoryColorMap = {};
+  function categoryColor(cat){
+    if(!cat) return '#EDEAE2';
+    if(!categoryColorMap[cat]) categoryColorMap[cat] = categoryPalette[Object.keys(categoryColorMap).length % categoryPalette.length];
+    return categoryColorMap[cat];
+  }
+  function setGoalView(v){
+    goalView = v;
+    document.getElementById('goalViewCards').classList.toggle('active', v==='cards');
+    document.getElementById('goalViewTable').classList.toggle('active', v==='table');
+    document.getElementById('goalViewTree').classList.toggle('active', v==='tree');
+    document.getElementById('goalsCardGrid').style.display = v==='cards' ? 'grid' : 'none';
+    document.getElementById('goalsTableWrap').style.display = v==='table' ? 'block' : 'none';
+    document.getElementById('goalTreeWrap').style.display = v==='tree' ? 'block' : 'none';
+    renderGoalsTable();
+  }
+  function renderGoalsTable(){
+    if(goalView === 'cards'){
+      renderGoalCards();
+    } else if(goalView === 'table'){
+      renderGoalTableRows();
+    } else {
+      renderGoalTree();
+    }
+  }
+  function renderGoalTree(){
+    var wrap = document.getElementById('goalTreeWrap');
+    if(lifeGoals.length === 0){ wrap.innerHTML = '<div class="list-empty">Inga mål ännu — lägg till ditt första.</div>'; return; }
+    var w = 700, h = 380;
+    var originX = w/2, originY = h-20;
+    var trunkTopY = originY - 70;
+    var n = lifeGoals.length;
+    var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:auto;display:block;">';
+    svg += '<line x1="' + originX + '" y1="' + originY + '" x2="' + originX + '" y2="' + trunkTopY + '" stroke="#BFA98F" stroke-width="6" stroke-linecap="round"></line>';
+    lifeGoals.forEach(function(g, i){
+      var c = cardPalette[i % cardPalette.length];
+      var t = n > 1 ? i / (n-1) : 0.5;
+      var endX = originX + (t - 0.5) * 2 * 260;
+      var endY = trunkTopY - (50 + (g.progress/100) * 170) + Math.abs(t-0.5) * 30;
+      var ctrlX = (originX + endX) / 2;
+      var ctrlY = trunkTopY - 30;
+      var strokeW = 2.5 + (g.progress/100) * 4;
+      svg += '<path d="M' + originX + ',' + trunkTopY + ' Q' + ctrlX + ',' + ctrlY + ' ' + endX + ',' + endY + '" fill="none" stroke="' + c.fg + '" stroke-width="' + strokeW + '" stroke-linecap="round" opacity="0.85"></path>';
+      svg += '<circle cx="' + endX + '" cy="' + endY + '" r="7" fill="' + c.fg + '" style="cursor:pointer;" onclick="openGoalDetail(' + i + ')"></circle>';
+      var textAnchor = t < 0.35 ? 'start' : (t > 0.65 ? 'end' : 'middle');
+      var textDx = t < 0.35 ? 8 : (t > 0.65 ? -8 : 0);
+      svg += '<text x="' + (endX + textDx) + '" y="' + (endY - 12) + '" font-size="11" font-weight="600" fill="' + c.fg + '" text-anchor="' + textAnchor + '">' + g.title + '</text>';
+      svg += '<text x="' + (endX + textDx) + '" y="' + (endY + 2) + '" font-size="10" fill="' + c.fg + '" text-anchor="' + textAnchor + '" opacity="0.8">' + g.progress + '%</text>';
+    });
+    svg += '</svg>';
+    wrap.innerHTML = svg;
+  }
+  function renderGoalCards(){
+    var grid = document.getElementById('goalsCardGrid');
+    if(lifeGoals.length === 0){ grid.innerHTML = '<div class="list-empty">Inga mål ännu — lägg till ditt första.</div>'; return; }
+    grid.innerHTML = lifeGoals.map(function(g, i){
+      var c = cardPalette[i % cardPalette.length];
+      return '<div class="recipe-card" style="background:' + c.bg + ';border:none;padding:14px;cursor:pointer;" onclick="openGoalDetail(' + i + ')">' +
+        '<div style="font-size:13px;font-weight:600;color:' + c.fg + ';margin-bottom:10px;">' + g.title + '</div>' +
+        '<div style="font-size:12px;color:' + c.fg + ';margin-bottom:4px;">' + g.progress + ' %</div>' +
+        '<div class="bar"><div class="bar-fill" style="width:' + g.progress + '%;background:' + c.fg + ';"></div></div>' +
+        '</div>';
+    }).join('');
+  }
+  function renderGoalTableRows(){
+    var table = document.getElementById('goalsTable');
+    if(lifeGoals.length === 0){
+      table.innerHTML = '<tr><td class="rowlabel" style="padding:10px 0;">Inga mål ännu — lägg till ditt första.</td></tr>';
+      return;
+    }
+    var rows = lifeGoals.map(function(g, i){
+      var expanded = !!expandedGoals[i];
+      var arrow = g.milestones.length ? '<span onclick="event.stopPropagation();toggleGoalExpand(' + i + ')" style="cursor:pointer;display:inline-block;width:14px;">' + (expanded ? '▾' : '▸') + '</span>' : '<span style="display:inline-block;width:14px;"></span>';
+      var mainRow = '<tr>' +
+        '<td class="rowlabel" style="cursor:pointer;" onclick="openGoalDetail(' + i + ')">' + arrow + g.title + '</td>' +
+        '<td style="text-align:center;"><span style="background:' + categoryColor(g.category) + ';border-radius:6px;padding:3px 8px;font-size:11px;">' + (g.category||'-') + '</span></td>' +
+        '<td style="text-align:center;"><div class="habit-box' + (g.completed?' done':'') + '" style="margin:0 auto;" onclick="toggleGoalCompleted(' + i + ')">' + (g.completed?'✓':'') + '</div></td>' +
+        '<td style="text-align:center;font-size:11px;">' + (g.deadline||'-') + '</td>' +
+        '<td style="font-size:11px;"><div style="display:flex;align-items:center;gap:6px;"><span>' + g.progress + '%</span><div class="bar" style="flex:1;margin:0;"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div></div></td>' +
+        '</tr>';
+      var subRows = '';
+      if(expanded){
+        subRows = g.milestones.map(function(m, mi){
+          return '<tr>' +
+            '<td class="rowlabel" style="padding-left:26px;font-size:12px;color:var(--text-soft);">' + m.title + '</td>' +
+            '<td></td>' +
+            '<td style="text-align:center;"><div class="habit-box' + (m.done?' done':'') + '" style="margin:0 auto;" onclick="toggleMilestoneQuick(' + i + ',' + mi + ')">' + (m.done?'✓':'') + '</div></td>' +
+            '<td></td><td></td></tr>';
+        }).join('');
+        if(g.milestones.length === 0) subRows = '<tr><td class="rowlabel" style="padding-left:26px;font-size:12px;color:var(--text-soft);font-style:italic;">Inga delmål ännu.</td><td></td><td></td><td></td><td></td></tr>';
+      }
+      return mainRow + subRows;
+    }).join('');
+    table.innerHTML = '<tr><td class="rowlabel">Mål</td><td class="habit-head">Kategori</td><td class="habit-head">Klar</td><td class="habit-head">Deadline</td><td class="habit-head">Progress</td></tr>' + rows;
+  }
+  function toggleGoalExpand(i){ expandedGoals[i] = !expandedGoals[i]; renderGoalTableRows(); }
+  function toggleGoalCompleted(i){
+    lifeGoals[i].completed = !lifeGoals[i].completed;
+    if(lifeGoals[i].completed) celebrate();
+    renderGoalTableRows();
+  }
+  function toggleMilestoneQuick(i, mi){ lifeGoals[i].milestones[mi].done = !lifeGoals[i].milestones[mi].done; renderGoalTableRows(); }
+  function requestAiGoalSplit(){
+    var val = document.getElementById('aiGoalInput').value.trim();
+    if(!val){ alert('Skriv in målet du vill bryta ner först.'); return; }
+    alert('AI-uppdelningen kräver samma backend-koppling som AI-uppföljningen i månadsreflektionen — då kan Claude läsa målet du skrev och föreslå en konkret plan bruten ner på år/kvartal/månad/vecka. Läggs i tekniska passet.');
+  }
+  function openGoalForm(){ document.getElementById('goalFormOverlay').style.display = 'flex'; }
+  function closeGoalForm(){
+    document.getElementById('goalFormOverlay').style.display = 'none';
+    ['gf_title','gf_category','gf_progress','gf_deadline'].forEach(function(id){ document.getElementById(id).value = ''; });
+  }
+  function saveGoalForm(){
+    var title = document.getElementById('gf_title').value.trim();
+    if(!title) return;
+    lifeGoals.push({
+      title: title,
+      category: document.getElementById('gf_category').value.trim(),
+      completed: false,
+      progress: parseInt(document.getElementById('gf_progress').value,10) || 0,
+      deadline: document.getElementById('gf_deadline').value,
+      milestones: [],
+      actions: []
+    });
+    closeGoalForm();
+    renderGoalsTable();
+  }
+  function openGoalDetail(i){
+    selectedGoalIdx = i;
+    renderGoalDetail();
+    document.getElementById('goalDetailCard').style.display = 'block';
+  }
+  function closeGoalDetail(){
+    document.getElementById('goalDetailCard').style.display = 'none';
+    selectedGoalIdx = null;
+  }
+  function renderGoalDetail(){
+    if(selectedGoalIdx === null) return;
+    var g = lifeGoals[selectedGoalIdx];
+    var card = document.getElementById('goalDetailCard');
+    card.innerHTML =
+      '<div class="card-label">' + g.title + '</div>' +
+      '<div class="card-sub">' + (g.category||'') + (g.deadline ? ' · deadline ' + g.deadline : '') + '</div>' +
+      '<div class="bar" style="margin-bottom:4px;"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div>' +
+      '<div style="font-size:12px;color:var(--text-soft);margin-bottom:16px;">' + g.progress + '% klart</div>' +
+      '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">Milstolpar</div>' +
+      '<ul class="task-list" id="goalMilestoneList" style="margin-bottom:10px;">' +
+        g.milestones.map(function(m, mi){ return '<li class="' + (m.done?'done':'') + '" onclick="toggleMilestone(' + mi + ')"><span class="box">' + (m.done?'✓':'') + '</span><span class="t">' + m.title + '</span></li>'; }).join('') +
+      '</ul>' +
+      '<div class="add-row" style="margin-bottom:18px;"><input type="text" id="goalMilestoneInput" placeholder="Lägg till milstolpe..."><button onclick="addMilestone()">Lägg till</button></div>' +
+      '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">Actions</div>' +
+      '<ul class="task-list" id="goalActionList" style="margin-bottom:10px;">' +
+        g.actions.map(function(a){ return '<li class="' + (a.done?'done':'') + '" onclick="toggleActionById(' + a.id + ')"><span class="box">' + (a.done?'✓':'') + '</span><span class="t">' + a.text + ' <span style="color:var(--text-soft);font-size:11px;">(' + a.freq + ')</span></span></li>'; }).join('') +
+      '</ul>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+        '<input type="text" id="goalActionInput" placeholder="Ny action..." style="flex:1;min-width:120px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--surface-soft);color:var(--text);">' +
+        '<select id="goalActionFreq" style="border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text);"><option>Dagligen</option><option>Veckovis</option><option>Månadsvis</option><option>Kvartalsvis</option><option>Årligen</option></select>' +
+        '<button class="change-btn" onclick="addAction()">Lägg till</button>' +
+      '</div>' +
+      '<button class="change-btn" style="margin-top:16px;" onclick="closeGoalDetail()">Stäng</button>';
+  }
+  function toggleMilestone(mi){
+    var g = lifeGoals[selectedGoalIdx];
+    g.milestones[mi].done = !g.milestones[mi].done;
+    renderGoalDetail();
+  }
+  function addMilestone(){
+    var input = document.getElementById('goalMilestoneInput');
+    var val = input.value.trim();
+    if(!val) return;
+    lifeGoals[selectedGoalIdx].milestones.push({ title: val, done:false });
+    renderGoalDetail();
+    renderGoalsTable();
+  }
+  function addAction(){
+    var input = document.getElementById('goalActionInput');
+    var val = input.value.trim();
+    if(!val) return;
+    goalActionIdCounter++;
+    lifeGoals[selectedGoalIdx].actions.push({ id: goalActionIdCounter, text: val, freq: document.getElementById('goalActionFreq').value, done:false });
+    renderGoalDetail();
+    renderGoalsTable();
+    renderAllGoalActionWidgets();
+  }
+  function findActionById(id){
+    for(var i = 0; i < lifeGoals.length; i++){
+      for(var j = 0; j < lifeGoals[i].actions.length; j++){
+        if(lifeGoals[i].actions[j].id === id) return { goal: lifeGoals[i], action: lifeGoals[i].actions[j] };
+      }
+    }
+    return null;
+  }
+  function toggleActionById(id){
+    var found = findActionById(id);
+    if(!found) return;
+    found.action.done = !found.action.done;
+    renderGoalDetail();
+    renderAllGoalActionWidgets();
+  }
+  function actionsByFreq(freq){
+    var out = [];
+    lifeGoals.forEach(function(g){ g.actions.forEach(function(a){ if(a.freq === freq) out.push({ goalTitle: g.title, action: a }); }); });
+    return out;
+  }
+  function renderGoalActionsWidget(containerId, freq){
+    var el = document.getElementById(containerId);
+    if(!el) return;
+    var list = actionsByFreq(freq);
+    el.innerHTML = list.length === 0
+      ? '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga ' + freq.toLowerCase() + ' actions från mål ännu.</li>'
+      : list.map(function(item){
+          return '<li class="' + (item.action.done?'done':'') + '" onclick="toggleActionById(' + item.action.id + ')">' +
+            '<span class="box">' + (item.action.done?'✓':'') + '</span><span class="t">' + item.action.text + ' <span style="color:var(--text-soft);font-size:11px;">— ' + item.goalTitle + '</span></span></li>';
+        }).join('');
+  }
+  function renderAllGoalActionWidgets(){
+    renderGoalActionsWidget('dailyGoalActions', 'Dagligen');
+    renderGoalActionsWidget('weekGoalActions', 'Veckovis');
+    renderGoalActionsWidget('monthGoalActions', 'Månadsvis');
+    renderGoalActionsWidget('quarterGoalActions', 'Kvartalsvis');
+    renderGoalActionsWidget('yearGoalActions', 'Årligen');
+  }
+
+  function toggleAcc(headEl){
+    var item = headEl.closest('.acc-item');
+    var wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.acc-item.open').forEach(function(el){ el.classList.remove('open'); });
+    if(!wasOpen) item.classList.add('open');
+  }
+
+  var monthNamesFull = ['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+  var reflectionQuestions = [
+    'Vad var din största utmaning och hur hanterade du den?',
+    'Vad är du mest tacksam för denna månad?',
+    'Vad var det viktigaste du lärde dig?',
+    'Hur tog du hand om din hälsa — träning, sömn, mat?',
+    'Hur växte du personligt eller inom Dosed?',
+    'Vad skulle du göra annorlunda nästa månad?',
+    'Vad är din intention inför nästa månad?'
+  ];
+  var monthlyData = {};
+  function monthKeyFor(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1); }
+  function ensureMonth(key){
+    if(!monthlyData[key]) monthlyData[key] = { answers: reflectionQuestions.map(function(){ return ''; }) };
+    return monthlyData[key];
+  }
+  var currentMonthDate = new Date();
+  currentMonthDate.setDate(1);
+
+  function shiftMonth(dir){
+    currentMonthDate.setMonth(currentMonthDate.getMonth() + dir);
+    refreshMonthView();
+  }
+  function pickMonth(val){
+    var parts = val.split('-');
+    currentMonthDate = new Date(parseInt(parts[0],10), parseInt(parts[1],10) - 1, 1);
+    refreshMonthView();
+  }
+  function refreshMonthView(){
+    document.getElementById('monthLabel').textContent = monthNamesFull[currentMonthDate.getMonth()].charAt(0).toUpperCase() + monthNamesFull[currentMonthDate.getMonth()].slice(1) + ' ' + currentMonthDate.getFullYear();
+    document.getElementById('monthPicker').value = monthKeyFor(currentMonthDate);
+    renderMonthAccordion();
+    renderPrevMonthCard();
+  }
+  function populateMonthPicker(){
+    var picker = document.getElementById('monthPicker');
+    var opts = [];
+    for(var offset = -18; offset <= 18; offset++){
+      var d = new Date();
+      d.setDate(1);
+      d.setMonth(d.getMonth() + offset);
+      var key = monthKeyFor(d);
+      var label = monthNamesFull[d.getMonth()].charAt(0).toUpperCase() + monthNamesFull[d.getMonth()].slice(1) + ' ' + d.getFullYear();
+      opts.push('<option value="' + key + '">' + label + '</option>');
+    }
+    picker.innerHTML = opts.join('');
+    picker.value = monthKeyFor(currentMonthDate);
+  }
+  function renderMonthAccordion(){
+    var key = monthKeyFor(currentMonthDate);
+    var data = ensureMonth(key);
+    document.getElementById('accList').innerHTML = reflectionQuestions.map(function(q, i){
+      return '<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><div class="radio"></div><div class="q">' + q + '</div><div class="chev">⌄</div></div>' +
+        '<div class="acc-body"><textarea placeholder="Skriv dina tankar..." oninput="saveMonthAnswer(' + i + ', this.value)">' + data.answers[i] + '</textarea></div></div>';
+    }).join('');
+  }
+  function saveMonthAnswer(i, val){
+    var key = monthKeyFor(currentMonthDate);
+    ensureMonth(key).answers[i] = val;
+  }
+  function renderPrevMonthCard(){
+    var prevDate = new Date(currentMonthDate);
+    prevDate.setMonth(prevDate.getMonth() - 1);
+    var prevKey = monthKeyFor(prevDate);
+    var prevData = monthlyData[prevKey];
+    var hasContent = prevData && prevData.answers.some(function(a){ return a.trim(); });
+    var card = document.getElementById('prevMonthCard');
+    var prevLabel = monthNamesFull[prevDate.getMonth()].charAt(0).toUpperCase() + monthNamesFull[prevDate.getMonth()].slice(1) + ' ' + prevDate.getFullYear();
+    if(!hasContent){
+      card.innerHTML = '<div class="card-label">Föregående månad — ' + prevLabel + '</div><div class="measure-note">Ingen reflektion loggad för ' + prevLabel + ' än.</div>';
+      return;
+    }
+    var intentionIdx = reflectionQuestions.length - 1;
+    var html = '<div class="card-label">Föregående månad — ' + prevLabel + '</div>';
+    reflectionQuestions.forEach(function(q, i){
+      if(!prevData.answers[i].trim()) return;
+      var isIntention = i === intentionIdx;
+      html += '<div style="padding:8px 0;border-top:1px solid var(--border);' + (isIntention ? 'background:var(--accent-soft);border-radius:8px;padding:10px;border-top:none;margin-top:6px;' : '') + '">' +
+        '<div style="font-size:11px;color:var(--text-soft);margin-bottom:3px;">' + q + '</div>' +
+        '<div style="font-size:13px;">' + prevData.answers[i] + '</div></div>';
+    });
+    card.innerHTML = html;
+  }
+  function requestAiFollowup(){
+    alert('AI-uppföljningen kräver backend-kopplingen vi bygger i tekniska passet — då kan Claude läsa förra månadens svar och föreslå nya frågor + fokus för kommande månad automatiskt.');
+  }
+
+  var quarterOffset = 0;
+  function quarterInfoFor(offset){
+    var today = new Date();
+    var totalQ = today.getFullYear() * 4 + Math.floor(today.getMonth()/3) + offset;
+    var year = Math.floor(totalQ/4);
+    var q = (totalQ % 4) + 1;
+    return { year: year, q: q, label: 'Q' + q + ' ' + year };
+  }
+  function shiftQuarter(dir){ quarterOffset += dir; refreshQuarterNav(); }
+  function pickQuarter(val){ quarterOffset = parseInt(val, 10); refreshQuarterNav(); }
+  function refreshQuarterNav(){
+    var info = quarterInfoFor(quarterOffset);
+    document.getElementById('quarterLabel').textContent = info.label;
+    document.getElementById('quarterPicker').value = quarterOffset;
+    document.getElementById('econQuarterLabel').textContent = 'Ekonomi ' + info.label;
+    document.getElementById('winsQuarterLabel').textContent = info.label;
+    renderGoals();
+  }
+  function populateQuarterPicker(){
+    var picker = document.getElementById('quarterPicker');
+    var opts = [];
+    for(var o = -8; o <= 8; o++){
+      opts.push('<option value="' + o + '">' + quarterInfoFor(o).label + '</option>');
+    }
+    picker.innerHTML = opts.join('');
+    picker.value = quarterOffset;
+  }
+
+  var goals = {
+    'Dosed': [ {t:'Färdig visuell identitet', done:false}, {t:'Fysisk mockup klar', done:false} ],
+    'Hälsa': [ {t:'Slutföra 75 Hard', done:false} ],
+    'Ekonomi': [],
+    'Personligt': []
+  };
+  var currentCat = 'Dosed';
+  var catOrder = ['Dosed','Hälsa','Ekonomi','Personligt'];
+  function renderGoals(){
+    var quad = document.getElementById('q_goalQuad');
+    quad.innerHTML = catOrder.map(function(cat){
+      var list = goals[cat];
+      var body = list.length === 0
+        ? '<div class="empty">Inga mål ännu</div>'
+        : list.map(function(g, i){
+            return '<div class="goal-row' + (g.done ? ' done' : '') + '" onclick="toggleGoal(\'' + cat + '\',' + i + ')">' +
+              '<div class="box">' + (g.done ? '✓' : '') + '</div><span class="t">' + g.t + '</span></div>';
+          }).join('');
+      return '<div class="goal-quad-card"><div class="cat-name">' + cat + '</div>' + body + '</div>';
+    }).join('');
+    var total = 0, done = 0;
+    Object.keys(goals).forEach(function(k){ goals[k].forEach(function(g){ total++; if(g.done) done++; }); });
+    document.getElementById('q_goalCountLabel').textContent = quarterInfoFor(quarterOffset).label + ' · ' + done + '/' + total + ' klara';
+  }
+  function toggleGoal(cat, i){ goals[cat][i].done = !goals[cat][i].done; renderGoals(); }
+  function switchCat(el){
+    document.querySelectorAll('.cat-tab').forEach(function(t){ t.classList.remove('active'); });
+    el.classList.add('active');
+    currentCat = el.dataset.cat;
+  }
+  function addGoalQ(){
+    var input = document.getElementById('q_goalInput');
+    var val = input.value.trim();
+    if(!val) return;
+    goals[currentCat].push({t: val, done:false});
+    input.value = '';
+    renderGoals();
+  }
+  var quarterBooks = [];
+  function renderQuarterBooks(){
+    var el = document.getElementById('q_booksList');
+    el.innerHTML = quarterBooks.length
+      ? quarterBooks.map(function(b){ return '<div class="list-item">' + b + '</div>'; }).join('')
+      : '<div class="list-empty">Inga böcker klara än — markera en som klar när du är där.</div>';
+    saveAll();
+  }
+  function addBook(){
+    var input = document.getElementById('q_bookInput');
+    var val = input.value.trim();
+    if(!val) return;
+    quarterBooks.push(val);
+    input.value = '';
+    renderQuarterBooks();
+  }
+  var dosedLog = [];
+  function renderDosedLog(){
+    var el = document.getElementById('dosedList');
+    el.innerHTML = dosedLog.length
+      ? dosedLog.map(function(e){ return '<div class="list-item">' + e + '</div>'; }).join('')
+      : '<div class="list-empty">Inget loggat än.</div>';
+    saveAll();
+  }
+  function addDosedEntry(){
+    var input = document.getElementById('dosedInput');
+    var val = input.value.trim();
+    if(!val) return;
+    dosedLog.push(todayStr() + ' · ' + val);
+    input.value = '';
+    renderDosedLog();
+  }
+  var tiktokLog = [];
+  function renderTiktokLog(){
+    var el = document.getElementById('tiktokList');
+    el.innerHTML = tiktokLog.length
+      ? tiktokLog.map(function(e){ return '<div class="list-item">' + e + '</div>'; }).join('')
+      : '<div class="list-empty">Inget loggat än.</div>';
+    saveAll();
+  }
+  function addTiktokEntry(){
+    var input = document.getElementById('tiktokInput');
+    var val = input.value.trim();
+    if(!val) return;
+    tiktokLog.push(todayStr() + ' · ' + val);
+    input.value = '';
+    renderTiktokLog();
+  }
+  function todayStr(){
+    var d = new Date();
+    return formatShort(d);
+  }
+
+  var quarterWins = [];
+  function renderWins(){
+    var el = document.getElementById('q_winsList');
+    el.innerHTML = quarterWins.length
+      ? quarterWins.map(function(w){ return '<div class="list-item">' + w + '</div>'; }).join('')
+      : '<div class="list-empty">Inga vinster loggade än — börja fira framstegen.</div>';
+    saveAll();
+  }
+  function addWin(){
+    var input = document.getElementById('q_winInput');
+    var val = input.value.trim();
+    if(!val) return;
+    quarterWins.push(val);
+    input.value = '';
+    renderWins();
+  }
+  var quarterIdeas = [];
+  function renderIdeas(){
+    var el = document.getElementById('q_ideaList');
+    el.innerHTML = quarterIdeas.length
+      ? quarterIdeas.map(function(idea){ return '<div class="list-item">' + idea + '</div>'; }).join('')
+      : '<div class="list-empty">Idé-parkeringen är tom.</div>';
+    saveAll();
+  }
+  function addIdea(){
+    var input = document.getElementById('q_ideaInput');
+    var val = input.value.trim();
+    if(!val) return;
+    quarterIdeas.push(val);
+    input.value = '';
+    renderIdeas();
+  }
+
+  var STORAGE_KEY = 'livsdashboard_v1';
+  function saveAll(){
+    try{
+      var savedInput = document.getElementById('savedAmountInput');
+      var goalInput = document.getElementById('savingsGoalInput');
+      var reflInput = document.getElementById('w_reflectionText');
+      var state = {
+        weekGoals: weekGoals, habitState: habitState, tasksByDay: tasksByDay, calEvents: calEvents,
+        weekReflectionText: reflInput ? reflInput.value : weekReflectionText,
+        dailyLog: dailyLog, measurementsLog: measurementsLog,
+        goals: goals, quarterBooks: quarterBooks, quarterWins: quarterWins, quarterIdeas: quarterIdeas,
+        dosedLog: dosedLog, tiktokLog: tiktokLog, arkivData: arkivData, recipes: recipes,
+        studyPlans: studyPlans, books: books, lifeGoals: lifeGoals, goalActionIdCounter: goalActionIdCounter,
+        monthlyData: monthlyData, yearData: yearData,
+        weekOffset: weekOffset, quarterOffset: quarterOffset, yearOffset: yearOffset, dagligenWeekOffset: dagligenWeekOffset,
+        selectedDate: selectedDate, currentCat: currentCat, currentArkivCat: currentArkivCat,
+        bookFilter: bookFilter, recipeView: recipeView, goalView: goalView,
+        categoryColorMap: categoryColorMap,
+        savedAmount: savedInput ? savedInput.value : '',
+        savingsGoalVal: goalInput ? goalInput.value : ''
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch(e){ /* lagring otillgänglig eller full — misslyckas tyst */ }
+  }
+  var restoredSavedAmount = '';
+  var restoredSavingsGoal = '';
+  function loadAll(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      var s = JSON.parse(raw);
+      if(s.weekGoals) weekGoals = s.weekGoals;
+      if(s.habitState) habitState = s.habitState;
+      if(s.tasksByDay) tasksByDay = s.tasksByDay;
+      if(s.calEvents) calEvents = s.calEvents;
+      if(s.weekReflectionText) weekReflectionText = s.weekReflectionText;
+      if(s.dailyLog) dailyLog = s.dailyLog;
+      if(s.measurementsLog) measurementsLog = s.measurementsLog;
+      if(s.goals) goals = s.goals;
+      if(s.quarterBooks) quarterBooks = s.quarterBooks;
+      if(s.quarterWins) quarterWins = s.quarterWins;
+      if(s.quarterIdeas) quarterIdeas = s.quarterIdeas;
+      if(s.dosedLog) dosedLog = s.dosedLog;
+      if(s.tiktokLog) tiktokLog = s.tiktokLog;
+      if(s.arkivData) arkivData = s.arkivData;
+      if(s.recipes) recipes = s.recipes;
+      if(s.studyPlans) studyPlans = s.studyPlans;
+      if(s.books) books = s.books;
+      if(s.lifeGoals) lifeGoals = s.lifeGoals;
+      if(typeof s.goalActionIdCounter === 'number') goalActionIdCounter = s.goalActionIdCounter;
+      if(s.monthlyData) monthlyData = s.monthlyData;
+      if(s.yearData) yearData = s.yearData;
+      if(typeof s.weekOffset === 'number') weekOffset = s.weekOffset;
+      if(typeof s.quarterOffset === 'number') quarterOffset = s.quarterOffset;
+      if(typeof s.yearOffset === 'number') yearOffset = s.yearOffset;
+      if(typeof s.dagligenWeekOffset === 'number') dagligenWeekOffset = s.dagligenWeekOffset;
+      if(s.selectedDate) selectedDate = s.selectedDate;
+      if(s.currentCat) currentCat = s.currentCat;
+      if(s.currentArkivCat) currentArkivCat = s.currentArkivCat;
+      if(s.bookFilter) bookFilter = s.bookFilter;
+      if(s.recipeView) recipeView = s.recipeView;
+      if(s.goalView) goalView = s.goalView;
+      if(s.categoryColorMap) categoryColorMap = s.categoryColorMap;
+      restoredSavedAmount = s.savedAmount || '';
+      restoredSavingsGoal = s.savingsGoalVal || '';
+    } catch(e){ /* korrupt data — kör vidare med standardvärden */ }
+  }
+  var saveDebounceTimer = null;
+  function scheduleSave(){
+    clearTimeout(saveDebounceTimer);
+    saveDebounceTimer = setTimeout(saveAll, 400);
+  }
+  document.addEventListener('click', scheduleSave);
+  document.addEventListener('input', scheduleSave);
+  document.addEventListener('change', scheduleSave);
+  window.addEventListener('beforeunload', saveAll);
+
+  loadAll();
+
+  renderWeekGoals();
+  renderHabitTable();
+  renderTaskDays();
+  renderCalEvents();
+  document.getElementById('w_reflectionText').value = weekReflectionText || '';
+  renderDaySelector();
+  renderMoodRow();
+  renderDailyHabits();
+  renderDailyNoteArea();
+  renderMeasureSection();
+  renderWeekMoodSummary();
+  renderMonthAccordion();
+  renderPrevMonthCard();
+  renderSessionsAndSleep();
+  populateMonthPicker();
+  populateWeekPicker();
+  refreshWeekNav();
+  populateQuarterPicker();
+  document.getElementById('savedAmountInput').value = restoredSavedAmount;
+  document.getElementById('savingsGoalInput').value = restoredSavingsGoal;
+  updateSavingsJar();
+  renderHabitsView();
+  populateYearPicker();
+  refreshYearNav();
+  renderYearHabitsBars();
+  renderYearSessionsAndSleep();
+  renderArkivGrid();
+  selectArkivCat(currentArkivCat);
+  setRecipeView(recipeView);
+  renderQuarterBooks();
+  renderDosedLog();
+  renderTiktokLog();
+  renderWins();
+  renderIdeas();
+  setGoalView(goalView);
+  renderAllGoalActionWidgets();
+  renderGoals();
+</script>
+</body>
+</html>
