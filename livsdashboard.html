@@ -6,30 +6,36 @@
 <title>Livsdashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,400;1,500&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F3EFE4;--surface:#FFFFFF;--surface-soft:#F7F5EF;--border:#E7E2D3;
-    --text:#3A3327;--text-soft:#8C8574;--accent:#FB4F74;--accent-soft:#FDE1E7;
-    --sage:#65673F;--sage-soft:#EAEBDF;--radius:16px;
-    --nav-bg:#FFFFFF;--nav-text:#5D5E25;--nav-active:#FB4F74;--nav-active-text:#FFFFFF;
+    --bg:#F8F6F1;--surface:#FFFFFF;--surface-soft:#F2EFE3;--border:#E7E2D3;
+    --text:#2E2A25;--text-soft:#8C8574;--accent:#FB4F74;--accent-soft:#FDE1E7;
+    --sage:#5D6B52;--sage-soft:#DCE5D0;--radius:16px;
+    --nav-bg:#FFFFFF;--nav-text:#4A5540;--nav-active:#5D6B52;--nav-active-text:#FFFFFF;
     --card-border-w:0px;
+    --sidebar-w:230px;
+    --font-head:'Playfair Display',serif;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;color:var(--text);font-family:'Inter',-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;
-    background:
-      radial-gradient(circle at 10% 0%, rgba(188,191,170,0.35), transparent 55%),
-      radial-gradient(circle at 90% 10%, rgba(251,79,116,0.14), transparent 55%),
-      radial-gradient(circle at 80% 90%, rgba(101,103,63,0.12), transparent 55%),
-      linear-gradient(160deg,#F8F4E8 0%,#F1ECDD 45%,#F6E9E4 100%);
-    background-attachment:fixed;
+    background:var(--bg);
   }
-  .wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px;}
+  .app-shell{display:flex;min-height:100vh;align-items:flex-start;}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);min-height:100vh;position:sticky;top:0;padding:26px 14px;display:flex;flex-direction:column;}
+  .sidebar-logo{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:.01em;color:var(--text);padding:0 10px 4px;}
+  .sidebar-logo-sub{font-size:10px;color:var(--text-soft);font-weight:500;letter-spacing:.02em;margin-top:2px;text-transform:none;}
+  .sidebar-tagline{font-family:'Lora',serif;font-style:italic;font-size:11px;color:var(--text-soft);margin-top:14px;padding-bottom:18px;border-bottom:1px solid var(--border);line-height:1.5;}
+  .sidebar-nav{display:flex;flex-direction:column;gap:2px;flex:1;}
+  .sidebar-footer{font-size:11px;color:var(--text-soft);font-style:italic;padding:14px 10px 4px;line-height:1.5;}
+  .tab-ic{margin-right:10px;font-size:14px;}
+  .main-content{flex:1;min-width:0;}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 28px 80px;}
 
   .top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:16px;}
   .tag{font-size:12px;color:var(--text-soft);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
-  .title{font-size:34px;margin:0;font-weight:800;text-transform:uppercase;color:var(--text);letter-spacing:.01em;}
+  .title{font-family:var(--font-head);font-size:26px;margin:0;font-weight:700;text-transform:none;color:var(--text);letter-spacing:0;}
   .title em{font-family:'Inter',sans-serif;font-style:normal;font-weight:800;color:var(--text);text-transform:uppercase;}
   .datebox{text-align:right;font-size:13px;color:var(--text);font-weight:600;text-transform:uppercase;}
   .weeknav{display:flex;align-items:center;gap:10px;margin-top:6px;justify-content:flex-end;}
@@ -38,8 +44,8 @@
   .weeknav span{font-size:13px;color:var(--text);}
 
   .tabs{display:flex;gap:8px;margin:22px 0 26px;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;}
-  .tab{border:none;background:var(--nav-bg);font-size:12px;font-weight:600;padding:9px 18px;border-radius:999px;cursor:pointer;color:var(--nav-text);transition:background .15s,color .15s;box-shadow:0 1px 4px rgba(0,0,0,.08);}
-  .tab:hover{background:#f2f2f2;}
+  .tab{border:none;background:var(--nav-bg);font-size:13px;font-weight:600;padding:10px 14px;border-radius:10px;cursor:pointer;color:var(--nav-text);transition:background .15s,color .15s;display:flex;align-items:center;width:100%;text-align:left;}
+  .tab:hover{background:var(--surface-soft);}
   .tab.active{background:var(--nav-active);color:var(--nav-active-text);}
 
   .view{display:none;}
@@ -189,7 +195,7 @@
   .mood-summary{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
   .mood-chip{font-size:12px;background:var(--surface-soft);border-radius:20px;padding:5px 12px;color:var(--text-soft);}
 
-  .saved-box{border:none;background:linear-gradient(135deg,var(--accent-soft),#fff);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(251,79,116,.18);}
+  .saved-box{border:none;background:linear-gradient(135deg,var(--accent-soft),#fff);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(63,82,48,.18);}
   .saved-box-head{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px;}
   .saved-box-head i{font-style:normal;}
   .saved-box-text{font-size:13px;color:var(--text);white-space:pre-wrap;margin-bottom:10px;}
@@ -265,20 +271,20 @@
 
   .tab{box-shadow:0 2px 6px rgba(0,0,0,.06) !important;transition:transform .12s,box-shadow .12s !important;}
   .tab:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.1) !important;}
-  .tab.active{box-shadow:0 4px 12px rgba(251,79,116,.35) !important;}
+  .tab.active{box-shadow:0 4px 12px rgba(63,82,48,.35) !important;}
 
-  .save-btn{background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 80%,black)) !important;box-shadow:0 3px 10px rgba(251,79,116,.3),inset 0 1px 0 rgba(255,255,255,.25) !important;transition:transform .12s,box-shadow .12s;}
-  .save-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(251,79,116,.35),inset 0 1px 0 rgba(255,255,255,.25) !important;}
+  .save-btn{background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 80%,black)) !important;box-shadow:0 3px 10px rgba(63,82,48,.3),inset 0 1px 0 rgba(255,255,255,.25) !important;transition:transform .12s,box-shadow .12s;}
+  .save-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(63,82,48,.35),inset 0 1px 0 rgba(255,255,255,.25) !important;}
   .change-btn{box-shadow:0 2px 5px rgba(0,0,0,.06) !important;background:#fff !important;transition:transform .12s;}
   .change-btn:hover{transform:translateY(-1px);}
 
   .day-sel{box-shadow:0 2px 6px rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s;}
   .day-sel:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(0,0,0,.1);}
-  .day-sel.active{box-shadow:0 5px 14px rgba(251,79,116,.4) !important;}
+  .day-sel.active{box-shadow:0 5px 14px rgba(63,82,48,.4) !important;}
 
   .cal-day-col{box-shadow:0 3px 10px rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s;}
   .cal-day-col:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.1);}
-  .cal-day-col.today{box-shadow:0 5px 14px rgba(251,79,116,.3) !important;}
+  .cal-day-col.today{box-shadow:0 5px 14px rgba(63,82,48,.3) !important;}
 
   .habit-box{box-shadow:0 2px 4px rgba(0,0,0,.08);}
   .mood-btn{box-shadow:0 3px 8px rgba(0,0,0,.06) !important;}
@@ -293,7 +299,7 @@
   .recipe-card:hover,.arkiv-box:hover{transform:translateY(-2px);}
 
   .bar{height:9px;background:var(--surface-soft);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.12);}
-  .bar-fill{height:9px;background:linear-gradient(90deg,var(--nav-active),#F08BC4);border-radius:999px;transition:width .3s ease;}
+  .bar-fill{height:9px;background:linear-gradient(90deg,var(--nav-active),#7C9268);border-radius:999px;transition:width .3s ease;}
 
   .task-list li .box{width:18px;height:18px;border-radius:999px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;background:rgba(255,255,255,.35);}
   .task-list li.done .box{box-shadow:0 2px 6px rgba(0,0,0,.15);}
@@ -314,10 +320,42 @@
   .session-icon{width:36px;height:36px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.1);}
 
   .recipe-card,.session-row,.goal-quad-card,.gp-card,.arkiv-box{box-shadow:0 2px 8px rgba(0,0,0,.06);}
+  @media (max-width:820px){
+    .app-shell{flex-direction:column;}
+    .sidebar{width:100%;min-height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);padding:14px 10px;}
+    .sidebar-logo{padding:0 6px 10px;}
+    .sidebar-nav{flex-direction:row;overflow-x:auto;gap:6px;}
+    .tab{width:auto;white-space:nowrap;border-radius:999px;}
+    .sidebar-footer{display:none;}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app-shell">
+  <nav class="sidebar">
+    <div class="sidebar-logo">LIFE OS<div class="sidebar-logo-sub">Personal Operating System</div><div class="sidebar-tagline">One life.<br>A higher standard.</div></div>
+    <div class="sidebar-nav" id="tabRow">
+      <div class="tab active" data-view="home" onclick="switchView('home')"><span class="tab-ic">🏠</span>Home</div>
+      <div class="tab" data-view="dagligen" onclick="switchView('dagligen')"><span class="tab-ic">☀️</span>Daily</div>
+      <div class="tab" data-view="week" onclick="switchView('week')"><span class="tab-ic">📅</span>Week</div>
+      <div class="tab" data-view="hard75" onclick="switchView('hard75')"><span class="tab-ic">🔥</span>75 Hard</div>
+      <div class="tab" data-view="month" onclick="switchView('month')"><span class="tab-ic">🗓️</span>Monthly</div>
+      <div class="tab" data-view="quarter" onclick="switchView('quarter')"><span class="tab-ic">📊</span>Quarterly</div>
+      <div class="tab" data-view="year" onclick="switchView('year')"><span class="tab-ic">🎯</span>Yearly</div>
+      <div class="tab" data-view="habits" onclick="switchView('habits')"><span class="tab-ic">🔁</span>Habits</div>
+      <div class="tab" data-view="mal" onclick="switchView('mal')"><span class="tab-ic">🏆</span>Goals</div>
+      <div class="tab" data-view="projects" onclick="switchView('projects')"><span class="tab-ic">📁</span>Projects</div>
+      <div class="tab" data-view="money" onclick="switchView('money')"><span class="tab-ic">💰</span>Money</div>
+      <div class="tab" data-view="arkiv" onclick="switchView('arkiv')"><span class="tab-ic">🗄️</span>Archive</div>
+      <div class="tab" data-view="bucketlist" onclick="switchView('bucketlist')"><span class="tab-ic">🧭</span>Bucket list</div>
+      <div class="tab" data-view="tiktok" onclick="switchView('tiktok')"><span class="tab-ic">🎬</span>TikTok</div>
+      <div class="tab" data-view="dosed" onclick="switchView('dosed')"><span class="tab-ic">🧴</span>Dosed</div>
+    </div>
+    <div class="sidebar-footer">Discipline today.<br>Freedom tomorrow.</div>
+  </nav>
+
+  <main class="main-content">
+  <div class="wrap">
 
   <div class="top-row">
     <div>
@@ -334,29 +372,20 @@
     </div>
   </div>
 
-  <div class="tabs" id="tabRow">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <div class="tab active" data-view="home" onclick="switchView('home')">Home</div>
-      <div class="tab" data-view="dagligen" onclick="switchView('dagligen')">Daily</div>
-      <div class="tab" data-view="week" onclick="switchView('week')">Week</div>
-      <div class="tab" data-view="month" onclick="switchView('month')">Monthly</div>
-      <div class="tab" data-view="quarter" onclick="switchView('quarter')">Quarterly</div>
-      <div class="tab" data-view="year" onclick="switchView('year')">Yearly</div>
-      <div class="tab" data-view="habits" onclick="switchView('habits')">Habits</div>
-      <div class="tab" data-view="mal" onclick="switchView('mal')">Goals</div>
-      <div class="tab" data-view="projects" onclick="switchView('projects')">Projects</div>
-      <div class="tab" data-view="money" onclick="switchView('money')">Money</div>
-      <div class="tab" data-view="arkiv" onclick="switchView('arkiv')">Archive</div>
-      <div class="tab" data-view="bucketlist" onclick="switchView('bucketlist')">Bucket list</div>
-      <div class="tab" data-view="tiktok" onclick="switchView('tiktok')">TikTok</div>
-      <div class="tab" data-view="dosed" onclick="switchView('dosed')">Dosed</div>
-    </div>
-  </div>
-
   <div class="view active" id="view-home">
     <div class="card" style="background:linear-gradient(135deg,var(--accent-soft),var(--surface));">
       <div class="reflect-row">
-        <div class="card-label">🧠 AI CEO Brief</div>
+        <div>
+          <div id="homeGreeting" style="font-family:var(--font-head);font-size:22px;font-weight:700;">—</div>
+          <div id="homeHeaderDate" style="font-size:12px;color:var(--text-soft);margin-top:2px;">—</div>
+        </div>
+        <div id="homeStatusPill" style="font-size:11px;font-weight:700;padding:6px 14px;border-radius:999px;white-space:nowrap;">—</div>
+      </div>
+    </div>
+
+    <div class="card" style="background:linear-gradient(135deg,var(--accent-soft),var(--surface));">
+      <div class="reflect-row">
+        <div class="card-label">✨ AI CEO Brief</div>
         <div style="font-size:11px;color:var(--text-soft);" id="briefUpdatedAt"></div>
       </div>
       <button class="save-btn" onclick="requestDailyBrief()">Generera Daily Brief</button>
@@ -365,108 +394,162 @@
 
     <div class="grid2">
       <div class="card">
-        <div class="card-label">Today</div>
-        <div class="stat-grid" id="homeTodayGrid">
-          <div class="stat"><div class="stat-icon">✅</div><div class="lbl">Habits</div><div class="val" id="homeHabitsToday">—</div></div>
-          <div class="stat"><div class="stat-icon">🔥</div><div class="lbl">75 Hard</div><div class="val" id="homeHardStatus">—</div></div>
-          <div class="stat"><div class="stat-icon">👣</div><div class="lbl">Steg</div><div class="val" id="homeStepsGoal">— / 10k</div></div>
-          <div class="stat"><div class="stat-icon">💤</div><div class="lbl">Sömn</div><div class="val" id="homeSleep">—</div></div>
-          <div class="stat"><div class="stat-icon">🏋️</div><div class="lbl">Träning</div><div class="val" id="homeWorkoutDone">—</div></div>
-          <div class="stat"><div class="stat-icon">😊</div><div class="lbl">Humör</div><div class="val" id="homeMoodToday">—</div></div>
+        <div class="reflect-row" style="margin-bottom:10px;">
+          <div class="card-label" style="margin:0;">Today</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);" id="homeTodayPctBig">—%</div>
+        </div>
+        <div style="display:flex;gap:18px;align-items:center;">
+          <svg width="110" height="110" viewBox="0 0 120 120" style="flex-shrink:0;">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--surface-soft)" stroke-width="12"></circle>
+            <circle id="homeRingProgress" cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)"></circle>
+            <text x="60" y="66" text-anchor="middle" font-size="22" font-weight="700" fill="var(--text)" id="homeRingText">—%</text>
+          </svg>
+          <div style="flex:1;display:flex;flex-wrap:wrap;gap:8px;">
+            <div class="stat" style="flex:1;min-width:70px;"><div class="lbl">🔥 75 Hard</div><div class="val" id="homeHardStatus">—</div></div>
+            <div class="stat" style="flex:1;min-width:70px;"><div class="lbl">💤 Sömn</div><div class="val" id="homeSleep">—</div></div>
+            <div class="stat" style="flex:1;min-width:70px;"><div class="lbl">👣 Steg</div><div class="val" id="homeStepsGoal">—</div></div>
+            <div class="stat" style="flex:1;min-width:70px;"><div class="lbl">🏋️ Workout</div><div class="val" id="homeWorkoutToday">—</div></div>
+          </div>
         </div>
       </div>
       <div class="card">
-        <div class="card-label">Top 3 idag</div>
-        <div class="card-sub">de tre mest prioriterade sakerna just nu</div>
+        <div class="card-label">Today's 3</div>
         <div id="homeTop3"></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-label">Goals</div>
-      <div class="cat-tabs" id="homeGoalTfRow"></div>
-      <div id="homeGoalScorecard" style="margin-top:10px;"></div>
+      <div class="reflect-row">
+        <div class="card-label" style="margin:0;">This Week</div>
+        <div style="font-size:20px;font-weight:700;color:var(--accent);" id="homeWeekPctBig">—%</div>
+      </div>
+      <div class="bar" style="margin-top:8px;margin-bottom:12px;"><div class="bar-fill" id="homeWeekBar" style="width:0%;"></div></div>
+      <div class="card-sub" style="margin-bottom:4px;">Top outcomes</div>
+      <ul class="task-list" id="homeWeekOutcomes" style="margin-bottom:8px;"></ul>
+      <div style="font-size:11px;color:var(--text-soft);" id="homeWeekDaysOnTrack">—</div>
     </div>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="card-label">🚀 Business</div>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:13px;">TikTok</span>
-            <span style="font-size:13px;font-weight:600;" id="homeTiktokStat">—</span>
-          </div>
-          <div class="bar"><div class="bar-fill" id="homeTiktokBar" style="width:0%;"></div></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
-            <span style="font-size:13px;">Dosed</span>
-            <span style="font-size:13px;font-weight:600;" id="homeDosedStat">—</span>
-          </div>
-          <div class="card-sub" style="margin:0;">TikTok-trendgraf kräver historiska snapshots — nästa steg om du vill ha det</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-label">🌿 Health</div>
-        <div class="stat-grid" style="margin-top:6px;">
-          <div class="stat"><div class="lbl">Snittsteg (7d)</div><div class="val" id="homeStepsAvg">—</div></div>
-          <div class="stat"><div class="lbl">Snittsömn (7d)</div><div class="val" id="homeSleepAvg">—</div></div>
-          <div class="stat"><div class="lbl">Health-konsistens</div><div class="val" id="homeHealthConsistency">—</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-label">💪 Physical</div>
-        <div class="stat-grid" style="margin-top:6px;">
-          <div class="stat"><div class="lbl">Pass denna vecka</div><div class="val" id="physWorkoutsWeek">—</div></div>
-          <div class="stat"><div class="lbl">Pull-ups just nu</div><div class="val" id="physPullupMax">—</div></div>
-        </div>
-        <div class="add-row" style="margin-top:10px;">
-          <input type="number" id="physPullupInput" placeholder="Nytt antal pull-ups">
-          <button onclick="logPullup()">Logga</button>
-        </div>
-        <div class="card-sub" style="margin-top:12px;margin-bottom:4px;">Calisthenics-milstolpar</div>
-        <ul class="task-list" id="physMilestones"></ul>
-      </div>
-    </div>
-
-    <div class="grid2">
-      <div class="card">
-        <div class="card-label">📚 Education</div>
-        <div id="homeEducation"></div>
-      </div>
-      <div class="card">
-        <div class="card-label">💰 Money</div>
-        <div class="stat-grid" style="margin-top:6px;">
-          <div class="stat"><div class="lbl">Sparat totalt</div><div class="val" id="homeSavings">—</div></div>
-          <div class="stat"><div class="lbl">Netto/mån</div><div class="val" id="homeNetMonth">—</div></div>
-        </div>
-      </div>
+    <div class="card" style="cursor:pointer;" onclick="switchView('mal')">
+      <div class="card-label">🌟 Your North Star</div>
+      <div class="card-sub">klicka för att öppna Goals</div>
+      <div id="homeNorthStar" style="margin-top:8px;"></div>
     </div>
 
     <div class="card">
-      <div class="card-label">Upcoming</div>
-      <ul class="task-list" id="homeUpcoming"></ul>
-    </div>
-
-    <div class="card">
-      <div class="card-label">Inbox</div>
-      <div class="card-sub">Skriv en idé, ett mål, en task — vad som helst. AI klassificerar, du godkänner.</div>
-      <div class="add-row">
-        <input type="text" id="inboxInput" placeholder="What's on your mind?">
-        <button onclick="classifyInboxItem()">+ Add</button>
-      </div>
-      <div id="inboxResult" style="margin-top:10px;"></div>
+      <div class="card-label">📈 Goal Trajectory — DOSED</div>
+      <div class="card-sub">hur dagens jobb kopplas till den långsiktiga visionen</div>
+      <div id="homeTrajectory" style="margin-top:8px;"></div>
     </div>
 
     <div class="card">
       <div class="reflect-row">
-        <div class="card-label">AI Insights</div>
-        <button class="change-btn" onclick="requestAiInsights()">Generera</button>
+        <div class="card-label" style="margin:0;">🚀 Business</div>
       </div>
-      <div id="aiInsightsResult" style="margin-top:10px;"></div>
+      <div class="cat-tabs" id="homeBizTabRow" style="margin:10px 0 12px;"></div>
+      <div id="homeBizContent"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card" style="cursor:pointer;" onclick="switchView('money')">
+        <div class="card-label">💰 Money</div>
+        <div class="card-sub">klicka för att öppna Money</div>
+        <div id="homeMoneyContent" style="margin-top:8px;"></div>
+      </div>
+      <div class="card" style="cursor:pointer;" onclick="switchView('month')">
+        <div class="card-label">❤️ Health</div>
+        <div class="card-sub">klicka för att öppna Monthly Health</div>
+        <div id="homeHealthContent" style="margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Life</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:8px;">
+        <div>
+          <div style="font-size:11px;color:var(--text-soft);font-weight:600;margin-bottom:6px;">💪 PHYSICAL</div>
+          <div style="font-size:12px;color:var(--text-soft);">Pull-ups just nu</div><div style="font-size:16px;font-weight:700;" id="physPullupMax">—</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:6px;">Styrkepass (vecka)</div><div style="font-size:16px;font-weight:700;" id="physStrengthWeek">—</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:6px;">Promenader (vecka)</div><div style="font-size:16px;font-weight:700;" id="physWalksWeek">—</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:6px;">Totalt alla pass (vecka)</div><div style="font-size:16px;font-weight:700;" id="physTotalWeek">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-soft);font-weight:600;margin-bottom:6px;">📚 EDUCATION</div>
+          <div id="homeEducation" style="font-size:13px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">General To-Do</div>
+      <div class="card-sub">dumpa saker utan datum här — sätt ett datum senare så blir det en riktig task</div>
+      <div class="add-row">
+        <input type="text" id="homeTodoInput" placeholder="Nåt som behöver göras, inget datum ännu...">
+        <button onclick="addGeneralTodo('homeTodoInput')">Lägg till</button>
+      </div>
+      <ul class="task-list" id="homeTodoBacklog" style="margin-top:10px;"></ul>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-label">Upcoming</div>
+        <ul class="task-list" id="homeUpcoming"></ul>
+      </div>
+      <div class="card">
+        <div class="reflect-row">
+          <div class="card-label" style="margin:0;">AI Insights</div>
+          <button class="change-btn" onclick="requestAiInsights()">Generera</button>
+        </div>
+        <div id="aiInsightsResult" style="margin-top:10px;"></div>
+      </div>
     </div>
 
     <div class="card">
       <div class="card-label">🎯 If I were your CEO...</div>
-      <div id="aiCeoRecommendation" class="card-sub">Klicka "Generera" ovan för att få en rekommendation baserad på din data.</div>
+      <div id="aiCeoRecommendation" class="card-sub">Klicka "Generera" i AI Insights för att få en rekommendation baserad på din data.</div>
+    </div>
+
+    <div class="card" style="position:sticky;bottom:12px;">
+      <div class="add-row" style="margin-bottom:0;">
+        <input type="text" id="inboxInput" placeholder="What's on your mind? Idé, mål, task...">
+        <button onclick="classifyInboxItem()">+ Add</button>
+        <button class="change-btn" onclick="switchView('mal')">✨ AI Plan</button>
+        <button class="change-btn" onclick="requestWeeklyReview()">📊 Review</button>
+      </div>
+      <div id="inboxResult" style="margin-top:10px;"></div>
+      <div id="weeklyReviewResult" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <div class="view" id="view-hard75">
+    <div class="card">
+      <div class="reflect-row">
+        <div class="card-label">🔥 75 Hard</div>
+        <div style="font-size:13px;color:var(--text-soft);" id="hard75StatusLine">—</div>
+      </div>
+      <div style="display:flex;gap:20px;align-items:center;margin-top:10px;">
+        <svg width="110" height="110" viewBox="0 0 120 120" style="flex-shrink:0;">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="var(--surface-soft)" stroke-width="12"></circle>
+          <circle id="hard75RingProgress" cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)"></circle>
+          <text x="60" y="58" text-anchor="middle" font-size="20" font-weight="700" fill="var(--text)" id="hard75RingDay">Day —</text>
+          <text x="60" y="76" text-anchor="middle" font-size="11" fill="var(--text-soft)">/ 75</text>
+        </svg>
+        <div style="flex:1;display:flex;flex-wrap:wrap;gap:8px;">
+          <div class="stat" style="flex:1;min-width:90px;"><div class="lbl">✅ Fullständiga dagar</div><div class="val" id="hard75FullDays">—</div></div>
+          <div class="stat" style="flex:1;min-width:90px;"><div class="lbl">🔥 Streak</div><div class="val" id="hard75Streak">—</div></div>
+          <div class="stat" style="flex:1;min-width:90px;"><div class="lbl">📅 Dagar kvar</div><div class="val" id="hard75DaysLeft">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" id="hard75TodayLabel">Idag</div>
+      <ul class="task-list" id="hard75TodayList"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Historik — alla 75 dagar</div>
+      <div class="card-sub">grön = alla krav klara, gul = delvis, grå = inte påbörjad/framtid</div>
+      <div id="hard75Grid" style="display:grid;grid-template-columns:repeat(15,1fr);gap:5px;margin-top:10px;"></div>
     </div>
   </div>
 
@@ -496,18 +579,18 @@
       <div id="taskDays"></div>
     </div>
 
+    <div class="card">
+      <div class="card-label">Från backlogen — schemalagt denna vecka</div>
+      <div class="card-sub">från din General To-Do (finns även på Home/Daily)</div>
+      <ul class="task-list" id="weekTodoList"></ul>
+    </div>
+
     <div class="grid2">
       <div class="card">
         <div class="card-label">Dosed — just nu</div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div>
-            <div style="font-size:14px;font-weight:500;">Iconografi — koncept 2</div>
-            <div style="font-size:12px;color:var(--text-soft);margin-top:2px;">Halvton-mönster på förpackning</div>
-          </div>
-          <button class="change-btn" onclick="notReady()">Byt</button>
-        </div>
-        <div class="status-row">
-          <div class="status-pill active" onclick="setStatus(this)">Pågår</div>
+        <input type="text" id="weekDosedFocusInput" placeholder="Vad jobbar du med i Dosed denna vecka?" onchange="saveWeekFocus('dosed', this.value)">
+        <div class="status-row" id="weekDosedStatusRow">
+          <div class="status-pill" onclick="setStatus(this)">Pågår</div>
           <div class="status-pill" onclick="setStatus(this)">Pausad</div>
           <div class="status-pill" onclick="setStatus(this)">Klar</div>
         </div>
@@ -515,16 +598,10 @@
 
       <div class="card">
         <div class="card-label">TikTok — just nu</div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div>
-            <div style="font-size:14px;font-weight:500;">Gymklipp — söndagens set</div>
-            <div style="font-size:12px;color:var(--text-soft);margin-top:2px;">Filmat, ej klippt än</div>
-          </div>
-          <button class="change-btn" onclick="notReady()">Byt</button>
-        </div>
-        <div class="status-row">
+        <input type="text" id="weekTiktokFocusInput" placeholder="Vad jobbar du med på TikTok denna vecka?" onchange="saveWeekFocus('tiktok', this.value)">
+        <div class="status-row" id="weekTiktokStatusRow">
           <div class="status-pill" onclick="setStatus(this)">Idé</div>
-          <div class="status-pill active" onclick="setStatus(this)">Filmat</div>
+          <div class="status-pill" onclick="setStatus(this)">Filmat</div>
           <div class="status-pill" onclick="setStatus(this)">Klippt</div>
           <div class="status-pill" onclick="setStatus(this)">Postat</div>
         </div>
@@ -621,6 +698,9 @@
         <input type="text" id="dailyTodoInput" placeholder="Ny task för idag...">
         <button onclick="addDailyTodo()">Lägg till</button>
       </div>
+
+      <div class="card-label">Från backlogen — schemalagt för denna dag</div>
+      <ul class="task-list" id="dailyTodoBacklogList" style="margin-bottom:18px;"></ul>
 
       <div class="card-label">Mål — dagens actions</div>
       <ul class="task-list" id="dailyGoalActions" style="margin-bottom:18px;"></ul>
@@ -935,6 +1015,16 @@
         <button onclick="saveMoneyPrivate()">Spara</button>
       </div>
       <div class="card-sub" style="margin-top:12px;margin-bottom:0;">Sparande hämtas automatiskt från dina Sparmål i Quarterly.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Bolån — historik</div>
+      <div class="card-sub">logga saldot en gång i månaden för att se en trend över tid</div>
+      <div id="mortgageHistoryList" style="margin-bottom:10px;"></div>
+      <div class="add-row">
+        <input type="number" id="moneyMortgageInput" placeholder="Nuvarande bolånesaldo kr">
+        <button onclick="logMortgageBalance()">Logga</button>
+      </div>
     </div>
 
     <div class="card">
@@ -1273,12 +1363,14 @@
     <div id="recipeDetailContent" style="background:var(--surface);border-radius:14px;padding:22px;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;"></div>
   </div>
 
+  </div>
+  </main>
 </div>
 
 <script>
   var days7 = ['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
 
-  var subtitles = { home: '— home', week: '— denna vecka', dagligen: '— dagligen', month: '— september', quarter: '— Q4 2026', dosed: '— dosed', tiktok: '— tiktok', habits: '— habits', year: '— 2026', arkiv: '— arkiv', mal: '— mål', bucketlist: '— bucket list', projects: '— projects', money: '— money' };
+  var subtitles = { home: '— home', week: '— denna vecka', dagligen: '— dagligen', month: '— september', quarter: '— Q4 2026', dosed: '— dosed', tiktok: '— tiktok', habits: '— habits', year: '— 2026', arkiv: '— arkiv', mal: '— mål', bucketlist: '— bucket list', projects: '— projects', money: '— money', hard75: '— 75 hard' };
   function switchView(name){
     document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
     document.getElementById('view-' + name).classList.add('active');
@@ -1286,6 +1378,7 @@
     document.querySelector('.tab[data-view="' + name + '"]').classList.add('active');
     document.getElementById('viewSubtitle').textContent = subtitles[name];
     document.getElementById('weekNavBox').style.display = (name === 'week') ? 'flex' : 'none';
+    if(name === 'hard75' && typeof renderHard75View === 'function') renderHard75View();
   }
   function notReady(){
     alert('Den här vyn är inte byggd än — vi tar den nästa.');
@@ -1430,6 +1523,70 @@
     renderHabitTable();
     renderDailyHabits();
     if(typeof renderHabitsView === 'function') renderHabitsView();
+    if(typeof renderHard75View === 'function') renderHard75View();
+  }
+  function toggleHard75Today(h){
+    var todayKey = isoDate(new Date());
+    habitState[h][todayKey] = !habitState[h][todayKey];
+    renderHard75View();
+    renderDailyHabits();
+    renderHabitTable();
+    if(typeof renderHabitsView === 'function') renderHabitsView();
+  }
+  function renderHard75View(){
+    var el = document.getElementById('hard75RingDay');
+    if(!el) return;
+    var todayKey = isoDate(new Date());
+    var startD = new Date(challengeStart + 'T00:00:00');
+    var endD = new Date(challengeEnd + 'T00:00:00');
+    var totalDays = Math.round((endD - startD)/86400000) + 1;
+    var inChallenge = isInChallenge(todayKey);
+    var dayNum = Math.max(1, Math.min(totalDays, Math.round((new Date(todayKey) - startD)/86400000) + 1));
+
+    document.getElementById('hard75StatusLine').textContent = inChallenge ? ('Dag ' + dayNum + ' av ' + totalDays) : (todayKey < challengeStart ? 'Börjar ' + challengeStart : 'Avslutad ' + challengeEnd);
+    el.textContent = 'Day ' + dayNum;
+    var pct = Math.round((dayNum/totalDays)*100);
+    document.getElementById('hard75RingProgress').setAttribute('stroke-dashoffset', Math.round(314 * (1 - pct/100)));
+
+    var fullDays = 0, streak = 0, streakActive = true;
+    var dayStatuses = [];
+    for(var i = 0; i < totalDays; i++){
+      var d = new Date(startD); d.setDate(d.getDate()+i);
+      var dk = isoDate(d);
+      var doneCount = 0;
+      hard75Rows.forEach(function(h){ if(habitState[h] && habitState[h][dk]) doneCount++; });
+      var isFull = doneCount === hard75Rows.length;
+      var isFuture = dk > todayKey;
+      dayStatuses.push({ dk:dk, doneCount:doneCount, isFull:isFull, isFuture:isFuture });
+      if(isFull) fullDays++;
+    }
+    for(var j = dayStatuses.length-1; j >= 0; j--){
+      var ds = dayStatuses[j];
+      if(ds.isFuture) continue;
+      if(ds.isFull && streakActive){ streak++; } else { streakActive = false; }
+    }
+    document.getElementById('hard75FullDays').textContent = fullDays + '/' + totalDays;
+    document.getElementById('hard75Streak').textContent = streak + ' dagar';
+    var daysLeft = Math.max(0, totalDays - dayNum);
+    document.getElementById('hard75DaysLeft').textContent = daysLeft;
+
+    document.getElementById('hard75Grid').innerHTML = dayStatuses.map(function(ds, i){
+      var color = ds.isFuture ? 'var(--surface-soft)' : (ds.isFull ? 'var(--accent)' : (ds.doneCount > 0 ? 'var(--sage-soft)' : 'var(--border)'));
+      return '<div title="' + ds.dk + ' — ' + ds.doneCount + '/' + hard75Rows.length + '" style="aspect-ratio:1;border-radius:5px;background:' + color + ';font-size:9px;display:flex;align-items:center;justify-content:center;color:var(--text-soft);">' + (i+1) + '</div>';
+    }).join('');
+
+    var todayLabelEl = document.getElementById('hard75TodayLabel');
+    var todayListEl = document.getElementById('hard75TodayList');
+    if(inChallenge){
+      todayLabelEl.textContent = 'Idag — ' + dayLabelFor(todayKey);
+      todayListEl.innerHTML = hard75Rows.map(function(h){
+        var done = habitState[h] && habitState[h][todayKey];
+        return '<li class="' + (done?'done':'') + '" onclick="toggleHard75Today(\'' + h.replace(/'/g,"\\'") + '\')"><span class="box">' + (done?'✓':'') + '</span><span class="t">' + h + '</span></li>';
+      }).join('');
+    } else {
+      todayLabelEl.textContent = 'Utanför perioden';
+      todayListEl.innerHTML = '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">75 Hard är inte aktivt just nu (' + challengeStart + ' till ' + challengeEnd + ').</li>';
+    }
   }
   function renderDailyHabits(){
     var labelEl = document.getElementById('dailyHabitLabel');
@@ -1579,6 +1736,88 @@
   }
 
   var weekReflectionText = '';
+  var weekFocus = { dosed:'', tiktok:'' };
+
+  // ---------- GENERAL TO-DO (backlog utan datum → blir task när datum sätts) ----------
+  var generalTodos = [];
+  var todoIdCounter = 0;
+  function addGeneralTodo(inputId){
+    var input = document.getElementById(inputId);
+    var val = input.value.trim();
+    if(!val) return;
+    todoIdCounter++;
+    generalTodos.push({ id: todoIdCounter, text: val, date: '', done: false });
+    input.value = '';
+    renderAllGeneralTodos();
+    saveAll();
+  }
+  function assignTodoDate(id, date){
+    var t = generalTodos.filter(function(x){ return x.id === id; })[0];
+    if(t) t.date = date;
+    renderAllGeneralTodos();
+    saveAll();
+  }
+  function toggleGeneralTodo(id){
+    var t = generalTodos.filter(function(x){ return x.id === id; })[0];
+    if(t){ t.done = !t.done; if(t.done) celebrate(); }
+    renderAllGeneralTodos();
+    saveAll();
+  }
+  function removeGeneralTodo(id){
+    generalTodos = generalTodos.filter(function(x){ return x.id !== id; });
+    renderAllGeneralTodos();
+    saveAll();
+  }
+  function todoRowHTML(t, showDateInput){
+    var dateInput = showDateInput
+      ? '<input type="date" value="' + (t.date||'') + '" onchange="assignTodoDate(' + t.id + ', this.value)" style="width:auto;padding:4px 8px;font-size:11px;">'
+      : (t.date ? '<span style="font-size:11px;color:var(--text-soft);">' + t.date + '</span>' : '');
+    return '<li class="' + (t.done?'done':'') + '" style="display:flex;justify-content:space-between;align-items:center;">' +
+      '<span style="display:flex;align-items:center;gap:8px;flex:1;" onclick="toggleGeneralTodo(' + t.id + ')"><span class="box">' + (t.done?'✓':'') + '</span><span class="t">' + t.text + '</span></span>' +
+      '<span style="display:flex;align-items:center;gap:6px;" onclick="event.stopPropagation()">' + dateInput + '<span onclick="removeGeneralTodo(' + t.id + ')" style="cursor:pointer;color:var(--text-soft);font-size:14px;">×</span></span>' +
+      '</li>';
+  }
+  function renderGeneralTodoBacklog(){
+    var el = document.getElementById('homeTodoBacklog');
+    if(!el) return;
+    var undated = generalTodos.filter(function(t){ return !t.date && !t.done; });
+    el.innerHTML = undated.length
+      ? undated.map(function(t){ return todoRowHTML(t, true); }).join('')
+      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inget i backlogen just nu.</li>';
+  }
+  function renderWeekGeneralTodos(){
+    var el = document.getElementById('weekTodoList');
+    if(!el) return;
+    var wkStart = isoDate(REAL_WEEK_DATES[0]), wkEnd = isoDate(REAL_WEEK_DATES[6]);
+    var items = generalTodos.filter(function(t){ return t.date && t.date >= wkStart && t.date <= wkEnd; });
+    el.innerHTML = items.length
+      ? items.map(function(t){ return todoRowHTML(t, true); }).join('')
+      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inget schemalagt denna vecka från backlogen.</li>';
+  }
+  function renderDailyGeneralTodos(){
+    var el = document.getElementById('dailyTodoBacklogList');
+    if(!el) return;
+    var items = generalTodos.filter(function(t){ return t.date === selectedDate; });
+    el.innerHTML = items.length
+      ? items.map(function(t){ return todoRowHTML(t, true); }).join('')
+      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inget schemalagt för denna dag från backlogen.</li>';
+  }
+  function renderAllGeneralTodos(){
+    renderGeneralTodoBacklog();
+    renderWeekGeneralTodos();
+    renderDailyGeneralTodos();
+  }
+
+  function saveWeekFocus(key, val){
+    weekFocus[key] = val;
+    saveAll();
+  }
+  function renderWeekFocus(){
+    var d = document.getElementById('weekDosedFocusInput');
+    var t = document.getElementById('weekTiktokFocusInput');
+    if(d) d.value = weekFocus.dosed;
+    if(t) t.value = weekFocus.tiktok;
+  }
   function saveReflectionW(){
     weekReflectionText = document.getElementById('w_reflectionText').value;
     var note = document.getElementById('w_savedNote');
@@ -1696,6 +1935,7 @@
     renderMoodRow();
     renderDailyHabits();
     renderDailyTodo();
+    renderDailyGeneralTodos();
     renderDailyCalendar();
     renderDailyTraining();
     renderDailyNoteArea();
@@ -3618,8 +3858,16 @@
 
   // ---------- TIKTOK HQ ----------
   var tiktokStats = { followers:0, views:0, engagement:0, posts:0 };
+  var tiktokHistory = [];
   var tiktokPillars = [];
   var tiktokCollabs = [];
+  function tiktokDeltaSince(daysAgo){
+    if(tiktokHistory.length === 0) return null;
+    var cutoff = isoDate(new Date(Date.now() - daysAgo*86400000));
+    var past = tiktokHistory.filter(function(h){ return h.date <= cutoff; }).sort(function(a,b){ return b.date.localeCompare(a.date); })[0];
+    if(!past) past = tiktokHistory[0];
+    return tiktokStats.followers - past.followers;
+  }
   function renderTiktokHQ(){
     var followersEl = document.getElementById('tiktokFollowersLabel');
     if(!followersEl) return;
@@ -3647,6 +3895,8 @@
     if(!isNaN(v)) tiktokStats.views = v;
     if(!isNaN(e)) tiktokStats.engagement = e;
     if(!isNaN(p)) tiktokStats.posts = p;
+    tiktokHistory.push({ date: isoDate(new Date()), followers: tiktokStats.followers, views: tiktokStats.views, engagement: tiktokStats.engagement, posts: tiktokStats.posts });
+    if(tiktokHistory.length > 60) tiktokHistory.shift();
     ['tiktokFollowersInput','tiktokViewsInput','tiktokEngagementInput','tiktokPostsInput'].forEach(function(id){ document.getElementById(id).value = ''; });
     renderTiktokHQ();
   }
@@ -3788,6 +4038,17 @@
 
   // ---------- MONEY ----------
   var moneyPrivate = { income:0, expenses:0, debt:0 };
+  var mortgageHistory = [];
+  function logMortgageBalance(){
+    var input = document.getElementById('moneyMortgageInput');
+    var val = parseFloat(input.value);
+    if(isNaN(val)) return;
+    mortgageHistory.push({ date: isoDate(new Date()), balance: val });
+    moneyPrivate.debt = val;
+    input.value = '';
+    renderMoney();
+    renderHome();
+  }
   var moneyBusiness = { affiliate:0, creator:0 };
   function renderMoney(){
     var el = document.getElementById('moneyIncomeVal');
@@ -3806,11 +4067,20 @@
     if(sgEl){
       sgEl.innerHTML = savingsGoals.length
         ? savingsGoals.map(function(g,i){
-            var pct = g.target>0 ? Math.min(100,Math.round((g.saved/g.target)*100)) : 0;
             var color = savingsColors[i % savingsColors.length];
-            return '<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>' + g.name + '</span><span style="color:var(--text-soft);">' + g.saved.toLocaleString('sv-SE') + ' / ' + g.target.toLocaleString('sv-SE') + ' kr</span></div><div class="bar"><div class="bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div></div>';
+            if(g.target > 0){
+              var pct = Math.min(100,Math.round((g.saved/g.target)*100));
+              return '<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>' + g.name + '</span><span style="color:var(--text-soft);">' + g.saved.toLocaleString('sv-SE') + ' / ' + g.target.toLocaleString('sv-SE') + ' kr</span></div><div class="bar"><div class="bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div></div>';
+            }
+            return '<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;"><span>' + g.name + '</span><span style="color:var(--text-soft);">' + g.saved.toLocaleString('sv-SE') + ' kr · mål ej satt</span></div></div>';
           }).join('')
         : '<div class="list-empty">Inga sparmål ännu.</div>';
+    }
+    var mhEl = document.getElementById('mortgageHistoryList');
+    if(mhEl){
+      mhEl.innerHTML = mortgageHistory.length
+        ? mortgageHistory.slice(-6).reverse().map(function(h){ return '<div class="list-item">' + h.date + ' — ' + h.balance.toLocaleString('sv-SE') + ' kr</div>'; }).join('')
+        : '<div class="list-empty">Ingen historik loggad ännu. Nuvarande saldo: ' + moneyPrivate.debt.toLocaleString('sv-SE') + ' kr.</div>';
     }
     saveAll();
     renderHome();
@@ -3855,14 +4125,20 @@
   var physicalStats = { pullUpMax: 0, pullUpHistory: [] };
   var physicalMilestones = [];
   function renderPhysical(){
-    var el = document.getElementById('physWorkoutsWeek');
+    var el = document.getElementById('physPullupMax');
     if(!el) return;
     var workoutsThisWeek = healthLoaded ? workoutsInRange(isoDate(REAL_WEEK_DATES[0]), isoDate(REAL_WEEK_DATES[6])) : [];
-    el.textContent = healthLoaded ? workoutsThisWeek.length : '—';
-    document.getElementById('physPullupMax').textContent = physicalStats.pullUpMax;
-    document.getElementById('physMilestones').innerHTML = physicalMilestones.map(function(m, i){
-      return '<li class="' + (m.done?'done':'') + '" onclick="togglePhysicalMilestone(' + i + ')"><span class="box">' + (m.done?'✓':'') + '</span><span class="t">' + m.title + '</span></li>';
-    }).join('');
+    var walks = 0, strength = 0, other = 0;
+    workoutsThisWeek.forEach(function(w){
+      var icon = workoutIconFor(w.name);
+      if(icon === '🚶') walks++;
+      else if(icon === '🏋️') strength++;
+      else other++;
+    });
+    document.getElementById('physStrengthWeek').textContent = healthLoaded ? strength : '—';
+    document.getElementById('physWalksWeek').textContent = healthLoaded ? walks : '—';
+    document.getElementById('physTotalWeek').textContent = healthLoaded ? workoutsThisWeek.length : '—';
+    el.textContent = physicalStats.pullUpMax;
     saveAll();
   }
   function logPullup(){
@@ -3893,7 +4169,7 @@
     var elapsedRatio = Math.min(1, Math.max(0, 1 - ((deadline-today)/86400000)/totalDays));
     var expectedProgress = elapsedRatio * 100;
     if(g.progress >= expectedProgress - 5) return '🟢';
-    if(g.progress >= expectedProgress - 20) return '🟡';
+    if(g.progress >= expectedProgress - 20) return '🟠';
     return '🔴';
   }
   var homeGoalTf = 'Årligen';
@@ -3905,6 +4181,14 @@
       return '<div class="cat-tab' + (homeGoalTf===tf?' active':'') + '" onclick="setHomeGoalTf(\'' + tf + '\')">' + tf + '</div>';
     }).join('');
   }
+  function goalStatusLabel(g){
+    var s = goalStatusEmoji(g);
+    if(g.completed) return 'Done';
+    if(!g.deadline) return 'Long term';
+    if(s === '🟢') return 'On track';
+    if(s === '🟡') return 'At risk';
+    return 'Off track';
+  }
   function renderHomeGoalScorecard(){
     var el = document.getElementById('homeGoalScorecard');
     if(!el) return;
@@ -3914,7 +4198,7 @@
       : filtered.map(function(g){
           var kpiLine = (g.kpiTarget !== null && g.kpiTarget !== undefined) ? (g.kpiActual||0).toLocaleString('sv-SE') + ' / ' + g.kpiTarget.toLocaleString('sv-SE') + ' ' + (g.kpiUnit||'') + kpiTrendArrow(g) : '';
           return '<div style="padding:8px 0;border-top:1px solid var(--border);">' +
-            '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;"><span>' + goalStatusEmoji(g) + ' ' + g.title + '</span><span style="color:var(--text-soft);font-weight:400;font-size:12px;">' + g.progress + '%</span></div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;margin-bottom:4px;"><span>' + g.title + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:var(--text-soft);font-weight:400;font-size:12px;">' + g.progress + '%</span><span class="status-pill active" style="cursor:default;font-size:10px;padding:3px 9px;">' + goalStatusEmoji(g) + ' ' + goalStatusLabel(g) + '</span></span></div>' +
             (kpiLine ? '<div style="font-size:11px;color:var(--text-soft);margin-bottom:4px;">' + kpiLine + '</div>' : '') +
             '<div class="bar"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div>' +
             '</div>';
@@ -4047,75 +4331,314 @@
     renderHome();
   }
 
+  var homeBizTab = 'TikTok';
+  function setHomeBizTab(t){ homeBizTab = t; renderHomeBizContent(); }
+  var appStagesData = [];
+  function renderHomeBizTabRow(){
+    var el = document.getElementById('homeBizTabRow');
+    if(!el) return;
+    el.innerHTML = ['TikTok','DOSED','App'].map(function(t){
+      return '<div class="cat-tab' + (homeBizTab===t?' active':'') + '" onclick="setHomeBizTab(\'' + t + '\')">' + t + '</div>';
+    }).join('');
+  }
+  function toggleAppStage(i){
+    appStagesData[i].done = !appStagesData[i].done;
+    renderHomeBizContent();
+    saveAll();
+  }
+  function renderHomeBizContent(){
+    var el = document.getElementById('homeBizContent');
+    if(!el) return;
+    if(homeBizTab === 'TikTok'){
+      var pct = Math.min(100, Math.round((tiktokStats.followers/500000)*100));
+      var deltaWeek = tiktokDeltaSince(7);
+      var deltaMonth = tiktokDeltaSince(30);
+      var deltaText = deltaWeek !== null
+        ? ((deltaWeek>=0?'+':'') + deltaWeek.toLocaleString('sv-SE') + ' senaste veckan' + (deltaMonth !== null ? ' · ' + (deltaMonth>=0?'+':'') + deltaMonth.toLocaleString('sv-SE') + ' senaste månaden' : ''))
+        : 'Spara siffror igen nästa vecka för att se förändring över tid';
+      el.innerHTML = '<div class="stat-grid">' +
+        '<div class="stat"><div class="lbl">Följare</div><div class="val">' + tiktokStats.followers.toLocaleString('sv-SE') + '</div></div>' +
+        '<div class="stat"><div class="lbl">Views</div><div class="val">' + tiktokStats.views.toLocaleString('sv-SE') + '</div></div>' +
+        '<div class="stat"><div class="lbl">Posts</div><div class="val">' + tiktokStats.posts + '</div></div>' +
+        '<div class="stat"><div class="lbl">Engagement</div><div class="val">' + tiktokStats.engagement + '%</div></div>' +
+        '</div><div class="card-sub" style="margin-top:12px;margin-bottom:4px;">' + tiktokStats.followers.toLocaleString('sv-SE') + ' / 500 000 · ' + pct + '%</div>' +
+        '<div class="bar"><div class="bar-fill" style="width:' + pct + '%;"></div></div>' +
+        '<div style="font-size:12px;color:var(--text-soft);margin-top:8px;">' + deltaText + '</div>';
+    } else if(homeBizTab === 'DOSED'){
+      var doneStages = dosedStagesData.filter(function(s){return s.done;}).length;
+      var stagePct = Math.round((doneStages/dosedStagesData.length)*100);
+      var hasFinance = dosedFinance.revenue > 0 || dosedFinance.expenses > 0;
+      el.innerHTML =
+        '<div class="card-sub" style="margin-bottom:6px;">Status: FOUNDATION</div>' +
+        '<div class="stat-grid">' +
+        '<div class="stat"><div class="lbl">Stadier klara</div><div class="val">' + doneStages + '/' + dosedStagesData.length + '</div></div>' +
+        '<div class="stat"><div class="lbl">Progress</div><div class="val">' + stagePct + '%</div></div>' +
+        '</div><div class="bar" style="margin-top:10px;"><div class="bar-fill" style="width:' + stagePct + '%;"></div></div>' +
+        (hasFinance
+          ? '<div class="card-sub" style="margin-top:14px;margin-bottom:6px;">Ekonomi</div><div class="stat-grid">' +
+            '<div class="stat"><div class="lbl">Intäkter</div><div class="val">' + dosedFinance.revenue.toLocaleString('sv-SE') + ' kr</div></div>' +
+            '<div class="stat"><div class="lbl">Utgifter</div><div class="val">' + dosedFinance.expenses.toLocaleString('sv-SE') + ' kr</div></div>' +
+            '</div>'
+          : '<div class="card-sub" style="margin-top:12px;margin-bottom:0;">Ingen försäljning igång än — fokus är lansering, inte ekonomi.</div>');
+    } else {
+      if(appStagesData.length === 0){
+        ['Concept','Prototype','MVP','Launch'].forEach(function(t){ appStagesData.push({ name:t, done:false }); });
+      }
+      var appDone = appStagesData.filter(function(s){return s.done;}).length;
+      var appPct = Math.round((appDone/appStagesData.length)*100);
+      el.innerHTML =
+        '<div class="card-sub" style="margin-bottom:6px;">Status: PROTOTYPE</div>' +
+        '<ul class="task-list" style="margin-bottom:10px;">' + appStagesData.map(function(s,i){
+          return '<li class="' + (s.done?'done':'') + '" onclick="toggleAppStage(' + i + ')"><span class="box">' + (s.done?'✓':'') + '</span><span class="t">' + s.name + '</span></li>';
+        }).join('') + '</ul>' +
+        '<div class="bar"><div class="bar-fill" style="width:' + appPct + '%;"></div></div>' +
+        '<div style="font-size:11px;color:var(--text-soft);margin-top:8px;">2026: prototyp + affärsplan · 2027: MVP · 2028-2029: möjlig lansering</div>';
+    }
+  }
+
+  function renderHomeStatusTags(){
+    var el = document.getElementById('homeStatusTags');
+    if(!el) return;
+    var tags = [];
+    var tiktokGoal = lifeGoals.filter(function(g){ return g.kpiUnit === 'följare'; })[0];
+    if(tiktokGoal){
+      var s = goalStatusEmoji(tiktokGoal);
+      tags.push({ text: 'TikTok ' + (s==='🟢'?'ahead':s==='🔴'?'behind':'on track') });
+    }
+    var dosedNet = dosedFinance.revenue - dosedFinance.expenses;
+    tags.push({ text: 'DOSED ' + (dosedNet >= 0 ? 'stable' : 'needs focus') });
+    if(healthLoaded){
+      tags.push({ text: 'Health ' + (window._homeConsistencyPct !== undefined && window._homeConsistencyPct >= 60 ? 'on track' : 'attention') });
+    }
+    var nextEdu = studyPlans.filter(function(s){ return s.end; }).sort(function(a,b){ return a.end.localeCompare(b.end); })[0];
+    if(nextEdu) tags.push({ text: 'Education ' + nextEdu.status });
+    el.innerHTML = tags.map(function(t){ return '<span class="status-pill active" style="cursor:default;">' + t.text + '</span>'; }).join('');
+  }
+
+  function requestWeeklyReview(){
+    var el = document.getElementById('weeklyReviewResult');
+    el.innerHTML = '<div class="list-empty">Analyserar veckan...</div>';
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      el.innerHTML = '<div class="card-label" style="margin-bottom:6px;">Week in Review</div>' +
+        '<div style="font-size:12px;margin-bottom:8px;"><b>Wins:</b> ' + (r.wins||[]).join(', ') + '</div>' +
+        '<div style="font-size:12px;margin-bottom:8px;"><b>Misses:</b> ' + (r.misses||[]).join(', ') + '</div>' +
+        '<div style="font-size:12px;margin-bottom:8px;"><b>Bottleneck:</b> ' + (r.bottleneck||'') + '</div>' +
+        '<div style="font-size:12px;margin-bottom:8px;"><b>Next week top 3:</b><ul style="margin:4px 0 0 18px;padding:0;">' + (r.top3||[]).map(function(t){return '<li>'+t+'</li>';}).join('') + '</ul></div>' +
+        '<div style="font-size:12px;"><b>Rekommendation:</b> ' + (r.recommendation||'') + '</div>';
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=weekly_brief&context=' + encodeURIComponent(buildAIContext()) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
+
+  function computeOverallStatus(){
+    var active = lifeGoals.filter(function(g){ return !g.completed && g.deadline; });
+    if(active.length === 0) return { label:'NO ACTIVE DEADLINES', tone:'neutral' };
+    var bad = active.filter(function(g){ var s = goalStatusEmoji(g); return s === '🔴' || s === '🟡'; }).length;
+    return (bad / active.length) > 0.4 ? { label:'NEEDS ATTENTION', tone:'warn' } : { label:'ON TRACK', tone:'ok' };
+  }
+  function renderHomeHeader(){
+    var el = document.getElementById('homeGreeting');
+    if(!el) return;
+    var now = new Date();
+    var hour = now.getHours();
+    var greeting = hour < 12 ? 'Good morning, Julia' : (hour < 18 ? 'Good afternoon, Julia' : 'Good evening, Julia');
+    el.textContent = greeting;
+    var weekdayNames = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+    var q = quarterInfoFor(0);
+    var todayKey = isoDate(now);
+    var dateLine = weekdayNames[now.getDay()] + ' · ' + now.getDate() + ' ' + monthNamesFull[now.getMonth()] + ' ' + now.getFullYear() + '  ·  ' + q.label;
+    if(isInChallenge(todayKey)){
+      var dayNum = Math.round((new Date(todayKey) - new Date(challengeStart))/86400000) + 1;
+      dateLine += '  ·  Day ' + dayNum + '/75 HARD';
+    }
+    document.getElementById('homeHeaderDate').textContent = dateLine;
+    var status = computeOverallStatus();
+    var pillEl = document.getElementById('homeStatusPill');
+    pillEl.textContent = status.label;
+    pillEl.style.background = status.tone === 'ok' ? 'var(--sage-soft)' : (status.tone === 'warn' ? '#FDE1E7' : 'var(--surface-soft)');
+    pillEl.style.color = status.tone === 'ok' ? 'var(--sage)' : (status.tone === 'warn' ? 'var(--accent)' : 'var(--text-soft)');
+  }
+
+  function renderHomeThisWeek(){
+    var el = document.getElementById('homeWeekPctBig');
+    if(!el) return;
+    var pct = habitPctForDates(REAL_WEEK_DATES);
+    el.textContent = pct + '%';
+    document.getElementById('homeWeekBar').style.width = pct + '%';
+    var outcomesEl = document.getElementById('homeWeekOutcomes');
+    outcomesEl.innerHTML = weekGoals.length
+      ? weekGoals.slice(0,3).map(function(g){ return '<li style="cursor:default;"><span class="box"></span><span class="t">' + g + '</span></li>'; }).join('')
+      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga veckans mål satta ännu — lägg till i Week.</li>';
+    var daysOnTrack = 0;
+    REAL_WEEK_DATES.forEach(function(dt){
+      var dk = isoDate(dt);
+      if(dk > isoDate(new Date())) return;
+      var rows = isInChallenge(dk) ? hard75Rows : permanentRows;
+      var done = rows.filter(function(h){ return habitState[h] && habitState[h][dk]; }).length;
+      if(rows.length && done === rows.length) daysOnTrack++;
+    });
+    var daysSoFar = REAL_WEEK_DATES.filter(function(dt){ return isoDate(dt) <= isoDate(new Date()); }).length;
+    document.getElementById('homeWeekDaysOnTrack').textContent = daysOnTrack + ' / ' + daysSoFar + ' days on track denna vecka';
+  }
+
+  function renderHomeNorthStar(){
+    var el = document.getElementById('homeNorthStar');
+    if(!el) return;
+    var order = ['10 år','5 år','3 år'];
+    var chain = [];
+    order.forEach(function(tf){
+      var g = lifeGoals.filter(function(x){ return x.timeframe === tf; })[0];
+      if(g) chain.push(g);
+    });
+    var yearGoals = lifeGoals.filter(function(g){ return g.timeframe === 'Årligen' && g.deadline && g.deadline.slice(0,4) === String(currentYear()); });
+    if(chain.length === 0 && yearGoals.length === 0){
+      el.innerHTML = '<div class="list-empty">Inga långsiktiga mål satta ännu — lägg till en 10/5/3-års vision under Goals.</div>';
+      return;
+    }
+    var html = chain.map(function(g, i){
+      return '<div style="padding:8px 0;' + (i>0?'border-top:1px solid var(--border);':'') + '">' +
+        '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + g.timeframe + '</span>' +
+        '<span style="font-size:13px;">' + g.title + '</span></div>';
+    }).join('');
+    if(yearGoals.length){
+      html += '<div style="padding:8px 0;border-top:1px solid var(--border);">' +
+        '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + currentYear() + '</span>' +
+        yearGoals.map(function(g){ return '<span style="font-size:13px;">' + g.title + '</span>'; }).join('<br>') + '</div>';
+    }
+    el.innerHTML = html;
+  }
+
+  function renderHomeTrajectory(){
+    var el = document.getElementById('homeTrajectory');
+    if(!el) return;
+    var dosedGoal = lifeGoals.filter(function(g){ return g.category === 'DOSED'; })[0];
+    if(!dosedGoal){
+      el.innerHTML = '<div class="list-empty">Inget DOSED-mål hittat under Goals ännu.</div>';
+      return;
+    }
+    var chain = [];
+    var cur = dosedGoal;
+    while(cur){
+      chain.unshift(cur);
+      cur = cur.parentId ? lifeGoals.filter(function(x){ return x.id === cur.parentId; })[0] : null;
+    }
+    var html = chain.map(function(g, i){
+      return '<div style="padding:6px 0;' + (i>0?'border-top:1px solid var(--border);':'') + '">' +
+        '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + g.timeframe + '</span>' +
+        '<span style="font-size:12px;">' + g.title + '</span></div>';
+    }).join('');
+    var dosedChecklist = goals['Dosed'] || [];
+    var doneCount = dosedChecklist.filter(function(t){ return t.done; }).length;
+    html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
+      '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Detta kvartal</span>' +
+      '<span style="font-size:12px;">' + doneCount + '/' + dosedChecklist.length + ' foundation-punkter klara</span></div>';
+    var weekMatch = weekGoals.filter(function(g){ return g.toLowerCase().indexOf('dosed') > -1; });
+    html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
+      '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Denna vecka</span>' +
+      '<span style="font-size:12px;">' + (weekMatch.length ? weekMatch.join(', ') : '<span style="color:var(--text-soft);font-style:italic;">inget DOSED-mål satt för veckan ännu</span>') + '</span></div>';
+    var todayLabelNow = days7[(new Date().getDay()+6)%7];
+    var todayMatch = (tasksByDay[todayLabelNow]||[]).filter(function(t){ return t.t.toLowerCase().indexOf('dosed') > -1 || t.t.toLowerCase().indexOf('leverantör') > -1; });
+    html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
+      '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Idag</span>' +
+      '<span style="font-size:12px;">' + (todayMatch.length ? todayMatch.map(function(t){return t.t;}).join(', ') : '<span style="color:var(--text-soft);font-style:italic;">ingen DOSED-task satt för idag ännu</span>') + '</span></div>';
+    el.innerHTML = html;
+  }
+
+  function renderHomeMoneyCard(){
+    var el = document.getElementById('homeMoneyContent');
+    if(!el) return;
+    var savingsTotal = savingsGoals.reduce(function(sum,g){ return sum + (g.saved||0); }, 0);
+    var lastMortgage = mortgageHistory.length ? mortgageHistory[mortgageHistory.length-1].balance : moneyPrivate.debt;
+    var changeText = 'Logga fler månader för att se förändring';
+    if(mortgageHistory.length >= 2){
+      var diff = mortgageHistory[mortgageHistory.length-1].balance - mortgageHistory[mortgageHistory.length-2].balance;
+      var arrow = diff < 0 ? '<span style="color:var(--sage);">↓</span>' : (diff > 0 ? '<span style="color:var(--accent);">↑</span>' : '→');
+      changeText = arrow + ' ' + (diff>0?'+':'') + diff.toLocaleString('sv-SE') + ' kr sedan förra loggningen';
+    }
+    var bucketsHtml = savingsGoals.length
+      ? savingsGoals.map(function(g){ return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;"><span>' + g.name + '</span><span style="color:var(--text-soft);">' + (g.saved||0).toLocaleString('sv-SE') + ' kr' + (g.target>0 ? ' / ' + g.target.toLocaleString('sv-SE') + ' kr' : '') + '</span></div>'; }).join('')
+      : '<div style="font-size:11px;color:var(--text-soft);">Inga sparbuckets ännu.</div>';
+    el.innerHTML = '<div class="stat-grid">' +
+      '<div class="stat"><div class="lbl">Savings</div><div class="val">' + savingsTotal.toLocaleString('sv-SE') + ' kr</div></div>' +
+      '<div class="stat"><div class="lbl">Mortgage</div><div class="val">' + lastMortgage.toLocaleString('sv-SE') + ' kr</div></div>' +
+      '</div><div class="card-sub" style="margin-top:8px;margin-bottom:8px;">' + changeText + '</div>' +
+      '<div style="border-top:1px solid var(--border);padding-top:8px;">' + bucketsHtml + '</div>';
+  }
+
+  function renderHomeHealthCard(){
+    var el = document.getElementById('homeHealthContent');
+    if(!el) return;
+    if(!healthLoaded){
+      el.innerHTML = '<div class="list-empty">Hämtar Apple Health-data...</div>';
+      return;
+    }
+    var todayKey = isoDate(new Date());
+    var stepsToday = metricSumInRange('step_count', todayKey, todayKey);
+    var sleepMetric = metricByName('sleep_analysis');
+    var sleepPt = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) === todayKey; })[0] : null;
+    var workoutsToday = workoutsInRange(todayKey, todayKey);
+    el.innerHTML = '<div class="stat-grid">' +
+      '<div class="stat"><div class="lbl">Sleep</div><div class="val">' + (sleepPt ? sleepPt.totalSleep.toFixed(1) + ' h' : '—') + '</div></div>' +
+      '<div class="stat"><div class="lbl">Steps</div><div class="val">' + (stepsToday !== null ? Math.round(stepsToday).toLocaleString('sv-SE') : '—') + '</div></div>' +
+      '<div class="stat"><div class="lbl">Workout</div><div class="val">' + (workoutsToday.length ? 'Klart' : 'Inte än') + '</div></div>' +
+      '</div>';
+  }
+
   function renderHome(){
-    var el = document.getElementById('homeHabitsToday');
+    var el = document.getElementById('homeRingText');
     if(!el) return;
     var todayKey = isoDate(new Date());
     var inChallenge = isInChallenge(todayKey);
     var rows = inChallenge ? hard75Rows : permanentRows;
     var done = 0;
     rows.forEach(function(h){ if(habitState[h] && habitState[h][todayKey]) done++; });
-    el.textContent = done + '/' + rows.length;
     if(inChallenge){
       var dayNum = Math.round((new Date(todayKey) - new Date(challengeStart))/86400000) + 1;
-      document.getElementById('homeHardStatus').textContent = 'Day ' + dayNum + '/75';
+      document.getElementById('homeHardStatus').textContent = done + '/' + rows.length + ' · Day ' + dayNum + '/75';
     } else {
-      document.getElementById('homeHardStatus').textContent = 'Habits-läge';
+      document.getElementById('homeHardStatus').textContent = done + '/' + rows.length + ' (habits)';
     }
-    var moodEntry = dailyLog[todayKey];
-    var moodMap = { glad:'😊', arg:'😠', neutral:'😐', ledsen:'😢', angest:'😰' };
-    document.getElementById('homeMoodToday').textContent = moodEntry && moodEntry.mood ? moodMap[moodEntry.mood] : '—';
+
+    var todayPct = rows.length ? Math.round((done/rows.length)*100) : 0;
+    document.getElementById('homeTodayPctBig').textContent = todayPct + '%';
+    document.getElementById('homeRingText').textContent = todayPct + '%';
+    var circumference = 314;
+    document.getElementById('homeRingProgress').setAttribute('stroke-dashoffset', Math.round(circumference * (1 - todayPct/100)));
 
     var stepsToday = healthLoaded ? metricSumInRange('step_count', todayKey, todayKey) : null;
-    document.getElementById('homeStepsGoal').textContent = (stepsToday !== null ? Math.round(stepsToday).toLocaleString('sv-SE') : '—') + ' / 10k';
+    document.getElementById('homeStepsGoal').textContent = stepsToday !== null ? Math.round(stepsToday).toLocaleString('sv-SE') : '—';
     var sleepMetric = healthLoaded ? metricByName('sleep_analysis') : null;
     var sleepPt = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) === todayKey; })[0] : null;
     document.getElementById('homeSleep').textContent = sleepPt ? sleepPt.totalSleep.toFixed(1) + ' h' : '—';
-    var todaysWorkouts = healthLoaded ? workoutsInRange(todayKey, todayKey) : [];
-    document.getElementById('homeWorkoutDone').textContent = todaysWorkouts.length > 0 ? 'Klart' : (healthLoaded ? 'Inte än' : '—');
+    var workoutsToday = healthLoaded ? workoutsInRange(todayKey, todayKey) : [];
+    document.getElementById('homeWorkoutToday').textContent = !healthLoaded ? '—' : (workoutsToday.length ? 'Klart' : 'Inte än');
 
+    renderHomeHeader();
     renderHomeTop3();
-    renderHomeGoalTfRow();
-    renderHomeGoalScorecard();
+    renderHomeThisWeek();
+    renderHomeNorthStar();
+    renderHomeTrajectory();
     renderHomeUpcoming();
     renderPhysical();
-
-    document.getElementById('homeTiktokStat').textContent = tiktokStats.followers.toLocaleString('sv-SE') + ' / 500k';
-    document.getElementById('homeTiktokBar').style.width = Math.min(100, Math.round((tiktokStats.followers/500000)*100)) + '%';
-    var dosedNet = dosedFinance.revenue - dosedFinance.expenses;
-    document.getElementById('homeDosedStat').textContent = (dosedNet >= 0 ? '+' : '') + dosedNet.toLocaleString('sv-SE') + ' kr netto';
-
-    if(healthLoaded){
-      var last7Start = isoDate(new Date(Date.now() - 6*86400000));
-      var stepsSum = metricSumInRange('step_count', last7Start, todayKey);
-      var stepsAvg = stepsSum !== null ? Math.round(stepsSum/7) : null;
-      document.getElementById('homeStepsAvg').textContent = stepsAvg !== null ? stepsAvg.toLocaleString('sv-SE') : '—';
-      var sleepVals = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) >= last7Start; }) : [];
-      var sleepAvg = sleepVals.length ? (sleepVals.reduce(function(s,p){return s+p.totalSleep;},0)/sleepVals.length) : null;
-      document.getElementById('homeSleepAvg').textContent = sleepAvg !== null ? sleepAvg.toFixed(1) + ' h' : '—';
-      var sleepOk = sleepVals.filter(function(p){ return p.totalSleep >= 7; }).length;
-      var stepsOkDays = 0;
-      for(var i=0;i<7;i++){ var dk = isoDate(new Date(Date.now()-i*86400000)); var s = metricSumInRange('step_count', dk, dk); if(s!==null && s>=10000) stepsOkDays++; }
-      var consistency = Math.round(((sleepOk + stepsOkDays) / 14) * 100);
-      document.getElementById('homeHealthConsistency').textContent = consistency + '%';
-    } else {
-      document.getElementById('homeStepsAvg').textContent = '—';
-      document.getElementById('homeSleepAvg').textContent = '—';
-      document.getElementById('homeHealthConsistency').textContent = '—';
-    }
+    renderHomeBizTabRow();
+    renderHomeBizContent();
+    renderHomeMoneyCard();
+    renderHomeHealthCard();
 
     var eduEl = document.getElementById('homeEducation');
     eduEl.innerHTML = studyPlans.length
-      ? studyPlans.slice(0,3).map(function(s){ return '<div class="list-item">' + s.title + ' <span style="color:var(--text-soft);font-size:11px;">— ' + s.status + (s.end ? ' · till ' + s.end : '') + '</span></div>'; }).join('')
-      : '<div class="list-empty">Inga kurser lagda till.</div>';
-
-    var savingsTotal = savingsGoals.reduce(function(sum,g){ return sum + (g.saved||0); }, 0);
-    document.getElementById('homeSavings').textContent = savingsTotal.toLocaleString('sv-SE') + ' kr';
-    var netMonth = moneyPrivate.income - moneyPrivate.expenses;
-    document.getElementById('homeNetMonth').textContent = (netMonth>=0?'+':'') + netMonth.toLocaleString('sv-SE') + ' kr';
+      ? studyPlans.slice(0,3).map(function(s){ return '<div style="font-size:12px;margin-bottom:4px;">' + s.title + '<br><span style="color:var(--text-soft);font-size:11px;">' + s.status + (s.end ? ' · ' + s.end : ' · deadline ej satt') + '</span></div>'; }).join('')
+      : '<div style="font-size:12px;color:var(--text-soft);">Inga kurser.</div>';
   }
 
   var STORAGE_KEY = 'livsdashboard_v1';
+  var appDataVersion = 0;
   function saveAll(){
     try{
       var reflInput = document.getElementById('w_reflectionText');
@@ -4128,14 +4651,16 @@
         studyPlans: studyPlans, books: books, lifeGoals: lifeGoals, goalActionIdCounter: goalActionIdCounter,
         monthlyData: monthlyData, yearData: yearData, savingsGoals: savingsGoals, bucketItems: bucketItems,
         dosedFinance: dosedFinance, dosedStagesData: dosedStagesData, dosedTasks: dosedTasks,
-        tiktokStats: tiktokStats, tiktokPillars: tiktokPillars, tiktokCollabs: tiktokCollabs,
+        tiktokStats: tiktokStats, tiktokHistory: tiktokHistory, tiktokPillars: tiktokPillars, tiktokCollabs: tiktokCollabs,
         projects: projects, ideaVaultItems: ideaVaultItems,
         moneyPrivate: moneyPrivate, moneyBusiness: moneyBusiness, visionData: visionData,
-        physicalStats: physicalStats, physicalMilestones: physicalMilestones,
+        physicalStats: physicalStats, physicalMilestones: physicalMilestones, mortgageHistory: mortgageHistory, weekFocus: weekFocus, appStagesData: appStagesData,
+        generalTodos: generalTodos, todoIdCounter: todoIdCounter,
         weekOffset: weekOffset, quarterOffset: quarterOffset, yearOffset: yearOffset, dagligenWeekOffset: dagligenWeekOffset,
         selectedDate: selectedDate, currentCat: currentCat, currentArkivCat: currentArkivCat,
         bookFilter: bookFilter, recipeView: recipeView, goalView: goalView,
-        categoryColorMap: categoryColorMap
+        categoryColorMap: categoryColorMap,
+        appDataVersion: appDataVersion
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch(e){ /* lagring otillgänglig eller full — misslyckas tyst */ }
@@ -4183,6 +4708,7 @@
       if(s.dosedStagesData) dosedStagesData = s.dosedStagesData;
       if(s.dosedTasks) dosedTasks = s.dosedTasks;
       if(s.tiktokStats) tiktokStats = s.tiktokStats;
+      if(s.tiktokHistory) tiktokHistory = s.tiktokHistory;
       if(s.tiktokPillars) tiktokPillars = s.tiktokPillars;
       if(s.tiktokCollabs) tiktokCollabs = s.tiktokCollabs;
       if(s.projects) projects = s.projects;
@@ -4192,6 +4718,12 @@
       if(s.visionData) visionData = s.visionData;
       if(s.physicalStats) physicalStats = s.physicalStats;
       if(s.physicalMilestones) physicalMilestones = s.physicalMilestones;
+      if(s.mortgageHistory) mortgageHistory = s.mortgageHistory;
+      if(s.weekFocus) weekFocus = s.weekFocus;
+      if(s.appStagesData) appStagesData = s.appStagesData;
+      if(s.generalTodos) generalTodos = s.generalTodos;
+      if(s.todoIdCounter) todoIdCounter = s.todoIdCounter;
+      if(s.appDataVersion) appDataVersion = s.appDataVersion;
     } catch(e){ /* korrupt data — kör vidare med standardvärden */ }
   }
   var saveDebounceTimer = null;
@@ -4206,210 +4738,152 @@
 
   loadAll();
 
+  if(appDataVersion < 2){
+    weekGoals = [];
+    lifeGoals = [];
+    goalIdCounter = 0;
+    goalActionIdCounter = 0;
+    goals = { 'Dosed':[], 'Hälsa':[], 'Ekonomi':[], 'TikTok':[], 'Personligt':[] };
+    habitState = {};
+    allHabitRows.forEach(function(h){ habitState[h] = {}; });
+    tasksByDay = {};
+    days7.forEach(function(d){ tasksByDay[d] = []; });
+    calEvents = [];
+    dailyLog = {};
+    measurementsLog = [];
+    monthlyData = {};
+    yearData = {};
+    quarterBooks = [];
+    quarterWins = [];
+    quarterIdeas = [];
+    dosedLog = [];
+    tiktokLog = [];
+    recipes = [];
+    studyPlans = [];
+    books = [];
+    savingsGoals = [];
+    bucketItems = [];
+    dosedFinance = { revenue:0, expenses:0 };
+    dosedStagesData = [];
+    dosedTasks = [];
+    tiktokStats = { followers:0, views:0, engagement:0, posts:0 };
+    tiktokHistory = [];
+    tiktokPillars = [];
+    tiktokCollabs = [];
+    projects = [];
+    ideaVaultItems = [];
+    moneyPrivate = { income:0, expenses:0, debt:0 };
+    moneyBusiness = { affiliate:0, creator:0 };
+    visionData = { v3:'', v5:'', v10:'' };
+    physicalStats = { pullUpMax:0, pullUpHistory:[] };
+    physicalMilestones = [];
+    appDataVersion = 2;
+  }
+
+  lifeGoals = lifeGoals.filter(function(g){ return g.title.toLowerCase().indexOf('hanfors') === -1; });
+
   catOrder.forEach(function(k){ if(!goals[k]) goals[k] = []; });
 
   function seedIfEmpty(){
-    if(weekGoals.length === 0){
-      weekGoals.push('Träna 5 gånger', 'Klar med Dosed-förpackning', 'Filma 3 TikTok-klipp');
-    }
+    // ===== RIKTIG DATA (från Julias initial dataset) =====
+
     if(lifeGoals.length === 0){
-      lifeGoals.push(
-        { id:++goalIdCounter, title:'Gå ner till 65kg', category:'Hälsa & fitness', timeframe:'Kvartalsvis', parentId:null, completed:false, progress:67, deadline:'2026-12-31', kpiTarget:65, kpiActual:66.4, kpiUnit:'kg',
-          kpiHistory:[{date:isoDate(new Date(Date.now()-30*86400000)),actual:69},{date:isoDate(new Date(Date.now()-14*86400000)),actual:67.5},{date:isoDate(new Date()),actual:66.4}],
-          milestones:[{title:'Nå 69 kg',done:true},{title:'Nå 67 kg',done:true},{title:'Nå 65 kg',done:false}],
-          actions:[{id:++goalActionIdCounter,text:'Väga mig varje söndag',freq:'Veckovis',done:true},{id:++goalActionIdCounter,text:'Hålla kaloriunderskott',freq:'Dagligen',done:false}] },
-        { id:++goalIdCounter, title:'Klara 3 strikta pull-ups', category:'Hälsa & fitness', timeframe:'Månadsvis', parentId:null, completed:true, progress:100, deadline:'2026-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] }
-      );
-
-      var v10 = { id:++goalIdCounter, title:'Bygga ett wellness-imperium', category:'Vision', timeframe:'10 år', parentId:null, completed:false, progress:5, deadline:'', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
-      var v5 = { id:++goalIdCounter, title:'DOSED + app + fysiskt gym', category:'Vision', timeframe:'5 år', parentId:v10.id, completed:false, progress:8, deadline:'', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
-      var v3 = { id:++goalIdCounter, title:'DOSED etablerat + wellness-appen lanserad', category:'Vision', timeframe:'3 år', parentId:v5.id, completed:false, progress:10, deadline:'', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
-      var yearly = { id:++goalIdCounter, title:'Lansera DOSED', category:'Företag', timeframe:'Årligen', parentId:v3.id, completed:false, progress:35, deadline:'2026-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
-      var quarterly = { id:++goalIdCounter, title:'Produktutveckling klar', category:'Företag', timeframe:'Kvartalsvis', parentId:yearly.id, completed:false, progress:40, deadline:'2026-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
-      var monthly = { id:++goalIdCounter, title:'Leverantör + samples klara', category:'Företag', timeframe:'Månadsvis', parentId:quarterly.id, completed:false, progress:50, deadline:'', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
-      var weekly = { id:++goalIdCounter, title:'Jämför 3 leverantörer', category:'Företag', timeframe:'Veckovis', parentId:monthly.id, completed:false, progress:66, deadline:'', kpiTarget:3, kpiActual:2, kpiUnit:'leverantörer', milestones:[], actions:[] };
-      var daily = { id:++goalIdCounter, title:'Mejla 3 leverantörer', category:'Företag', timeframe:'Dagligen', parentId:weekly.id, completed:false, progress:33, deadline:'', kpiTarget:3, kpiActual:1, kpiUnit:'mejl', milestones:[], actions:[] };
-
-      var tiktokYearly = { id:++goalIdCounter, title:'Nå 500 000 följare på TikTok', category:'Karriär & professionellt', timeframe:'Årligen', parentId:null, completed:false, progress:2, deadline:'2027-12-31', kpiTarget:500000, kpiActual:8400, kpiUnit:'följare',
-        milestones:[{title:'10 000 följare',done:false}], actions:[{id:++goalActionIdCounter,text:'Posta ett klipp',freq:'Dagligen',done:false},{id:++goalActionIdCounter,text:'Planera veckans innehåll',freq:'Veckovis',done:false},{id:++goalActionIdCounter,text:'Analysera månadens tillväxt',freq:'Månadsvis',done:false},{id:++goalActionIdCounter,text:'Sätt kvartalets följarmål',freq:'Kvartalsvis',done:false},{id:++goalActionIdCounter,text:'Gör en årlig innehållsstrategi',freq:'Årligen',done:false}] };
-      var tiktokQuarter = { id:++goalIdCounter, title:'Q4: +120k följare', category:'Karriär & professionellt', timeframe:'Kvartalsvis', parentId:tiktokYearly.id, completed:false, progress:15, deadline:'2026-12-31', kpiTarget:120000, kpiActual:18000, kpiUnit:'nya följare', milestones:[], actions:[] };
-      var tiktokMonth = { id:++goalIdCounter, title:'September: +35k följare', category:'Karriär & professionellt', timeframe:'Månadsvis', parentId:tiktokQuarter.id, completed:false, progress:20, deadline:'2026-09-30', kpiTarget:35000, kpiActual:7000, kpiUnit:'nya följare', milestones:[], actions:[] };
-
-      lifeGoals.push(v10, v5, v3, yearly, quarterly, monthly, weekly, daily, tiktokYearly, tiktokQuarter, tiktokMonth);
-    }
-    if(Object.values(habitState).every(function(h){ return Object.keys(h).length === 0; })){
-      var seedDays = REAL_WEEK_DATES.slice(0,4).map(function(d){ return isoDate(d); });
-      seedDays.forEach(function(dk, i){
-        habitState['🥗 Hållt diet'][dk] = true;
-        habitState['📖 Läst 10 sidor'][dk] = i % 2 === 0;
-        habitState['🚫 Ingen alkohol'][dk] = true;
-        habitState['🚶 Promenad 30-45 min'][dk] = i < 3;
-        habitState['🏋️ Träning inne 30-45 min'][dk] = i % 2 === 1;
-        habitState['📝 Dokumenterat dagen'][dk] = true;
-        habitState['🧘 Meditation'][dk] = i < 2;
-      });
-    }
-    if(recipes.length === 0){
-      recipes.push(
-        { title:'Overnight oats', imageUrl:'', course:'Frukost', calories:'350', carbs:'45', fat:'10', protein:'12', time:'10 min', servings:'1', ingredients:['Havregryn','Skyr','Bär','Chiafrön'], equipment:['Burk'], steps:['Blanda allt','Ställ i kylen över natten'], rating:'4' },
-        { title:'Kycklingbowl med quinoa', imageUrl:'', course:'Middag', calories:'520', carbs:'42', fat:'14', protein:'38', time:'25 min', servings:'2', ingredients:['Kycklingfilé','Quinoa','Broccoli','Avokado'], equipment:['Stekpanna','Kastrull'], steps:['Koka quinoa','Stek kyckling','Blanda ihop'], rating:'5' }
-      );
-    }
-    if(books.length === 0){
-      books.push(
-        { title:'Atomic Habits', author:'James Clear', cover:'', genre:'Självutveckling', status:'Läser', progress:60, rating:0 },
-        { title:'Wabi Sabi', author:'Beth Kempton', cover:'', genre:'Mindfulness', status:'Läst', progress:100, rating:4 }
-      );
-    }
-    if(studyPlans.length === 0){
-      studyPlans.push(
-        { title:'Psykologi 1: Kapitel 3', type:'Begreppsrepetition', lecture:'Föreläsning 2', status:'Pågår', start:'2026-09-09', end:'2026-09-13' },
-        { title:'Marknadsföring: Modul 2', type:'Problemlösning', lecture:'Öva-modul', status:'Inte påbörjad', start:'2026-09-15', end:'' }
-      );
-    }
-    if(quarterBooks.length === 0) quarterBooks.push('Atomic Habits');
-    if(quarterWins.length === 0) quarterWins.push('Klarade första 75 Hard-veckan', 'Publicerade Dosed-teaser på TikTok');
-    if(quarterIdeas.length === 0) quarterIdeas.push('Samarbete med lokal gymkedja', 'Prova en pop-up för Dosed');
-    if(bucketItems.length === 0){
-      bucketItems.push(
-        { text:'Resa till Japan', category:'resa', deadline:'2027-06-01', done:false },
-        { text:'Nå 65kg', category:'halsa', deadline:'2026-12-31', done:false },
-        { text:'Bygga 30 000 kr buffert', category:'pengar', deadline:'2026-12-31', done:false },
-        { text:'Lansera Dosed', category:'foretag', deadline:'2026-11-30', done:false }
-      );
-    }
-    if(savingsGoals.length === 0){
-      savingsGoals.push(
-        { name:'Buffert', saved:18000, target:30000 },
-        { name:'Investeringar', saved:42000, target:100000 },
-        { name:'Resor', saved:6500, target:15000 },
-        { name:'Pension', saved:9000, target:50000 }
-      );
-    }
-    if(dosedLog.length === 0) dosedLog.push('9 sep · Skickade wordmark till tryckeriet');
-    if(tiktokLog.length === 0) tiktokLog.push('9 sep · Filmade gymklipp för fredag');
-
-    if(Object.keys(tasksByDay).every(function(d){ return tasksByDay[d].length === 0; })){
-      tasksByDay['Mån'].push({t:'Handla matvaror till veckan', done:true});
-      tasksByDay['Tis'].push({t:'Boka fotograf mockup', done:true});
-      tasksByDay['Ons'].push({t:'Skicka wordmark till tryck', done:false});
-      tasksByDay['Tor'].push({t:'Klippa söndagens innehåll', done:false});
-      tasksByDay['Fre'].push({t:'Beställa retinol-påfyllning', done:false});
+      var v10 = { id:++goalIdCounter, title:'Äga flera fungerande företag, vara miljardär, bygga DOSED till ett stort internationellt wellness-bolag (större än SATS på gymsidan)', category:'Vision', timeframe:'10 år', parentId:null, completed:false, progress:0, deadline:'', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
+      var v5 = { id:++goalIdCounter, title:'DOSED lanserat och fungerar, wellness-appen live/etablerad, första DOSED-gymmet startat, självförsörjande', category:'Vision', timeframe:'5 år', parentId:v10.id, completed:false, progress:0, deadline:'', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
+      var v3 = { id:++goalIdCounter, title:'DOSED lanserat och går bra, wellness-appen på gång/lanserad, första gymmet på gång, stark fysisk form, Audi A5/S5', category:'Vision', timeframe:'3 år', parentId:v5.id, completed:false, progress:0, deadline:'', kpiTarget:100000, kpiActual:76, kpiUnit:'TikTok-följare', milestones:[], actions:[] };
+      var tiktok2026 = { id:++goalIdCounter, title:'Nå 5 000–10 000 följare på TikTok (2026-mål)', category:'TikTok / Personal Brand', timeframe:'Årligen', parentId:v3.id, completed:false, progress:0, deadline:'2026-12-31', kpiTarget:null, kpiActual:76, kpiUnit:'följare (mål 5 000–10 000)', milestones:[], actions:[] };
+      var dosed2026 = { id:++goalIdCounter, title:'Klar affärsplan, positionering, logo, visuell identitet, leverantörsjämförelse och lanseringsbudget för DOSED', category:'DOSED', timeframe:'Årligen', parentId:v5.id, completed:false, progress:0, deadline:'2026-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
+      var wellnessApp2026 = { id:++goalIdCounter, title:'Tydlig prototyp + påbörjad affärsplan för wellness-appen', category:'Wellness App', timeframe:'Årligen', parentId:v5.id, completed:false, progress:0, deadline:'2026-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
+      var hobby2026 = { id:++goalIdCounter, title:'Testa en ny hobby', category:'Personligt', timeframe:'Årligen', parentId:null, completed:false, progress:0, deadline:'2026-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
+      var car2027 = { id:++goalIdCounter, title:'Köpa Audi A5/S5', category:'Personligt', timeframe:'Årligen', parentId:null, completed:false, progress:0, deadline:'2027-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] };
+      lifeGoals.push(v10, v5, v3, tiktok2026, dosed2026, wellnessApp2026, hobby2026, car2027);
     }
 
-    if(calEvents.length === 0){
-      calEvents.push('Manuellt exempel: Läkarbesök 15:00');
-    }
-
-    if(Object.keys(dailyLog).length === 0){
-      var seedMoods = ['glad','neutral','glad','arg','ledsen'];
-      var seedNotes = [
-        'Bra dag, hann med allt på listan.',
-        'Lugn dag, mest jobb och vila.',
-        'Riktigt bra träningspass idag!',
-        'Stressig dag, mycket att göra samtidigt.',
-        'Kände mig trött, tog det lugnt på kvällen.'
-      ];
-      REAL_WEEK_DATES.slice(0,5).forEach(function(dt, i){
-        var dk = isoDate(dt);
-        dailyLog[dk] = { mood: seedMoods[i], note: seedNotes[i], saved: true };
+    if(goals['Hälsa'].length === 0) goals['Hälsa'].push({ t:'Slutföra 75 Hard', done:false });
+    if(goals['TikTok'].length === 0) goals['TikTok'].push({ t:'Nå 5 000–10 000 följare 2026', done:false });
+    if(goals['Dosed'].length === 0){
+      ['Affärsplan','Varumärkespositionering','Logo','Visuell identitet','Grafisk profil','Produktstrategi','Leverantörsresearch','Leverantörsshortlist','Leverantörsjämförelse','Kostnadsjämförelse','MOQ-information','Förpackningsresearch','Logistikresearch','Lanseringsbudget','Bolagsstruktur','Produktroadmap','Måldatum för lansering'].forEach(function(t){
+        goals['Dosed'].push({ t:t, done:false });
       });
     }
 
-    if(measurementsLog.length === 0){
-      var sunday = REAL_WEEK_DATES[6];
-      measurementsLog.push({
-        weekKey: isoDate(REAL_WEEK_DATES[0]),
-        date: isoDate(sunday),
-        values: { weight:'66.4', arm:'27', waist:'71', thigh:'54', chest:'88', hips:'92' }
+    if(dosedStagesData.length === 0){
+      ['Affärsplan','Varumärkespositionering','Logo & visuell identitet','Leverantörsresearch & jämförelse','Förpackning & logistik','Lanseringsbudget klar'].forEach(function(t){
+        dosedStagesData.push({ name:t, done:false });
       });
     }
 
-    if(Object.keys(monthlyData).length === 0){
-      var mk = monthKeyFor(currentMonthDate);
-      monthlyData[mk] = { answers: [
-        'Att hålla igång 75 Hard samtidigt som jobb och studier.',
-        'Att jag äntligen kom igång med Dosed på riktigt.',
-        'Att konsekvens slår motivation — små dagliga vanor bygger allt.',
-        'Tränat 18 av 22 dagar, sovit bra mesta delen av månaden.',
-        'Klippt mitt första riktiga TikTok-innehåll för Dosed.',
-        'Planera veckans innehåll i förväg istället för att filma i sista sekund.',
-        'Fokusera mer på förpackningsdesignen och mindre på perfektionism.'
-      ] };
+    if(tiktokStats.followers === 0 && tiktokHistory.length === 0){
+      tiktokStats = { followers:76, views:0, engagement:0, posts:0 };
+    }
+    if(tiktokPillars.length === 0){
+      tiktokPillars.push(
+        'Recept — 20%',
+        'Tips / mytkrossning / kreatin / kollagen / wellness-fakta — 25%',
+        'Gym-video — 20%',
+        'Vlogg — 20%',
+        'Self-empowerment — 15%'
+      );
     }
 
-    if(Object.keys(yearData).length === 0){
-      var yk = currentYear();
-      yearData[yk] = { resets: [
-        'Att bygga något eget som betyder något — Dosed.',
-        'Ett varumärke ingen annan skulle byggt på samma sätt.',
-        'Att jämföra mig med andra på sociala medier.',
-        'Att inte hinna lansera Dosed innan året är slut.'
-      ], buckets: [] };
-    }
-
-    if((goals['Ekonomi']||[]).length === 0) goals['Ekonomi'].push({t:'Bygga 30 000 kr buffert', done:false});
-    if((goals['TikTok']||[]).length === 0) goals['TikTok'].push({t:'Nå 10 000 följare', done:false});
-    if((goals['Personligt']||[]).length === 0) goals['Personligt'].push({t:'Läsa 5 böcker detta kvartal', done:false});
-
-    if(dosedFinance.revenue === 0 && dosedFinance.expenses === 0){
-      dosedFinance.revenue = 4200; dosedFinance.expenses = 18500;
-    }
-    if(dosedStagesData.every(function(s){ return !s.done; })){
-      dosedStagesData[0].done = true; dosedStagesData[1].done = true;
-    }
-    if(dosedTasks.length === 0){
-      dosedTasks.push({t:'Skicka wordmark till tryckeriet', done:true}, {t:'Boka fotograf för mockup', done:false}, {t:'Hitta leverantör för kreatin', done:false});
-    }
-    if(tiktokStats.followers === 0 && tiktokStats.views === 0){
-      tiktokStats = { followers:8400, views:42000, engagement:6.2, posts:14 };
-    }
-    if(tiktokPillars.length === 0) tiktokPillars.push('Gym & träning', 'Dosed-produktutveckling', 'Behind the scenes');
-    if(tiktokCollabs.length === 0) tiktokCollabs.push('Samarbete med lokalt gym — under diskussion');
     if(projects.length === 0){
       projects.push(
-        { title:'DOSED launch', status:'Aktiv', priority:'Hög', deadline:'2026-12-31', progress:35,
-          milestones:[{title:'Varumärke klart',done:true},{title:'Leverantör vald',done:false},{title:'Webbsida live',done:false}],
-          tasks:[{t:'Klar med förpackningsdesign', done:false}], notes:'' },
-        { title:'TikTok 500k', status:'Aktiv', priority:'Hög', deadline:'2027-12-31', progress:2,
-          milestones:[{title:'10k följare',done:false}], tasks:[], notes:'' },
-        { title:'Wellness-app', status:'Idé', priority:'Medel', deadline:'', progress:0, milestones:[], tasks:[], notes:'Kopplad till Dosed, mäter hälsodata och ger tips' }
+        { title:'DOSED launch', status:'Aktiv', priority:'Hög', deadline:'2026-12-31', progress:0, milestones:[], tasks:[], notes:'Första produkt: kreatin. Möjliga framtida produkter: whey/protein, magnesium, andra tillskott — inte bekräftade ännu.' },
+        { title:'Wellness App', status:'Idé', priority:'Medel', deadline:'2026-12-31', progress:0, milestones:[], tasks:[], notes:'Riktad mot kvinnor. V1: Apple Health-koppling, menscykel-kontext, personliga rekommendationer, DOSED-affiliate. 2026: prototyp + affärsplan. 2027: MVP.' },
+        { title:'TikTok content bank', status:'Aktiv', priority:'Hög', deadline:'2026-10-31', progress:0, milestones:[], tasks:[], notes:'Bygg innehållsbank under hösten 2026, planerad postingstart november 2026, mål 3-5 videos/dag.' }
       );
     }
-    if(ideaVaultItems.length === 0){
-      ideaVaultItems.push({ text:'Pop-up event för Dosed-lansering', category:'Business' }, { text:'TikTok-serie: bygga ett företag från scratch', category:'Content' });
+
+    if(bucketItems.length === 0){
+      ['Vasaloppet','Tough Viking','Apply to Elitsyrkan','Hemligheter Hotel Tylösand','100 000 steps in one day','Help 10 million women achieve a pull-up','Kebnekaise'].forEach(function(t){
+        bucketItems.push({ text:t, category:categorizeBucketText(t), deadline:'', done:false });
+      });
     }
-    if(moneyPrivate.income === 0 && moneyPrivate.expenses === 0){
-      moneyPrivate = { income: 28000, expenses: 19500, debt: 0 };
+
+    if(books.length === 0){
+      [
+        ['Sex substanser som förändrar ditt liv',''],
+        ['Ostoppbar','David Goggins'],
+        ['Berget är du',''],
+        ['Öppet sinne',''],
+        ['Depphjärnan',''],
+        ['Let Them',''],
+        ['Handbok i skuggarbete','']
+      ].forEach(function(pair){
+        books.push({ title:pair[0], author:pair[1], cover:'', genre:'', status:'Läst', progress:100, rating:0 });
+      });
     }
-    if(moneyBusiness.affiliate === 0 && moneyBusiness.creator === 0){
-      moneyBusiness = { affiliate: 850, creator: 1200 };
+
+    if(studyPlans.length === 0){
+      ['Psykologi','Marknadsföring','Engelska'].forEach(function(t){
+        studyPlans.push({ title:t, type:'', lecture:'', status:'Pågår', start:'', end:'' });
+      });
     }
+
+    if(savingsGoals.length === 0){
+      savingsGoals.push(
+        { name:'Emergency fund', saved:0, target:0 },
+        { name:'Travel', saved:0, target:0 },
+        { name:'Business / company', saved:0, target:0 },
+        { name:'Investments', saved:0, target:0 },
+        { name:'Splurge', saved:0, target:0 }
+      );
+    }
+
+    if(moneyPrivate.debt === 0 && moneyPrivate.income === 0 && moneyPrivate.expenses === 0){
+      moneyPrivate = { income:0, expenses:0, debt:1982132 };
+    }
+
     if(!visionData.v3){
       visionData = {
-        v3: 'Dosed lanserat och genererar stabil omsättning. 50 000+ följare på TikTok.',
-        v5: 'Dosed är ett etablerat wellness-varumärke med egen app. Jag lever av mina egna projekt.',
-        v10: 'Ett större wellness-ekosystem — Dosed, app, community, kanske ett fysiskt gym.'
+        v3: '3 år: DOSED lanserat och går bra. Wellness-appen på gång eller lanserad. Över 100 000 TikTok-följare. Första gymmet på gång eller startat. Stabil personlig/business income. Självförsörjande. Stark fysisk form. Audi A5/S5 eller motsvarande.',
+        v5: '5 år: DOSED är lanserat och fungerar. Wellness-appen är live eller etablerad. Första DOSED-gymmet är startat. Personligt varumärke etablerat. Flera fungerande intäktsströmmar. Möjlighet att köpa en dyrare bostad. 1-2 bilar. Börjat bygga kapital och investeringar. Självförsörjande. Betydligt större frihet över min tid.',
+        v10: '10 år: Äga flera fungerande företag. Vara miljardär. Äga flera bostäder (Stockholm, Norrland, Los Angeles, Portugal). Styra min egen tid. Företagen ska kunna operera utan att jag är beroende dagligen — jag är ägare och strategisk beslutsfattare. Bygga DOSED till ett stort internationellt fitness/wellness-bolag, med gymkedjor som på sikt blir större än SATS. Äga wellness-appen. Investera i startups och andra bolag. Ha ambitiösa människor runt mig. Aldrig vara anställd åt någon annan. Ha uppnått min bästa fysiska nivå. Fortsätta utvecklas personligen.'
       };
-    }
-    if(physicalStats.pullUpMax === 0 && physicalStats.pullUpHistory.length === 0){
-      physicalStats.pullUpMax = 4;
-      physicalStats.pullUpHistory = [
-        { date: isoDate(new Date(Date.now()-21*86400000)), value: 2 },
-        { date: isoDate(new Date(Date.now()-10*86400000)), value: 3 },
-        { date: isoDate(new Date()), value: 4 }
-      ];
-    }
-    if(physicalMilestones.length === 0){
-      physicalMilestones.push(
-        { title:'3 strikta pull-ups', done:true },
-        { title:'5 strikta pull-ups', done:false },
-        { title:'L-sit 10 sekunder', done:false },
-        { title:'10 dips i följd', done:false }
-      );
     }
   }
   seedIfEmpty();
+
 
   var healthDemoTimeout = setTimeout(function(){
     if(healthLoaded) return;
@@ -4507,6 +4981,9 @@
   renderMoney();
   renderVision();
   renderHome();
+  renderHard75View();
+  renderWeekFocus();
+  renderAllGeneralTodos();
 </script>
 </body>
 </html>
