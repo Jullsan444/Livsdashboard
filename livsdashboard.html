@@ -354,37 +354,38 @@
   </div>
 
   <div class="view active" id="view-home">
-    <div class="card">
-      <div class="card-label">Today</div>
-      <div class="stat-grid" id="homeTodayGrid">
-        <div class="stat"><div class="stat-icon">✅</div><div class="lbl">Habits idag</div><div class="val" id="homeHabitsToday">—</div></div>
-        <div class="stat"><div class="stat-icon">🔥</div><div class="lbl">75 Hard-status</div><div class="val" id="homeHardStatus">—</div></div>
-        <div class="stat"><div class="stat-icon">😊</div><div class="lbl">Humör idag</div><div class="val" id="homeMoodToday">—</div></div>
+    <div class="card" style="background:linear-gradient(135deg,var(--accent-soft),var(--surface));">
+      <div class="reflect-row">
+        <div class="card-label">🧠 AI CEO Brief</div>
+        <div style="font-size:11px;color:var(--text-soft);" id="briefUpdatedAt"></div>
       </div>
-      <div class="card-sub" style="margin-top:14px;margin-bottom:6px;">Dagens prioriteringar</div>
-      <ul class="task-list" id="homeTodayPriorities"></ul>
-    </div>
-
-    <div class="card">
-      <div class="card-label">AI Daily Brief</div>
-      <div class="card-sub">bygger på riktig data från hela Life OS — inget sparas automatiskt</div>
       <button class="save-btn" onclick="requestDailyBrief()">Generera Daily Brief</button>
       <div id="dailyBriefResult" style="margin-top:12px;"></div>
     </div>
 
     <div class="grid2">
       <div class="card">
-        <div class="card-label">This week</div>
-        <div style="font-size:22px;font-weight:700;" id="homeWeekPct">—%</div>
-        <div class="bar" style="margin-top:8px;"><div class="bar-fill" id="homeWeekBar" style="width:0%;"></div></div>
-        <div class="card-sub" style="margin-top:12px;margin-bottom:4px;">Viktigaste tasks</div>
-        <ul class="task-list" id="homeWeekTasks"></ul>
+        <div class="card-label">Today</div>
+        <div class="stat-grid" id="homeTodayGrid">
+          <div class="stat"><div class="stat-icon">✅</div><div class="lbl">Habits</div><div class="val" id="homeHabitsToday">—</div></div>
+          <div class="stat"><div class="stat-icon">🔥</div><div class="lbl">75 Hard</div><div class="val" id="homeHardStatus">—</div></div>
+          <div class="stat"><div class="stat-icon">👣</div><div class="lbl">Steg</div><div class="val" id="homeStepsGoal">— / 10k</div></div>
+          <div class="stat"><div class="stat-icon">💤</div><div class="lbl">Sömn</div><div class="val" id="homeSleep">—</div></div>
+          <div class="stat"><div class="stat-icon">🏋️</div><div class="lbl">Träning</div><div class="val" id="homeWorkoutDone">—</div></div>
+          <div class="stat"><div class="stat-icon">😊</div><div class="lbl">Humör</div><div class="val" id="homeMoodToday">—</div></div>
+        </div>
       </div>
       <div class="card">
-        <div class="card-label">This month</div>
-        <div class="card-sub" id="homeMonthLabel">Mål-progress</div>
-        <ul class="task-list" id="homeMonthGoals"></ul>
+        <div class="card-label">Top 3 idag</div>
+        <div class="card-sub">de tre mest prioriterade sakerna just nu</div>
+        <div id="homeTop3"></div>
       </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Goals</div>
+      <div class="cat-tabs" id="homeGoalTfRow"></div>
+      <div id="homeGoalScorecard" style="margin-top:10px;"></div>
     </div>
 
     <div class="grid2">
@@ -400,16 +401,72 @@
             <span style="font-size:13px;">Dosed</span>
             <span style="font-size:13px;font-weight:600;" id="homeDosedStat">—</span>
           </div>
+          <div class="card-sub" style="margin:0;">TikTok-trendgraf kräver historiska snapshots — nästa steg om du vill ha det</div>
         </div>
       </div>
       <div class="card">
-        <div class="card-label">🌿 Life</div>
+        <div class="card-label">🌿 Health</div>
         <div class="stat-grid" style="margin-top:6px;">
-          <div class="stat"><div class="lbl">Steg idag</div><div class="val" id="homeSteps">—</div></div>
-          <div class="stat"><div class="lbl">Sömn i natt</div><div class="val" id="homeSleep">—</div></div>
-          <div class="stat"><div class="lbl">Sparat totalt</div><div class="val" id="homeSavings">—</div></div>
+          <div class="stat"><div class="lbl">Snittsteg (7d)</div><div class="val" id="homeStepsAvg">—</div></div>
+          <div class="stat"><div class="lbl">Snittsömn (7d)</div><div class="val" id="homeSleepAvg">—</div></div>
+          <div class="stat"><div class="lbl">Health-konsistens</div><div class="val" id="homeHealthConsistency">—</div></div>
         </div>
       </div>
+      <div class="card">
+        <div class="card-label">💪 Physical</div>
+        <div class="stat-grid" style="margin-top:6px;">
+          <div class="stat"><div class="lbl">Pass denna vecka</div><div class="val" id="physWorkoutsWeek">—</div></div>
+          <div class="stat"><div class="lbl">Pull-ups just nu</div><div class="val" id="physPullupMax">—</div></div>
+        </div>
+        <div class="add-row" style="margin-top:10px;">
+          <input type="number" id="physPullupInput" placeholder="Nytt antal pull-ups">
+          <button onclick="logPullup()">Logga</button>
+        </div>
+        <div class="card-sub" style="margin-top:12px;margin-bottom:4px;">Calisthenics-milstolpar</div>
+        <ul class="task-list" id="physMilestones"></ul>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-label">📚 Education</div>
+        <div id="homeEducation"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">💰 Money</div>
+        <div class="stat-grid" style="margin-top:6px;">
+          <div class="stat"><div class="lbl">Sparat totalt</div><div class="val" id="homeSavings">—</div></div>
+          <div class="stat"><div class="lbl">Netto/mån</div><div class="val" id="homeNetMonth">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Upcoming</div>
+      <ul class="task-list" id="homeUpcoming"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Inbox</div>
+      <div class="card-sub">Skriv en idé, ett mål, en task — vad som helst. AI klassificerar, du godkänner.</div>
+      <div class="add-row">
+        <input type="text" id="inboxInput" placeholder="What's on your mind?">
+        <button onclick="classifyInboxItem()">+ Add</button>
+      </div>
+      <div id="inboxResult" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="reflect-row">
+        <div class="card-label">AI Insights</div>
+        <button class="change-btn" onclick="requestAiInsights()">Generera</button>
+      </div>
+      <div id="aiInsightsResult" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🎯 If I were your CEO...</div>
+      <div id="aiCeoRecommendation" class="card-sub">Klicka "Generera" ovan för att få en rekommendation baserad på din data.</div>
     </div>
   </div>
 
@@ -497,6 +554,13 @@
       </div>
       <div class="barchart" id="weekSleepBars" style="height:60px;margin-top:6px;"></div>
       <div class="barchart-labels" id="weekSleepLabels"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">10 000+ steg</div>
+      <div class="card-sub" id="weekStepsCount">—</div>
+      <div class="barchart" id="weekStepsBars" style="height:74px;"></div>
+      <div class="barchart-labels" id="weekStepsLabels"></div>
     </div>
 
     <div class="card">
@@ -602,6 +666,12 @@
     </div>
 
     <div class="card">
+      <div class="card-label">10 000+ steg</div>
+      <div class="card-sub" id="monthStepsCount">—</div>
+      <div style="overflow-x:auto;"><div class="barchart" id="monthStepsBars" style="height:74px;min-width:600px;"></div></div>
+    </div>
+
+    <div class="card">
       <div class="card-label">Sessioner</div>
       <div class="card-sub">september 2026 · exempeldata, riktiga passnamn kräver backend-utökningen</div>
       <div id="sessionsList" style="display:flex;flex-direction:column;gap:8px;"></div>
@@ -658,6 +728,13 @@
           <div class="bar-track"><div class="bar-fill-v hi" style="height:80%;"></div></div>
         </div>
         <div class="barchart-labels"><span>12 veckor sedan</span><span>denna vecka</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">10 000+ steg</div>
+        <div class="card-sub" id="quarterStepsCount">—</div>
+        <div class="barchart" id="quarterStepsBars" style="height:74px;"></div>
+        <div class="barchart-labels"><span>13 veckor sedan</span><span>denna vecka</span></div>
       </div>
 
       <div class="card">
@@ -967,6 +1044,13 @@
       <div class="card-sub">andel ifyllda habits per månad</div>
       <div class="barchart" id="yearHabitsBars"></div>
       <div class="barchart-labels" id="yearHabitsLabels"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">10 000+ steg</div>
+      <div class="card-sub" id="yearStepsCount">—</div>
+      <div class="barchart" id="yearStepsBars"></div>
+      <div class="barchart-labels" id="yearStepsLabels"></div>
     </div>
 
     <div class="card">
@@ -1919,6 +2003,10 @@
       renderSessionsAndSleep();
       renderYearSessionsAndSleep();
       renderWeekTrainingSleep();
+      renderWeekStepsChart();
+      renderMonthStepsChart();
+      renderQuarterStepsChart();
+      renderYearStepsChart();
       renderDailyTraining();
       if(typeof renderHome === 'function') renderHome();
     };
@@ -1939,6 +2027,13 @@
       if(d >= startStr && d <= endStr){ sum += (pt.qty||0); found = true; }
     });
     return found ? sum : null;
+  }
+  var STEP_THRESHOLD = 10000;
+  function stepsBarColumnHTML(pct, isOver){
+    return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:0;">' +
+      '<span style="font-size:11px;height:14px;line-height:14px;">' + (isOver?'⭐':'') + '</span>' +
+      '<div class="bar-track" style="height:56px;width:100%;"><div class="bar-fill-v' + (isOver?' hi':'') + '" style="height:' + pct + '%;"></div></div>' +
+      '</div>';
   }
   function metricLatestInRange(name, startStr, endStr){
     var m = metricByName(name);
@@ -2010,6 +2105,91 @@
           return '<li style="cursor:default;"><span class="box">' + workoutIconFor(w.name) + '</span><span class="t">' + (w.name||'Pass') + ' <span style="color:var(--text-soft);font-size:11px;">— ' + mins + ' min</span></span></li>';
         }).join('')
       : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga träningspass loggade den här dagen.</li>';
+  }
+
+  function renderWeekStepsChart(){
+    var el = document.getElementById('weekStepsBars');
+    if(!el) return;
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('weekStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    var count = 0;
+    el.innerHTML = REAL_WEEK_DATES.map(function(dt){
+      var dk = isoDate(dt);
+      var steps = metricSumInRange('step_count', dk, dk);
+      var over = steps !== null && steps >= STEP_THRESHOLD;
+      if(over) count++;
+      var pct = steps ? Math.max(2, Math.min(100, Math.round((steps/15000)*100))) : 2;
+      return stepsBarColumnHTML(pct, over);
+    }).join('');
+    document.getElementById('weekStepsLabels').innerHTML = '<span>' + formatShort(REAL_WEEK_DATES[0]) + '</span><span>' + formatShort(REAL_WEEK_DATES[6]) + '</span>';
+    document.getElementById('weekStepsCount').textContent = count + '/7 dagar över 10 000 steg denna vecka';
+  }
+
+  function renderMonthStepsChart(){
+    var el = document.getElementById('monthStepsBars');
+    if(!el) return;
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('monthStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    var y = currentMonthDate.getFullYear(), m = currentMonthDate.getMonth();
+    var daysInM = new Date(y, m+1, 0).getDate();
+    var count = 0;
+    var html = '';
+    for(var d = 1; d <= daysInM; d++){
+      var dk = y + '-' + pad2(m+1) + '-' + pad2(d);
+      var steps = metricSumInRange('step_count', dk, dk);
+      var over = steps !== null && steps >= STEP_THRESHOLD;
+      if(over) count++;
+      var pct = steps ? Math.max(2, Math.min(100, Math.round((steps/15000)*100))) : 2;
+      html += stepsBarColumnHTML(pct, over);
+    }
+    el.innerHTML = html;
+    document.getElementById('monthStepsCount').textContent = count + '/' + daysInM + ' dagar över 10 000 steg denna månad';
+  }
+
+  function renderQuarterStepsChart(){
+    var el = document.getElementById('quarterStepsBars');
+    if(!el) return;
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('quarterStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    var totalCount = 0;
+    var html = '';
+    for(var w = 12; w >= 0; w--){
+      var weekStart = new Date(REAL_WEEK_DATES[0]);
+      weekStart.setDate(weekStart.getDate() - w*7);
+      var daysOver = 0;
+      for(var i = 0; i < 7; i++){
+        var dt = new Date(weekStart); dt.setDate(dt.getDate()+i);
+        var dk = isoDate(dt);
+        var steps = metricSumInRange('step_count', dk, dk);
+        if(steps !== null && steps >= STEP_THRESHOLD) daysOver++;
+      }
+      totalCount += daysOver;
+      var pct = Math.max(2, Math.round((daysOver/7)*100));
+      html += stepsBarColumnHTML(pct, daysOver === 7);
+    }
+    el.innerHTML = html;
+    document.getElementById('quarterStepsCount').textContent = totalCount + ' dagar totalt över 10 000 steg de senaste 13 veckorna';
+  }
+
+  function renderYearStepsChart(){
+    var el = document.getElementById('yearStepsBars');
+    if(!el) return;
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('yearStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    var y = currentYear();
+    var totalCount = 0;
+    var html = '';
+    for(var m = 0; m < 12; m++){
+      var daysInM = new Date(y, m+1, 0).getDate();
+      var daysOver = 0;
+      for(var d = 1; d <= daysInM; d++){
+        var dk = y + '-' + pad2(m+1) + '-' + pad2(d);
+        var steps = metricSumInRange('step_count', dk, dk);
+        if(steps !== null && steps >= STEP_THRESHOLD) daysOver++;
+      }
+      totalCount += daysOver;
+      var pct = Math.max(2, Math.round((daysOver/daysInM)*100));
+      html += stepsBarColumnHTML(pct, daysOver === daysInM);
+    }
+    el.innerHTML = html;
+    document.getElementById('yearStepsLabels').innerHTML = '<span>' + monthNamesShort[0] + '</span><span>' + monthNamesShort[11] + '</span>';
+    document.getElementById('yearStepsCount').textContent = totalCount + ' dagar totalt över 10 000 steg i ' + y;
   }
 
   function renderWeekTrainingSleep(){
@@ -2166,6 +2346,7 @@
     document.getElementById('yearPicker').value = currentYear();
     renderYearReset();
     renderYearGoals();
+    if(typeof renderYearStepsChart === 'function') renderYearStepsChart();
   }
   function renderYearGoals(){
     var el = document.getElementById('yearGoalsList');
@@ -2648,7 +2829,7 @@
     function kpiBadge(g){
       if(g.kpiTarget === null || g.kpiTarget === undefined) return '';
       var pct = g.kpiTarget ? Math.min(100, Math.round(((g.kpiActual||0)/g.kpiTarget)*100)) : 0;
-      return ' <span style="background:var(--sage-soft);color:var(--sage);border-radius:6px;padding:2px 7px;font-size:10px;">' + (g.kpiActual||0) + '/' + g.kpiTarget + ' ' + (g.kpiUnit||'') + ' · ' + pct + '%</span>';
+      return ' <span style="background:var(--sage-soft);color:var(--sage);border-radius:6px;padding:2px 7px;font-size:10px;">' + (g.kpiActual||0) + '/' + g.kpiTarget + ' ' + (g.kpiUnit||'') + ' · ' + pct + '%' + kpiTrendArrow(g) + '</span>';
     }
     function renderNode(g, depth){
       var children = lifeGoals.filter(function(x){ return x.parentId === g.id; });
@@ -2909,12 +3090,22 @@
     document.getElementById('goalDetailCard').style.display = 'none';
     selectedGoalIdx = null;
   }
+  function kpiTrendArrow(g){
+    if(!g.kpiHistory || g.kpiHistory.length < 2) return '';
+    var last = g.kpiHistory[g.kpiHistory.length-1].actual;
+    var prev = g.kpiHistory[g.kpiHistory.length-2].actual;
+    if(last > prev) return ' <span style="color:var(--text-soft);">↑</span>';
+    if(last < prev) return ' <span style="color:var(--text-soft);">↓</span>';
+    return ' <span style="color:var(--text-soft);">→</span>';
+  }
   function renderGoalDetail(){
     if(selectedGoalIdx === null) return;
     var g = lifeGoals[selectedGoalIdx];
     var parentG = g.parentId ? lifeGoals.filter(function(x){ return x.id === g.parentId; })[0] : null;
     var kpiHtml = (g.kpiTarget !== null && g.kpiTarget !== undefined)
-      ? '<div class="card-sub" style="margin-top:4px;">KPI: ' + (g.kpiActual||0) + ' / ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + '</div>' : '';
+      ? '<div class="card-sub" style="margin-top:4px;display:flex;align-items:center;gap:8px;">KPI: <input type="number" id="ge_kpiActual" value="' + (g.kpiActual||0) + '" style="width:90px;padding:4px 8px;" onchange="editKpiActual(this.value)"> / ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + kpiTrendArrow(g) + '</div>' +
+        '<button class="change-btn" style="margin-top:8px;" onclick="requestReplan()">🔄 Recalculate Plan</button><div id="replanResult" style="margin-top:10px;"></div>'
+      : '';
     var timeframeOpts = timeframeOrder.map(function(tf){ return '<option' + (g.timeframe===tf?' selected':'') + '>' + tf + '</option>'; }).join('');
     var parentOpts = '<option value="">Inget överordnat mål</option>' + lifeGoals.filter(function(x){ return x.id !== g.id; }).map(function(x){ return '<option value="' + x.id + '"' + (g.parentId===x.id?' selected':'') + '>' + x.title + '</option>'; }).join('');
     var card = document.getElementById('goalDetailCard');
@@ -2946,6 +3137,37 @@
         '<button class="change-btn" onclick="addAction()">Lägg till</button>' +
       '</div>' +
       '<button class="change-btn" style="margin-top:16px;" onclick="closeGoalDetail()">Stäng</button>';
+  }
+  function editKpiActual(val){
+    var g = lifeGoals[selectedGoalIdx];
+    var num = parseFloat(val);
+    if(isNaN(num)) return;
+    g.kpiActual = num;
+    if(!g.kpiHistory) g.kpiHistory = [];
+    g.kpiHistory.push({ date: isoDate(new Date()), actual: num });
+    if(g.kpiHistory.length > 20) g.kpiHistory.shift();
+    renderGoalDetail();
+    renderGoalsTable();
+  }
+  function requestReplan(){
+    var g = lifeGoals[selectedGoalIdx];
+    var el = document.getElementById('replanResult');
+    el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var input = 'Mål: ' + g.title + '. Target: ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + '. Actual just nu: ' + (g.kpiActual||0) + '. Deadline: ' + (g.deadline || 'ingen satt') + '.';
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      el.innerHTML = '<div style="font-weight:600;font-size:13px;margin-bottom:4px;">' + r.status + '</div>' +
+        '<div style="font-size:12px;color:var(--text-soft);margin-bottom:8px;">' + (r.variance||'') + '</div>' +
+        '<div style="font-size:12px;margin-bottom:10px;">' + (r.explanation||'') + '</div>' +
+        (r.options||[]).map(function(o){ return '<div class="list-item"><b>' + o.label + '</b><div style="color:var(--text-soft);font-size:11px;margin-top:2px;">' + o.description + '</div></div>'; }).join('');
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=replan&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(input) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
   }
   function editGoalField(field, value){
     lifeGoals[selectedGoalIdx][field] = value;
@@ -3053,6 +3275,7 @@
     document.getElementById('monthPicker').value = monthKeyFor(currentMonthDate);
     renderMonthAccordion();
     renderPrevMonthCard();
+    renderMonthStepsChart();
   }
   function populateMonthPicker(){
     var picker = document.getElementById('monthPicker');
@@ -3628,7 +3851,202 @@
     saveAll();
   }
 
+  // ---------- PHYSICAL ----------
+  var physicalStats = { pullUpMax: 0, pullUpHistory: [] };
+  var physicalMilestones = [];
+  function renderPhysical(){
+    var el = document.getElementById('physWorkoutsWeek');
+    if(!el) return;
+    var workoutsThisWeek = healthLoaded ? workoutsInRange(isoDate(REAL_WEEK_DATES[0]), isoDate(REAL_WEEK_DATES[6])) : [];
+    el.textContent = healthLoaded ? workoutsThisWeek.length : '—';
+    document.getElementById('physPullupMax').textContent = physicalStats.pullUpMax;
+    document.getElementById('physMilestones').innerHTML = physicalMilestones.map(function(m, i){
+      return '<li class="' + (m.done?'done':'') + '" onclick="togglePhysicalMilestone(' + i + ')"><span class="box">' + (m.done?'✓':'') + '</span><span class="t">' + m.title + '</span></li>';
+    }).join('');
+    saveAll();
+  }
+  function logPullup(){
+    var input = document.getElementById('physPullupInput');
+    var num = parseInt(input.value, 10);
+    if(isNaN(num)) return;
+    physicalStats.pullUpMax = num;
+    physicalStats.pullUpHistory.push({ date: isoDate(new Date()), value: num });
+    if(physicalStats.pullUpHistory.length > 30) physicalStats.pullUpHistory.shift();
+    input.value = '';
+    renderPhysical();
+  }
+  function togglePhysicalMilestone(i){
+    physicalMilestones[i].done = !physicalMilestones[i].done;
+    if(physicalMilestones[i].done) celebrate();
+    renderPhysical();
+  }
+
   // ---------- HOME ----------
+  function goalStatusEmoji(g){
+    if(g.completed) return '🟢';
+    if(!g.deadline) return '⚪';
+    var today = new Date();
+    var deadline = new Date(g.deadline + 'T00:00:00');
+    if(deadline < today) return g.progress >= 90 ? '🟢' : '🔴';
+    var created = g.id ? 1 : 1;
+    var totalDays = Math.max(1, (deadline - today)/86400000 + 60);
+    var elapsedRatio = Math.min(1, Math.max(0, 1 - ((deadline-today)/86400000)/totalDays));
+    var expectedProgress = elapsedRatio * 100;
+    if(g.progress >= expectedProgress - 5) return '🟢';
+    if(g.progress >= expectedProgress - 20) return '🟡';
+    return '🔴';
+  }
+  var homeGoalTf = 'Årligen';
+  function setHomeGoalTf(tf){ homeGoalTf = tf; renderHomeGoalScorecard(); }
+  function renderHomeGoalTfRow(){
+    var el = document.getElementById('homeGoalTfRow');
+    if(!el) return;
+    el.innerHTML = timeframeOrder.map(function(tf){
+      return '<div class="cat-tab' + (homeGoalTf===tf?' active':'') + '" onclick="setHomeGoalTf(\'' + tf + '\')">' + tf + '</div>';
+    }).join('');
+  }
+  function renderHomeGoalScorecard(){
+    var el = document.getElementById('homeGoalScorecard');
+    if(!el) return;
+    var filtered = lifeGoals.filter(function(g){ return g.timeframe === homeGoalTf; });
+    el.innerHTML = filtered.length === 0
+      ? '<div class="list-empty">Inga mål på nivån ' + homeGoalTf + '.</div>'
+      : filtered.map(function(g){
+          var kpiLine = (g.kpiTarget !== null && g.kpiTarget !== undefined) ? (g.kpiActual||0).toLocaleString('sv-SE') + ' / ' + g.kpiTarget.toLocaleString('sv-SE') + ' ' + (g.kpiUnit||'') + kpiTrendArrow(g) : '';
+          return '<div style="padding:8px 0;border-top:1px solid var(--border);">' +
+            '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;"><span>' + goalStatusEmoji(g) + ' ' + g.title + '</span><span style="color:var(--text-soft);font-weight:400;font-size:12px;">' + g.progress + '%</span></div>' +
+            (kpiLine ? '<div style="font-size:11px;color:var(--text-soft);margin-bottom:4px;">' + kpiLine + '</div>' : '') +
+            '<div class="bar"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div>' +
+            '</div>';
+        }).join('');
+  }
+
+  function renderHomeTop3(){
+    var el = document.getElementById('homeTop3');
+    if(!el) return;
+    var todayKey = isoDate(new Date());
+    var todayLabelNow = days7[(new Date().getDay()+6)%7];
+    var candidates = [];
+    (tasksByDay[todayLabelNow]||[]).forEach(function(t, i){ if(!t.done) candidates.push({ text:t.t, area:'Task', done:false, mark:function(){ tasksByDay[todayLabelNow][i].done = true; } }); });
+    lifeGoals.forEach(function(g){
+      g.actions.forEach(function(a){
+        if(!a.done && a.freq === 'Dagligen') candidates.push({ text:a.text, area:g.title, done:false, mark:function(){ a.done = true; } });
+      });
+    });
+    bucketItemsDueInRange(todayKey, todayKey).forEach(function(item){
+      var idx = bucketItems.indexOf(item);
+      candidates.push({ text:item.text, area:'Bucket list', done:false, mark:function(){ bucketItems[idx].done = true; } });
+    });
+    var top3 = candidates.slice(0,3);
+    el.innerHTML = top3.length === 0
+      ? '<div class="list-empty">Inga toppactions satta för idag — lägg till i Veckans tasks eller Mål-actions.</div>'
+      : top3.map(function(c, i){
+          return '<div class="goal-row" onclick="markHomeTop3Done(' + i + ')" style="margin-bottom:8px;">' +
+            '<div class="box"></div><span class="t"><span style="color:var(--accent);font-weight:700;">0' + (i+1) + '</span> ' + c.text + ' <span style="color:var(--text-soft);font-size:11px;">— ' + c.area + '</span></span>' +
+            '</div>';
+        }).join('');
+    window._homeTop3Candidates = top3;
+  }
+  function markHomeTop3Done(i){
+    var c = window._homeTop3Candidates[i];
+    if(c) c.mark();
+    saveAll();
+    renderHomeTop3();
+    renderHome();
+  }
+
+  function renderHomeUpcoming(){
+    var el = document.getElementById('homeUpcoming');
+    if(!el) return;
+    var todayKey = isoDate(new Date());
+    var items = [];
+    lifeGoals.forEach(function(g){ if(g.deadline && g.deadline >= todayKey && !g.completed) items.push({ date:g.deadline, emoji:'🎯', text:g.title }); });
+    projects.forEach(function(p){ if(p.deadline && p.deadline >= todayKey && p.status !== 'Klar') items.push({ date:p.deadline, emoji:'💼', text:p.title }); });
+    bucketItems.forEach(function(b){ if(b.deadline && b.deadline >= todayKey && !b.done) items.push({ date:b.deadline, emoji:'🧭', text:b.text }); });
+    studyPlans.forEach(function(s){ if(s.end && s.end >= todayKey && s.status !== 'Klar') items.push({ date:s.end, emoji:'📚', text:s.title }); });
+    items.sort(function(a,b){ return a.date.localeCompare(b.date); });
+    var top = items.slice(0,8);
+    el.innerHTML = top.length === 0
+      ? '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inget kommande med deadline just nu.</li>'
+      : top.map(function(it){ return '<li style="cursor:default;"><span class="box">' + it.emoji + '</span><span class="t">' + it.text + ' <span style="color:var(--text-soft);font-size:11px;">— ' + it.date + '</span></span></li>'; }).join('');
+  }
+
+  function requestAiInsights(){
+    var el = document.getElementById('aiInsightsResult');
+    var recEl = document.getElementById('aiCeoRecommendation');
+    el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      el.innerHTML = (r.insights||[]).map(function(ins){
+        return '<div class="list-item"><div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + ins.emoji + ' ' + ins.area + '</div>' + ins.text + (ins.why ? '<div style="color:var(--text-soft);font-size:11px;margin-top:3px;">' + ins.why + '</div>' : '') + '</div>';
+      }).join('') + (r.stopDoing ? '<div class="list-item" style="margin-top:8px;"><div style="font-weight:600;font-size:13px;margin-bottom:3px;">⏸️ Överväg att sluta med</div>' + r.stopDoing.text + '<div style="color:var(--text-soft);font-size:11px;margin-top:3px;">' + r.stopDoing.why + '</div></div>' : '');
+      if(r.recommendation){
+        recEl.innerHTML = '<div style="font-size:14px;margin-bottom:8px;">' + r.recommendation.text + '</div>' +
+          '<div style="font-size:12px;color:var(--text-soft);margin-bottom:8px;"><b>Varför:</b> ' + r.recommendation.why + '</div>' +
+          '<div style="font-size:12px;color:var(--text-soft);"><b>Actions:</b><ul style="margin:4px 0 0 18px;padding:0;">' + (r.recommendation.actions||[]).map(function(a){ return '<li>' + a + '</li>'; }).join('') + '</ul></div>';
+      }
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=insights&context=' + encodeURIComponent(buildAIContext()) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
+
+  var pendingInboxClassification = null;
+  function classifyInboxItem(){
+    var input = document.getElementById('inboxInput');
+    var val = input.value.trim();
+    if(!val) return;
+    var el = document.getElementById('inboxResult');
+    el.innerHTML = '<div class="list-empty">Klassificerar...</div>';
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){
+        el.innerHTML = '<div class="list-empty">Fel: ' + data.error + ' — lägger till i Bucket list istället.</div>';
+        bucketItems.push({ text:val, category:categorizeBucketText(val), deadline:'', done:false });
+        renderBucketList();
+        return;
+      }
+      pendingInboxClassification = { text: val, result: data.result };
+      var r = data.result;
+      el.innerHTML = '<div class="list-item"><b>' + r.type + '</b> · ' + r.area + (r.suggestedTimeframe ? ' · ' + r.suggestedTimeframe : '') + '<div style="color:var(--text-soft);font-size:11px;margin-top:3px;">' + r.reasoning + '</div></div>' +
+        '<div style="display:flex;gap:8px;margin-top:10px;"><button class="save-btn" onclick="acceptInboxClassification()">Acceptera</button><button class="change-btn" onclick="document.getElementById(\'inboxResult\').innerHTML=\'\';">Avvisa</button></div>';
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=classify&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(val) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu — lägger till i Bucket list istället.</div>'; bucketItems.push({ text:val, category:categorizeBucketText(val), deadline:'', done:false }); renderBucketList(); };
+    document.body.appendChild(tag);
+  }
+  function acceptInboxClassification(){
+    var p = pendingInboxClassification;
+    if(!p) return;
+    var r = p.result;
+    if(r.type === 'Bucket List'){
+      bucketItems.push({ text:p.text, category:categorizeBucketText(p.text), deadline:'', done:false });
+      renderBucketList();
+    } else if(r.type === 'Task'){
+      var todayLabelNow = days7[(new Date().getDay()+6)%7];
+      tasksByDay[todayLabelNow].push({ t:p.text, done:false });
+      renderTaskDays();
+    } else if(r.type === 'Project'){
+      projects.push({ title:p.text, status:'Idé', priority:'Medel', deadline:'', progress:0, milestones:[], tasks:[], notes:'Från Inbox: ' + r.reasoning });
+      renderProjects();
+    } else {
+      goalIdCounter++;
+      var tf = timeframeOrder.indexOf(r.suggestedTimeframe) > -1 ? r.suggestedTimeframe : 'Dagligen';
+      lifeGoals.push({ id:goalIdCounter, title:p.text, category:r.area||'Inbox', timeframe:tf, parentId:null, completed:false, progress:0, deadline:'', kpiTarget:null, kpiActual:0, kpiUnit:'', milestones:[], actions:[] });
+      renderGoalsTable();
+    }
+    document.getElementById('inboxResult').innerHTML = '<div class="list-empty">Tillagt som ' + r.type + '.</div>';
+    document.getElementById('inboxInput').value = '';
+    pendingInboxClassification = null;
+    renderHome();
+  }
+
   function renderHome(){
     var el = document.getElementById('homeHabitsToday');
     if(!el) return;
@@ -3638,47 +4056,63 @@
     var done = 0;
     rows.forEach(function(h){ if(habitState[h] && habitState[h][todayKey]) done++; });
     el.textContent = done + '/' + rows.length;
-    document.getElementById('homeHardStatus').textContent = inChallenge ? 'Aktiv (75 Hard)' : 'Habits-läge';
+    if(inChallenge){
+      var dayNum = Math.round((new Date(todayKey) - new Date(challengeStart))/86400000) + 1;
+      document.getElementById('homeHardStatus').textContent = 'Day ' + dayNum + '/75';
+    } else {
+      document.getElementById('homeHardStatus').textContent = 'Habits-läge';
+    }
     var moodEntry = dailyLog[todayKey];
-    var moodMap = { glad:'😊 Glad', arg:'😠 Arg', neutral:'😐 Neutral', ledsen:'😢 Ledsen', angest:'😰 Ångest' };
+    var moodMap = { glad:'😊', arg:'😠', neutral:'😐', ledsen:'😢', angest:'😰' };
     document.getElementById('homeMoodToday').textContent = moodEntry && moodEntry.mood ? moodMap[moodEntry.mood] : '—';
 
-    var prioEl = document.getElementById('homeTodayPriorities');
-    var todayIdxNow = (new Date().getDay()+6)%7;
-    var todayLabel = days7[todayIdxNow];
-    var todos = (tasksByDay[todayLabel]||[]).slice(0,5);
-    prioEl.innerHTML = todos.length
-      ? todos.map(function(t){ return '<li style="cursor:default;" class="' + (t.done?'done':'') + '"><span class="box">' + (t.done?'✓':'') + '</span><span class="t">' + t.t + '</span></li>'; }).join('')
-      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga tasks satta för idag i Veckans tasks.</li>';
+    var stepsToday = healthLoaded ? metricSumInRange('step_count', todayKey, todayKey) : null;
+    document.getElementById('homeStepsGoal').textContent = (stepsToday !== null ? Math.round(stepsToday).toLocaleString('sv-SE') : '—') + ' / 10k';
+    var sleepMetric = healthLoaded ? metricByName('sleep_analysis') : null;
+    var sleepPt = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) === todayKey; })[0] : null;
+    document.getElementById('homeSleep').textContent = sleepPt ? sleepPt.totalSleep.toFixed(1) + ' h' : '—';
+    var todaysWorkouts = healthLoaded ? workoutsInRange(todayKey, todayKey) : [];
+    document.getElementById('homeWorkoutDone').textContent = todaysWorkouts.length > 0 ? 'Klart' : (healthLoaded ? 'Inte än' : '—');
 
-    var weekPct = habitPctForDates(REAL_WEEK_DATES);
-    document.getElementById('homeWeekPct').textContent = weekPct + '%';
-    document.getElementById('homeWeekBar').style.width = weekPct + '%';
-    var weekTasksEl = document.getElementById('homeWeekTasks');
-    var allWeekTasks = [];
-    days7.forEach(function(d){ (tasksByDay[d]||[]).forEach(function(t){ if(!t.done) allWeekTasks.push(t); }); });
-    weekTasksEl.innerHTML = allWeekTasks.length
-      ? allWeekTasks.slice(0,4).map(function(t){ return '<li style="cursor:default;"><span class="box"></span><span class="t">' + t.t + '</span></li>'; }).join('')
-      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Allt klart denna vecka! 🎉</li>';
-
-    var monthGoalsEl = document.getElementById('homeMonthGoals');
-    var topGoals = lifeGoals.filter(function(g){ return !g.completed; }).slice(0,4);
-    monthGoalsEl.innerHTML = topGoals.length
-      ? topGoals.map(function(g){ return '<li style="cursor:default;"><span class="box"></span><span class="t">' + g.title + ' <span style="color:var(--text-soft);font-size:11px;">— ' + g.progress + '%</span></span></li>'; }).join('')
-      : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga aktiva mål.</li>';
+    renderHomeTop3();
+    renderHomeGoalTfRow();
+    renderHomeGoalScorecard();
+    renderHomeUpcoming();
+    renderPhysical();
 
     document.getElementById('homeTiktokStat').textContent = tiktokStats.followers.toLocaleString('sv-SE') + ' / 500k';
     document.getElementById('homeTiktokBar').style.width = Math.min(100, Math.round((tiktokStats.followers/500000)*100)) + '%';
     var dosedNet = dosedFinance.revenue - dosedFinance.expenses;
     document.getElementById('homeDosedStat').textContent = (dosedNet >= 0 ? '+' : '') + dosedNet.toLocaleString('sv-SE') + ' kr netto';
 
-    var stepsToday = metricSumInRange('step_count', todayKey, todayKey);
-    document.getElementById('homeSteps').textContent = stepsToday !== null ? Math.round(stepsToday).toLocaleString('sv-SE') : '—';
-    var sleepMetric = metricByName('sleep_analysis');
-    var sleepPt = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) === todayKey; })[0] : null;
-    document.getElementById('homeSleep').textContent = sleepPt ? sleepPt.totalSleep.toFixed(1) + ' h' : '—';
+    if(healthLoaded){
+      var last7Start = isoDate(new Date(Date.now() - 6*86400000));
+      var stepsSum = metricSumInRange('step_count', last7Start, todayKey);
+      var stepsAvg = stepsSum !== null ? Math.round(stepsSum/7) : null;
+      document.getElementById('homeStepsAvg').textContent = stepsAvg !== null ? stepsAvg.toLocaleString('sv-SE') : '—';
+      var sleepVals = sleepMetric ? sleepMetric.data.filter(function(p){ return (p.date||'').slice(0,10) >= last7Start; }) : [];
+      var sleepAvg = sleepVals.length ? (sleepVals.reduce(function(s,p){return s+p.totalSleep;},0)/sleepVals.length) : null;
+      document.getElementById('homeSleepAvg').textContent = sleepAvg !== null ? sleepAvg.toFixed(1) + ' h' : '—';
+      var sleepOk = sleepVals.filter(function(p){ return p.totalSleep >= 7; }).length;
+      var stepsOkDays = 0;
+      for(var i=0;i<7;i++){ var dk = isoDate(new Date(Date.now()-i*86400000)); var s = metricSumInRange('step_count', dk, dk); if(s!==null && s>=10000) stepsOkDays++; }
+      var consistency = Math.round(((sleepOk + stepsOkDays) / 14) * 100);
+      document.getElementById('homeHealthConsistency').textContent = consistency + '%';
+    } else {
+      document.getElementById('homeStepsAvg').textContent = '—';
+      document.getElementById('homeSleepAvg').textContent = '—';
+      document.getElementById('homeHealthConsistency').textContent = '—';
+    }
+
+    var eduEl = document.getElementById('homeEducation');
+    eduEl.innerHTML = studyPlans.length
+      ? studyPlans.slice(0,3).map(function(s){ return '<div class="list-item">' + s.title + ' <span style="color:var(--text-soft);font-size:11px;">— ' + s.status + (s.end ? ' · till ' + s.end : '') + '</span></div>'; }).join('')
+      : '<div class="list-empty">Inga kurser lagda till.</div>';
+
     var savingsTotal = savingsGoals.reduce(function(sum,g){ return sum + (g.saved||0); }, 0);
     document.getElementById('homeSavings').textContent = savingsTotal.toLocaleString('sv-SE') + ' kr';
+    var netMonth = moneyPrivate.income - moneyPrivate.expenses;
+    document.getElementById('homeNetMonth').textContent = (netMonth>=0?'+':'') + netMonth.toLocaleString('sv-SE') + ' kr';
   }
 
   var STORAGE_KEY = 'livsdashboard_v1';
@@ -3697,6 +4131,7 @@
         tiktokStats: tiktokStats, tiktokPillars: tiktokPillars, tiktokCollabs: tiktokCollabs,
         projects: projects, ideaVaultItems: ideaVaultItems,
         moneyPrivate: moneyPrivate, moneyBusiness: moneyBusiness, visionData: visionData,
+        physicalStats: physicalStats, physicalMilestones: physicalMilestones,
         weekOffset: weekOffset, quarterOffset: quarterOffset, yearOffset: yearOffset, dagligenWeekOffset: dagligenWeekOffset,
         selectedDate: selectedDate, currentCat: currentCat, currentArkivCat: currentArkivCat,
         bookFilter: bookFilter, recipeView: recipeView, goalView: goalView,
@@ -3755,6 +4190,8 @@
       if(s.moneyPrivate) moneyPrivate = s.moneyPrivate;
       if(s.moneyBusiness) moneyBusiness = s.moneyBusiness;
       if(s.visionData) visionData = s.visionData;
+      if(s.physicalStats) physicalStats = s.physicalStats;
+      if(s.physicalMilestones) physicalMilestones = s.physicalMilestones;
     } catch(e){ /* korrupt data — kör vidare med standardvärden */ }
   }
   var saveDebounceTimer = null;
@@ -3778,6 +4215,7 @@
     if(lifeGoals.length === 0){
       lifeGoals.push(
         { id:++goalIdCounter, title:'Gå ner till 65kg', category:'Hälsa & fitness', timeframe:'Kvartalsvis', parentId:null, completed:false, progress:67, deadline:'2026-12-31', kpiTarget:65, kpiActual:66.4, kpiUnit:'kg',
+          kpiHistory:[{date:isoDate(new Date(Date.now()-30*86400000)),actual:69},{date:isoDate(new Date(Date.now()-14*86400000)),actual:67.5},{date:isoDate(new Date()),actual:66.4}],
           milestones:[{title:'Nå 69 kg',done:true},{title:'Nå 67 kg',done:true},{title:'Nå 65 kg',done:false}],
           actions:[{id:++goalActionIdCounter,text:'Väga mig varje söndag',freq:'Veckovis',done:true},{id:++goalActionIdCounter,text:'Hålla kaloriunderskott',freq:'Dagligen',done:false}] },
         { id:++goalIdCounter, title:'Klara 3 strikta pull-ups', category:'Hälsa & fitness', timeframe:'Månadsvis', parentId:null, completed:true, progress:100, deadline:'2026-12-31', kpiTarget:null, kpiActual:null, kpiUnit:'', milestones:[], actions:[] }
@@ -3954,6 +4392,22 @@
         v10: 'Ett större wellness-ekosystem — Dosed, app, community, kanske ett fysiskt gym.'
       };
     }
+    if(physicalStats.pullUpMax === 0 && physicalStats.pullUpHistory.length === 0){
+      physicalStats.pullUpMax = 4;
+      physicalStats.pullUpHistory = [
+        { date: isoDate(new Date(Date.now()-21*86400000)), value: 2 },
+        { date: isoDate(new Date(Date.now()-10*86400000)), value: 3 },
+        { date: isoDate(new Date()), value: 4 }
+      ];
+    }
+    if(physicalMilestones.length === 0){
+      physicalMilestones.push(
+        { title:'3 strikta pull-ups', done:true },
+        { title:'5 strikta pull-ups', done:false },
+        { title:'L-sit 10 sekunder', done:false },
+        { title:'10 dips i följd', done:false }
+      );
+    }
   }
   seedIfEmpty();
 
@@ -3963,10 +4417,12 @@
     var today = new Date();
     var y = today.getFullYear(), m = today.getMonth();
     var stepPts = [], energyPts = [], sleepPts = [];
-    for(var i = 1; i <= 10; i++){
-      var d = new Date(y, m, i);
+    for(var i = 0; i <= 100; i++){
+      var d = new Date(today); d.setDate(d.getDate() - i);
       var dstr = isoDate(d) + ' 12:00:00 +0200';
-      stepPts.push({ date: dstr, qty: 6000 + Math.round(Math.random()*6000) });
+      var roll = Math.random();
+      var stepQty = roll < 0.45 ? (10200 + Math.round(Math.random()*4500)) : (5200 + Math.round(Math.random()*4300));
+      stepPts.push({ date: dstr, qty: stepQty });
       energyPts.push({ date: dstr, qty: 250 + Math.round(Math.random()*200) });
     }
     for(var j = 6; j >= 0; j--){
@@ -3988,7 +4444,12 @@
     renderSessionsAndSleep();
     renderYearSessionsAndSleep();
     renderWeekTrainingSleep();
+      renderWeekStepsChart();
+      renderMonthStepsChart();
+      renderQuarterStepsChart();
+      renderYearStepsChart();
     renderDailyTraining();
+    renderHome();
   }, 2500);
 
   renderWeekGoals();
@@ -4008,6 +4469,10 @@
   renderPrevMonthCard();
   renderSessionsAndSleep();
   renderWeekTrainingSleep();
+      renderWeekStepsChart();
+      renderMonthStepsChart();
+      renderQuarterStepsChart();
+      renderYearStepsChart();
   renderDailyTraining();
   renderDailyCalendar();
   fetchHealthData();
