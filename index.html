@@ -11,7 +11,7 @@
   :root{
     --bg:#F8F6F1;--surface:#FFFFFF;--surface-soft:#F2EFE3;--border:#E7E2D3;
     --text:#2E2A25;--text-soft:#8C8574;--accent:#FB4F74;--accent-soft:#FDE1E7;
-    --sage:#5D6B52;--sage-soft:#DCE5D0;--radius:16px;
+    --sage:#5D6B52;--sage-soft:#DCE5D0;--radius:20px;
     --nav-bg:#FFFFFF;--nav-text:#4A5540;--nav-active:#5D6B52;--nav-active-text:#FFFFFF;
     --card-border-w:0px;
     --sidebar-w:230px;
@@ -31,7 +31,7 @@
   .sidebar-footer{font-size:11px;color:var(--text-soft);font-style:italic;padding:14px 10px 4px;line-height:1.5;}
   .tab-ic{margin-right:10px;font-size:14px;}
   .main-content{flex:1;min-width:0;}
-  .wrap{max-width:1000px;margin:0 auto;padding:32px 28px 80px;}
+  .wrap{max-width:1040px;margin:0 auto;padding:40px 32px 90px;}
 
   .top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:16px;}
   .tag{font-size:12px;color:var(--text-soft);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
@@ -44,7 +44,7 @@
   .weeknav span{font-size:13px;color:var(--text);}
 
   .tabs{display:flex;gap:8px;margin:22px 0 26px;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;}
-  .tab{border:none;background:var(--nav-bg);font-size:13px;font-weight:600;padding:10px 14px;border-radius:10px;cursor:pointer;color:var(--nav-text);transition:background .15s,color .15s;display:flex;align-items:center;width:100%;text-align:left;}
+  .tab{border:none;background:var(--nav-bg);font-size:13px;font-weight:600;padding:11px 16px;border-radius:14px;cursor:pointer;color:var(--nav-text);transition:background .15s,color .15s;display:flex;align-items:center;width:100%;text-align:left;}
   .tab:hover{background:var(--surface-soft);}
   .tab.active{background:var(--nav-active);color:var(--nav-active-text);}
 
@@ -53,10 +53,10 @@
 
   .quote{text-align:center;font-family:'Lora',serif;font-style:italic;font-size:16px;color:var(--text);padding:16px 0 26px;border-bottom:1px solid var(--border);margin-bottom:24px;}
 
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px;}
   @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
 
-  .card{background:var(--surface);border:none;border-radius:24px;padding:22px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.10);}
+  .card{background:var(--surface);border:none;border-radius:28px;padding:28px;margin-bottom:22px;box-shadow:0 10px 30px rgba(0,0,0,.10);}
   .card-label{font-size:12px;color:var(--text);font-weight:600;margin-bottom:2px;}
   .card-sub{font-size:11px;color:var(--text-soft);margin-bottom:14px;}
 
@@ -84,6 +84,9 @@
   textarea{width:100%;min-height:70px;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical;background:var(--surface-soft);color:var(--text);}
   .reflect-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
   .save-btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:7px 16px;font-size:13px;cursor:pointer;margin-top:10px;}
+  .btn-dark-full{display:block;width:100%;border:none;background:var(--text);color:#fff;border-radius:999px;padding:13px 20px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;}
+  .btn-dark-full:hover{opacity:.9;}
+  .btn-light-full{display:block;width:100%;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:13px 20px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;}
   .save-btn:hover{opacity:.9;}
   .saved-note{font-size:12px;color:var(--sage);margin-left:10px;}
   .change-btn{border:1px solid var(--border);background:var(--surface-soft);font-size:12px;padding:5px 12px;border-radius:20px;cursor:pointer;color:var(--text-soft);}
@@ -134,6 +137,7 @@
   .cat-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
   .cat-tab{border:1px solid var(--border);background:var(--surface-soft);font-size:12px;padding:6px 14px;border-radius:20px;cursor:pointer;color:var(--text-soft);}
   .cat-tab.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+  .group-filter-pill.active{background:var(--text) !important;border-color:var(--text) !important;color:#fff !important;}
   .goal-panel{min-height:70px;margin-bottom:12px;}
   .goal-panel .empty{font-size:13px;color:var(--text-soft);font-style:italic;}
   .goal-quad{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
@@ -241,8 +245,8 @@
 
   input[type="text"],input[type="number"],input[type="date"],input[type="email"],select{
     border:1px solid var(--border) !important;
-    border-radius:14px !important;
-    padding:11px 16px !important;
+    border-radius:16px !important;
+    padding:12px 18px !important;
     font-size:14px !important;
     background:#fff !important;
     box-shadow:0 1px 3px rgba(0,0,0,.05);
@@ -256,16 +260,16 @@
 
   .add-row{display:flex;gap:10px;}
 
-  .list-item{font-size:13px;padding:12px 16px;border:none;background:var(--surface-soft);border-radius:14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+  .list-item{font-size:13px;padding:14px 18px;border:none;background:var(--surface-soft);border-radius:18px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
   .list-item:last-child{margin-bottom:0;}
 
-  .task-list{gap:8px !important;}
-  .task-list li{background:var(--surface-soft);border-radius:14px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:0;}
-  .goal-row{background:var(--surface-soft);border-radius:14px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,.04);border-bottom:none !important;margin-bottom:8px;}
+  .task-list{gap:10px !important;}
+  .task-list li{background:var(--surface-soft);border-radius:18px;padding:12px 16px;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:0;}
+  .goal-row{background:var(--surface-soft);border-radius:18px;padding:12px 16px;box-shadow:0 1px 4px rgba(0,0,0,.04);border-bottom:none !important;margin-bottom:8px;}
   .goal-row:last-child{margin-bottom:0;}
 
   .card-label{font-size:13px;letter-spacing:.02em;margin-bottom:4px;}
-  .card-sub{margin-bottom:16px;}
+  .card-sub{margin-bottom:18px;}
 
   .card{box-shadow:0 10px 28px rgba(58,51,39,.08),0 2px 6px rgba(58,51,39,.04) !important;border:1px solid rgba(58,51,39,.06) !important;}
 
@@ -273,9 +277,9 @@
   .tab:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.1) !important;}
   .tab.active{box-shadow:0 4px 12px rgba(63,82,48,.35) !important;}
 
-  .save-btn{background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 80%,black)) !important;box-shadow:0 3px 10px rgba(63,82,48,.3),inset 0 1px 0 rgba(255,255,255,.25) !important;transition:transform .12s,box-shadow .12s;}
+  .save-btn{background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 80%,black)) !important;box-shadow:0 3px 10px rgba(63,82,48,.3),inset 0 1px 0 rgba(255,255,255,.25) !important;transition:transform .12s,box-shadow .12s;border-radius:999px !important;padding:10px 20px !important;}
   .save-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(63,82,48,.35),inset 0 1px 0 rgba(255,255,255,.25) !important;}
-  .change-btn{box-shadow:0 2px 5px rgba(0,0,0,.06) !important;background:#fff !important;transition:transform .12s;}
+  .change-btn{box-shadow:0 2px 5px rgba(0,0,0,.06) !important;background:#fff !important;transition:transform .12s;border-radius:999px !important;padding:8px 18px !important;}
   .change-btn:hover{transform:translateY(-1px);}
 
   .day-sel{box-shadow:0 2px 6px rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s;}
@@ -286,17 +290,19 @@
   .cal-day-col:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.1);}
   .cal-day-col.today{box-shadow:0 5px 14px rgba(63,82,48,.3) !important;}
 
-  .habit-box{box-shadow:0 2px 4px rgba(0,0,0,.08);}
+  .habit-box{box-shadow:0 2px 4px rgba(0,0,0,.08);border-radius:8px !important;}
   .mood-btn{box-shadow:0 3px 8px rgba(0,0,0,.06) !important;}
-  .status-pill{transition:transform .12s;}
+  .status-pill{transition:transform .12s;border-radius:999px !important;padding:5px 12px !important;}
   .status-pill:hover{transform:translateY(-1px);}
-  .cat-tab{box-shadow:0 2px 5px rgba(0,0,0,.06);}
+  .cat-tab{box-shadow:0 2px 5px rgba(0,0,0,.06);border-radius:999px !important;}
 
   .list-item,.task-list li,.goal-row{transition:transform .12s,box-shadow .12s;}
   .list-item:hover,.task-list li:hover,.goal-row:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.08);}
 
-  .stat,.recipe-card,.session-row,.goal-quad-card,.gp-card,.arkiv-box{box-shadow:0 3px 10px rgba(0,0,0,.06) !important;transition:transform .12s;}
+  .stat,.recipe-card,.session-row,.goal-quad-card,.gp-card,.arkiv-box{box-shadow:0 3px 10px rgba(0,0,0,.06) !important;transition:transform .12s;border-radius:20px !important;}
   .recipe-card:hover,.arkiv-box:hover{transform:translateY(-2px);}
+  .stat{padding:16px !important;}
+  .recipe-card{padding:18px !important;}
 
   .bar{height:9px;background:var(--surface-soft);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.12);}
   .bar-fill{height:9px;background:linear-gradient(90deg,var(--nav-active),#7C9268);border-radius:999px;transition:width .3s ease;}
@@ -1268,56 +1274,112 @@
 
   <div class="view" id="view-mal">
     <div class="card">
-      <div class="card-label">AI-uppdelning</div>
-      <div class="card-sub">beskriv målet och när du vill nå det — får förslag på hur det bryts ner i årliga/kvartalsvisa/månadsvisa/veckovisa actions</div>
+      <div class="reflect-row">
+        <div class="card-label" style="margin:0;">Mål</div>
+        <button class="save-btn" onclick="openGoalForm()">+ Nytt mål</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;" id="goalGroupFilterRow">
+        <div class="cat-tab group-filter-pill active" id="groupFilter_alla" onclick="setGoalGroupFilter('alla')">Alla</div>
+      </div>
+      <div class="recipe-grid" id="goalsCardGrid" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="reflect-row">
+        <div class="card-sub" style="margin:0;">Visa som</div>
+        <div class="cat-tabs">
+          <div class="cat-tab active" id="goalViewCards" onclick="setGoalView('cards')" style="font-size:11px;padding:5px 10px;">Kort</div>
+          <div class="cat-tab" id="goalViewTable" onclick="setGoalView('table')" style="font-size:11px;padding:5px 10px;">Tabell</div>
+          <div class="cat-tab" id="goalViewTree" onclick="setGoalView('tree')" style="font-size:11px;padding:5px 10px;">Träd</div>
+          <div class="cat-tab" id="goalViewHierarchy" onclick="setGoalView('hierarchy')" style="font-size:11px;padding:5px 10px;">Hierarki</div>
+        </div>
+      </div>
+      <div class="card-sub" style="margin-top:10px;margin-bottom:6px;">Sortera på år</div>
+      <div class="cat-tabs" id="goalYearFilterRow"></div>
+      <div id="goalsTableWrap" style="display:none;overflow-x:auto;margin-top:10px;">
+        <table class="habit-table" id="goalsTable" style="min-width:760px;"></table>
+      </div>
+      <div id="goalTreeWrap" style="display:none;margin-top:10px;"></div>
+      <div id="goalHierarchyWrap" style="display:none;margin-top:10px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">AI-uppdelning (avancerat)</div>
+      <div class="card-sub">beskriv ett stort mål och när du vill nå det — få förslag på hur det bryts ner i årliga/kvartalsvisa/månadsvisa/veckovisa actions</div>
       <textarea id="aiGoalInput" placeholder="T.ex. Jag vill nå 5000 följare på TikTok innan 31 december 2026..."></textarea>
       <button class="save-btn" style="margin-top:8px;" onclick="requestAiGoalSplit()">Föreslå uppdelning</button>
       <div id="aiGoalResult" style="margin-top:14px;"></div>
     </div>
 
-    <div class="card">
-      <div class="card-label">Mål</div>
-      <div class="cat-tabs">
-        <div class="cat-tab active" id="goalViewCards" onclick="setGoalView('cards')">Kort</div>
-        <div class="cat-tab" id="goalViewTable" onclick="setGoalView('table')">Tabell</div>
-        <div class="cat-tab" id="goalViewTree" onclick="setGoalView('tree')">Träd</div>
-        <div class="cat-tab" id="goalViewHierarchy" onclick="setGoalView('hierarchy')">Hierarki</div>
-      </div>
-      <div class="card-sub" style="margin-top:10px;margin-bottom:6px;">Sortera på år</div>
-      <div class="cat-tabs" id="goalYearFilterRow"></div>
-      <div class="recipe-grid" id="goalsCardGrid"></div>
-      <div id="goalsTableWrap" style="display:none;overflow-x:auto;">
-        <table class="habit-table" id="goalsTable" style="min-width:760px;"></table>
-      </div>
-      <div id="goalTreeWrap" style="display:none;"></div>
-      <div id="goalHierarchyWrap" style="display:none;"></div>
-      <button class="save-btn" onclick="openGoalForm()">+ Nytt mål</button>
-    </div>
     <div class="card" id="goalDetailCard" style="display:none;"></div>
   </div>
 
   <div id="goalFormOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
-    <div style="background:var(--surface);border-radius:14px;padding:22px;max-width:400px;width:90%;max-height:85vh;overflow-y:auto;">
-      <div class="card-label" style="margin-bottom:12px;">Nytt mål</div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <input type="text" id="gf_title" placeholder="Titel (t.ex. Gå ner till 65kg)">
-        <input type="text" id="gf_category" placeholder="Kategori (t.ex. Hälsa & fitness)">
+    <div style="background:var(--surface);border-radius:14px;padding:26px;max-width:460px;width:90%;max-height:88vh;overflow-y:auto;">
+
+      <div style="margin-bottom:14px;">
+        <span style="font-size:13px;color:var(--text-soft);cursor:pointer;" onclick="goalFormTopBack()">← Tillbaka</span>
+      </div>
+      <div id="gf_stepIndicator" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;"></div>
+
+      <div id="gf_step1">
+        <div class="card-label" style="margin-bottom:4px;">Vad vill du uppnå?</div>
+        <div class="card-sub" style="margin-bottom:10px;">Skriv det med egna ord, t.ex. "Jag vill nå 5 000 följare på TikTok."</div>
+        <textarea id="gf_title" placeholder="Jag vill..." style="min-height:60px;"></textarea>
+
+        <div class="card-sub" style="margin-top:16px;margin-bottom:8px;">Kategori</div>
+        <div id="gf_categoryGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"></div>
+        <input type="text" id="gf_category" placeholder="Specifikt namn (t.ex. TikTok, DOSED)" style="margin-top:8px;">
+
+        <div class="card-sub" style="margin-top:16px;margin-bottom:6px;">Målnivå</div>
         <select id="gf_timeframe">
-          <option>10 år</option><option>5 år</option><option>3 år</option><option>Årligen</option><option>Kvartalsvis</option><option>Månadsvis</option><option>Veckovis</option><option selected>Dagligen</option>
+          <option>10 år</option><option>5 år</option><option>3 år</option><option selected>Årligen</option><option>Kvartalsvis</option><option>Månadsvis</option><option>Veckovis</option><option>Dagligen</option>
         </select>
-        <select id="gf_parent"><option value="">Inget överordnat mål</option></select>
-        <input type="number" id="gf_progress" placeholder="Progress % (0-100)" min="0" max="100">
-        <input type="date" id="gf_deadline">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-          <input type="number" id="gf_kpiTarget" placeholder="KPI mål">
-          <input type="number" id="gf_kpiActual" placeholder="KPI nu">
-          <input type="text" id="gf_kpiUnit" placeholder="Enhet">
+
+        <div class="card-sub" style="margin-top:16px;margin-bottom:8px;">Deadline</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="radio" name="gf_deadlineMode" value="know" checked onchange="setDeadlineMode('know')"> Jag vet vilken deadline jag vill ha
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="radio" name="gf_deadlineMode" value="ai" onchange="setDeadlineMode('ai')"> Hjälp mig sätta en rimlig deadline med AI
+          </label>
+        </div>
+        <div id="gf_deadlineKnowWrap" style="margin-top:8px;">
+          <input type="date" id="gf_deadline">
+        </div>
+
+        <div style="margin-top:18px;">
+          <button class="btn-dark-full" onclick="goalFormContinueFromStep1()">Fortsätt →</button>
         </div>
       </div>
-      <div style="display:flex;gap:8px;margin-top:14px;">
-        <button class="save-btn" onclick="saveGoalForm()">Spara</button>
-        <button class="change-btn" onclick="closeGoalForm()">Avbryt</button>
+
+      <div id="gf_step2" style="display:none;">
+        <div class="card-label" style="margin-bottom:4px;">✨ AI-förslag</div>
+        <div class="card-sub" style="margin-bottom:14px;">Baserat på din data har jag analyserat målet och tagit fram ett förslag.</div>
+        <div id="gf_deadlineAiResult"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;">
+          <button class="btn-light-full" onclick="goalFormBackStep()">Ändra förslag</button>
+          <button class="btn-dark-full" id="gf_acceptAiBtn" style="display:none;" onclick="goalFormAcceptAiStep()">Acceptera och fortsätt →</button>
+        </div>
       </div>
+
+      <div id="gf_step3" style="display:none;">
+        <div class="card-label" style="margin-bottom:14px;">Bekräfta</div>
+        <div id="gf_confirmSummary"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px;">
+          <button class="btn-light-full" onclick="goalFormBackToStep1()">Tillbaka</button>
+          <button class="btn-dark-full" onclick="saveGoalForm()">Skapa mål</button>
+        </div>
+      </div>
+
+      <div id="gf_step4" style="display:none;text-align:center;">
+        <div style="font-size:40px;margin-bottom:10px;">✅</div>
+        <div class="card-label" style="margin-bottom:6px;">Klart!</div>
+        <div class="card-sub" style="margin-bottom:18px;">Ditt mål är skapat.</div>
+        <button class="save-btn" onclick="closeGoalForm()">Stäng</button>
+      </div>
+
     </div>
   </div>
 
@@ -3193,6 +3255,29 @@
   var goalIdCounter = 0;
   var goalView = 'cards';
   var expandedGoals = {};
+  var GROUP_DEFS = [
+    { key:'business', label:'Business', icon:'💼' },
+    { key:'wealth', label:'Wealth', icon:'💰' },
+    { key:'growth', label:'Growth', icon:'📈' },
+    { key:'physical', label:'Physical', icon:'💪' },
+    { key:'life', label:'Life', icon:'🌿' }
+  ];
+  function inferGroup(g){
+    var t = ((g.title||'') + ' ' + (g.category||'')).toLowerCase();
+    if(t.indexOf('kg') > -1 || t.indexOf('75 hard') > -1 || t.indexOf('hälsa') > -1 || t.indexOf('träning') > -1 || t.indexOf('pull-up') > -1 || t.indexOf('fysisk') > -1) return 'physical';
+    if(t.indexOf('spar') > -1 || t.indexOf('bolån') > -1 || t.indexOf('invester') > -1 || t.indexOf('inkomst') > -1 || t.indexOf('audi') > -1 || t.indexOf('bil') > -1) return 'wealth';
+    if(t.indexOf('kurs') > -1 || t.indexOf('bok') > -1 || t.indexOf('utbildning') > -1 || t.indexOf('psykologi') > -1 || t.indexOf('marknadsföring') > -1 || t.indexOf('engelska') > -1 || t.indexOf('hobby') > -1) return 'growth';
+    if(t.indexOf('resa') > -1 || t.indexOf('bucket') > -1 || t.indexOf('vasalopp') > -1 || t.indexOf('kebnekaise') > -1) return 'life';
+    return 'business';
+  }
+  function goalGroup(g){ return g.group || inferGroup(g); }
+  var goalGroupFilter = 'alla';
+  function setGoalGroupFilter(k){
+    goalGroupFilter = k;
+    document.querySelectorAll('.group-filter-pill').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('groupFilter_' + k).classList.add('active');
+    renderGoalCards();
+  }
   var cardPalette = [
     { bg:'#E4EADF', fg:'#4A5D40' }, { bg:'#DCE6F0', fg:'#2E5A8C' }, { bg:'#F5E1D3', fg:'#8C5A2E' },
     { bg:'#EAE0F3', fg:'#6B4A94' }, { bg:'#DCE6F0', fg:'#2E5A8C' }, { bg:'#E4EADF', fg:'#4A5D40' },
@@ -3214,6 +3299,7 @@
     var thisYear = new Date().getFullYear();
     return lifeGoals.map(function(g, i){ return i; }).filter(function(i){
       var g = lifeGoals[i];
+      if(goalGroupFilter !== 'alla' && goalGroup(g) !== goalGroupFilter) return false;
       if(goalYearFilter === 'alla') return true;
       if(goalYearFilter === 'none') return !g.deadline;
       if(goalYearFilter === 'later'){
@@ -3256,7 +3342,16 @@
     document.getElementById('goalHierarchyWrap').style.display = v==='hierarchy' ? 'block' : 'none';
     renderGoalsTable();
   }
+  function renderGoalGroupFilterRow(){
+    var el = document.getElementById('goalGroupFilterRow');
+    if(!el) return;
+    el.innerHTML = '<div class="cat-tab group-filter-pill' + (goalGroupFilter==='alla'?' active':'') + '" id="groupFilter_alla" onclick="setGoalGroupFilter(\'alla\')">Alla</div>' +
+      GROUP_DEFS.map(function(gd){
+        return '<div class="cat-tab group-filter-pill' + (goalGroupFilter===gd.key?' active':'') + '" id="groupFilter_' + gd.key + '" onclick="setGoalGroupFilter(\'' + gd.key + '\')">' + gd.icon + ' ' + gd.label + '</div>';
+      }).join('');
+  }
   function renderGoalsTable(){
+    renderGoalGroupFilterRow();
     renderGoalYearFilterRow();
     if(typeof renderYearGoals === 'function') renderYearGoals();
     if(goalView === 'cards'){
@@ -3282,11 +3377,14 @@
     function renderNode(g, depth){
       var children = lifeGoals.filter(function(x){ return x.parentId === g.id; });
       var idx = lifeGoals.indexOf(g);
-      var html = '<div style="margin-left:' + (depth*22) + 'px;padding:8px 0;border-top:1px solid var(--border);cursor:pointer;" onclick="openGoalDetail(' + idx + ')">' +
+      var gd = GROUP_DEFS.filter(function(x){ return x.key === goalGroup(g); })[0];
+      var html = '<div style="margin-left:' + (depth*22) + 'px;padding:8px 0;border-top:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:8px;" onclick="openGoalDetail(' + idx + ')">' +
+        '<span style="font-size:14px;">' + (gd?gd.icon:'🎯') + '</span>' +
+        '<span style="flex:1;">' +
         '<span style="font-size:11px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + (g.timeframe||'Okategoriserad') + '</span>' +
         '<span style="font-weight:600;font-size:13px;">' + g.title + '</span>' +
         ' <span style="font-size:11px;color:var(--text-soft);">' + g.progress + '%</span>' + kpiBadge(g) +
-        '</div>';
+        '</span></div>';
       children.forEach(function(c){ html += renderNode(c, depth+1); });
       return html;
     }
@@ -3322,24 +3420,65 @@
     svg += '</svg>';
     wrap.innerHTML = svg;
   }
+  function categoryEmoji(cat){
+    var c = (cat||'').toLowerCase();
+    if(c.indexOf('tiktok') > -1) return '🎯';
+    if(c.indexOf('dosed') > -1) return '🧪';
+    if(c.indexOf('app') > -1 || c.indexOf('wellness') > -1) return '📱';
+    if(c.indexOf('hälsa') > -1 || c.indexOf('fitness') > -1 || c.indexOf('fysisk') > -1) return '💪';
+    if(c.indexOf('pengar') > -1 || c.indexOf('ekonomi') > -1) return '💰';
+    if(c.indexOf('utbildning') > -1 || c.indexOf('education') > -1) return '📚';
+    if(c.indexOf('vision') > -1) return '🌟';
+    return '🎯';
+  }
+  var groupBadgeColors = {
+    business: { bg:'#EFEAE0', fg:'#3A342A' },
+    wealth: { bg:'#E4DCC8', fg:'#7A5A1E' },
+    growth: { bg:'#DCE6F0', fg:'#2E5A8C' },
+    physical: { bg:'#F1DAD3', fg:'#A8452F' },
+    life: { bg:'#E4EADF', fg:'#4A5D40' }
+  };
+  var statusPillColors = {
+    'On track':{ bg:'#DCEAE0', fg:'#3E7A56' }, 'At risk':{ bg:'#F5E1D3', fg:'#B0741F' },
+    'Off track':{ bg:'#F1DAD3', fg:'#A8452F' }, 'Long term':{ bg:'#EDEAE2', fg:'#8C8574' }, 'Done':{ bg:'#DCEAE0', fg:'#3E7A56' }
+  };
   function renderGoalCards(){
     var grid = document.getElementById('goalsCardGrid');
     var idxs = filteredGoalIndices();
     if(idxs.length === 0){ grid.innerHTML = '<div class="list-empty">Inga mål i den här perioden.</div>'; return; }
     grid.innerHTML = idxs.map(function(i){
       var g = lifeGoals[i];
-      var c = cardPalette[i % cardPalette.length];
-      var kpiSuffix = (g.kpiTarget !== null && g.kpiTarget !== undefined && g.kpiActual !== null && g.kpiActual !== undefined)
-        ? ' /' + g.kpiActual + (g.kpiUnit ? ' ' + g.kpiUnit : '')
+      var gd = GROUP_DEFS.filter(function(x){ return x.key === goalGroup(g); })[0];
+      var icon = gd ? gd.icon : categoryEmoji(g.category);
+      var badgeColor = groupBadgeColors[goalGroup(g)] || groupBadgeColors.business;
+      var statusLabel = goalStatusLabel(g);
+      var sc = statusPillColors[statusLabel] || statusPillColors['Long term'];
+      var kpiLine = (g.kpiTarget !== null && g.kpiTarget !== undefined && g.kpiActual !== null && g.kpiActual !== undefined)
+        ? g.kpiActual.toLocaleString('sv-SE') + ' / ' + g.kpiTarget.toLocaleString('sv-SE') + (g.kpiUnit ? ' ' + g.kpiUnit : '')
         : '';
-      return '<div class="recipe-card" style="background:' + c.bg + ';border:none;padding:14px;cursor:pointer;" onclick="openGoalDetail(' + i + ')">' +
-        '<div style="font-size:13px;font-weight:600;color:' + c.fg + ';margin-bottom:10px;">' + g.title + kpiSuffix + '</div>' +
-        '<div style="display:flex;align-items:center;gap:8px;">' +
-          '<span style="font-size:12px;color:' + c.fg + ';white-space:nowrap;">' + g.progress + ' %</span>' +
-          '<div class="bar" style="flex:1;margin:0;"><div class="bar-fill" style="width:' + g.progress + '%;background:' + c.fg + ';"></div></div>' +
+      var subtitle = (g.kpiTarget !== null && g.kpiTarget !== undefined)
+        ? g.kpiTarget.toLocaleString('sv-SE') + (g.kpiUnit ? ' ' + g.kpiUnit : '')
+        : g.title;
+      return '<div class="recipe-card" style="background:var(--surface);border:1px solid var(--border);padding:18px;cursor:pointer;" onclick="openGoalDetail(' + i + ')">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">' +
+          '<div style="width:38px;height:38px;border-radius:12px;background:' + badgeColor.bg + ';color:' + badgeColor.fg + ';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">' + icon + '</div>' +
+          '<span style="color:var(--text-soft);font-size:16px;cursor:default;">⋯</span>' +
         '</div>' +
+        '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;">' + (g.category || g.title) + '</div>' +
+        '<div style="font-size:12px;color:var(--text-soft);margin-bottom:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + subtitle + '</div>' +
+        '<div class="bar" style="margin-bottom:8px;"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-soft);margin-bottom:12px;">' +
+          '<span>' + (kpiLine || '&nbsp;') + '</span><span style="font-weight:600;color:var(--text);">' + g.progress + '%</span>' +
+        '</div>' +
+        '<div style="font-size:11px;color:var(--text-soft);margin-bottom:12px;">' + (g.deadline ? formatSwedishDate(g.deadline) : 'Ingen deadline satt') + '</div>' +
+        '<span class="status-pill active" style="cursor:default;font-size:11px;padding:4px 12px;background:' + sc.bg + ';color:' + sc.fg + ';border:none;">' + statusLabel + '</span>' +
         '</div>';
     }).join('');
+  }
+  function formatSwedishDate(iso){
+    if(!iso) return '';
+    var d = new Date(iso + 'T00:00:00');
+    return d.getDate() + ' ' + monthNamesShort[d.getMonth()] + ' ' + d.getFullYear();
   }
   function renderGoalTableRows(){
     var table = document.getElementById('goalsTable');
@@ -3499,43 +3638,156 @@
       (b.quickWin ? '<div class="card-sub" style="margin-top:8px;margin-bottom:4px;">Quick win</div><div class="list-item">' + b.quickWin + '</div>' : '');
   }
 
+  var goalFormDeadlineMode = 'know';
+  var goalFormStep = 1;
+  var goalFormGroup = null;
+  var goalFormAiSuggestion = null;
+  var GF_CATEGORY_ICONS = GROUP_DEFS.concat([
+    { key:'personligt', label:'Personligt', icon:'❤️' },
+    { key:'utbildning', label:'Utbildning', icon:'📚' },
+    { key:'annat', label:'Annat', icon:'➕' }
+  ]);
+  function renderGoalFormCategoryGrid(){
+    var el = document.getElementById('gf_categoryGrid');
+    el.innerHTML = GF_CATEGORY_ICONS.map(function(gd){
+      var active = goalFormGroup === gd.key;
+      return '<div onclick="selectGoalFormGroup(\'' + gd.key + '\')" style="border:1px solid ' + (active?'var(--text)':'var(--border)') + ';border-radius:10px;padding:10px 4px;text-align:center;cursor:pointer;background:' + (active?'var(--surface-soft)':'var(--surface)') + ';">' +
+        '<div style="font-size:16px;margin-bottom:4px;">' + gd.icon + '</div><div style="font-size:10px;">' + gd.label + '</div></div>';
+    }).join('');
+  }
+  function selectGoalFormGroup(key){
+    goalFormGroup = key;
+    renderGoalFormCategoryGrid();
+  }
+  function renderGfStepIndicator(){
+    var steps = ['Beskriv mål','AI-förslag','Bekräfta','Klart'];
+    var el = document.getElementById('gf_stepIndicator');
+    el.innerHTML = steps.map(function(label, i){
+      var n = i+1;
+      var state = n < goalFormStep ? 'done' : (n === goalFormStep ? 'active' : '');
+      var circleColor = state ? (state==='active' ? 'var(--text)' : 'var(--sage)') : 'var(--surface-soft)';
+      var circleTextColor = state ? '#fff' : 'var(--text-soft)';
+      return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;">' +
+        '<div style="width:26px;height:26px;border-radius:999px;background:' + circleColor + ';color:' + circleTextColor + ';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">' + (state==='done'?'✓':n) + '</div>' +
+        '<div style="font-size:9px;color:var(--text-soft);margin-top:4px;text-align:center;">' + label + '</div>' +
+        '</div>' + (i < steps.length-1 ? '<div style="flex:1;height:1px;background:var(--border);margin:0 4px;margin-bottom:16px;"></div>' : '');
+    }).join('');
+  }
+  function goToGoalFormStep(n){
+    goalFormStep = n;
+    renderGfStepIndicator();
+    [1,2,3,4].forEach(function(i){ document.getElementById('gf_step' + i).style.display = (i===n) ? 'block' : 'none'; });
+  }
   function openGoalForm(){
     document.getElementById('goalFormOverlay').style.display = 'flex';
-    var sel = document.getElementById('gf_parent');
-    sel.innerHTML = '<option value="">Inget överordnat mål</option>' + lifeGoals.map(function(g){
-      return '<option value="' + g.id + '">' + g.title + ' (' + (g.timeframe||'') + ')</option>';
-    }).join('');
+    document.getElementById('gf_title').value = '';
+    document.getElementById('gf_category').value = '';
+    document.getElementById('gf_deadline').value = '';
+    goalFormGroup = null;
+    goalFormDeadlineMode = 'know';
+    goalFormAiSuggestion = null;
+    renderGoalFormCategoryGrid();
+    setDeadlineMode('know');
+    document.querySelector('input[name="gf_deadlineMode"][value="know"]').checked = true;
+    goToGoalFormStep(1);
   }
   function closeGoalForm(){
     document.getElementById('goalFormOverlay').style.display = 'none';
-    ['gf_title','gf_category','gf_progress','gf_deadline','gf_kpiTarget','gf_kpiActual','gf_kpiUnit'].forEach(function(id){ document.getElementById(id).value = ''; });
+  }
+  function setDeadlineMode(mode){
+    goalFormDeadlineMode = mode;
+    document.getElementById('gf_deadlineKnowWrap').style.display = mode === 'know' ? 'block' : 'none';
+  }
+  function goalFormContinueFromStep1(){
+    var title = document.getElementById('gf_title').value.trim();
+    if(!title) return;
+    if(goalFormDeadlineMode === 'ai'){
+      goToGoalFormStep(2);
+      requestDeadlineSuggestion();
+    } else {
+      goToGoalFormStep(3);
+      renderGoalFormConfirmSummary();
+    }
+  }
+  function goalFormBackStep(){ goToGoalFormStep(1); }
+  function goalFormTopBack(){
+    if(goalFormStep === 1) closeGoalForm();
+    else goToGoalFormStep(goalFormStep - 1);
+  }
+  function goalFormBackToStep1(){ goToGoalFormStep(1); }
+  function requestDeadlineSuggestion(){
+    var el = document.getElementById('gf_deadlineAiResult');
+    document.getElementById('gf_acceptAiBtn').style.display = 'none';
+    el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var title = document.getElementById('gf_title').value.trim();
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      goalFormAiSuggestion = r;
+      el.innerHTML =
+        '<div style="background:var(--accent-soft);border-radius:12px;padding:14px;margin-bottom:14px;">' +
+          '<div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px;">📅 Rekommenderad deadline</div>' +
+          '<div style="font-size:18px;font-weight:700;margin-bottom:8px;">' + formatSwedishDate(r.deadline) + '</div>' +
+          '<div style="font-size:12px;color:var(--text-soft);">' + (r.reasoning||'') + '</div>' +
+        '</div>';
+      document.getElementById('gf_acceptAiBtn').style.display = 'inline-block';
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=suggest_deadline&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(title) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
+  function goalFormAcceptAiStep(){
+    if(goalFormAiSuggestion && goalFormAiSuggestion.deadline){
+      document.getElementById('gf_deadline').value = goalFormAiSuggestion.deadline;
+    }
+    goToGoalFormStep(3);
+    renderGoalFormConfirmSummary();
+  }
+  function renderGoalFormConfirmSummary(){
+    var el = document.getElementById('gf_confirmSummary');
+    var title = document.getElementById('gf_title').value.trim();
+    var category = document.getElementById('gf_category').value.trim();
+    var timeframe = document.getElementById('gf_timeframe').value;
+    var deadline = document.getElementById('gf_deadline').value;
+    var gd = GF_CATEGORY_ICONS.filter(function(x){ return x.key === goalFormGroup; })[0];
+    el.innerHTML =
+      '<div class="stat-grid">' +
+      '<div class="stat"><div class="lbl">Mål</div><div class="val" style="font-size:13px;">' + title + '</div></div>' +
+      '<div class="stat"><div class="lbl">Kategori</div><div class="val" style="font-size:13px;">' + (gd ? gd.icon + ' ' + gd.label : '—') + (category ? ' · ' + category : '') + '</div></div>' +
+      '<div class="stat"><div class="lbl">Målnivå</div><div class="val" style="font-size:13px;">' + timeframe + '</div></div>' +
+      '<div class="stat"><div class="lbl">Deadline</div><div class="val" style="font-size:13px;">' + (deadline ? formatSwedishDate(deadline) : 'Ingen satt') + '</div></div>' +
+      '</div>';
   }
   function saveGoalForm(){
     var title = document.getElementById('gf_title').value.trim();
     if(!title) return;
     goalIdCounter++;
-    var kpiTarget = document.getElementById('gf_kpiTarget').value;
-    var kpiActual = document.getElementById('gf_kpiActual').value;
     lifeGoals.push({
       id: goalIdCounter,
       title: title,
       category: document.getElementById('gf_category').value.trim(),
+      group: goalFormGroup,
       timeframe: document.getElementById('gf_timeframe').value,
-      parentId: document.getElementById('gf_parent').value ? parseInt(document.getElementById('gf_parent').value,10) : null,
+      parentId: null,
       completed: false,
-      progress: parseInt(document.getElementById('gf_progress').value,10) || 0,
+      progress: 0,
       deadline: document.getElementById('gf_deadline').value,
-      kpiTarget: kpiTarget ? parseFloat(kpiTarget) : null,
-      kpiActual: kpiActual ? parseFloat(kpiActual) : null,
-      kpiUnit: document.getElementById('gf_kpiUnit').value.trim(),
+      kpiTarget: null,
+      kpiActual: null,
+      kpiUnit: '',
+      notes: '',
       milestones: [],
       actions: []
     });
-    closeGoalForm();
     renderGoalsTable();
+    goToGoalFormStep(4);
   }
   function openGoalDetail(i){
     selectedGoalIdx = i;
+    goalDetailTab = 'oversikt';
     renderGoalDetail();
     document.getElementById('goalDetailCard').style.display = 'block';
   }
@@ -3551,47 +3803,179 @@
     if(last < prev) return ' <span style="color:var(--text-soft);">↓</span>';
     return ' <span style="color:var(--text-soft);">→</span>';
   }
+  var goalDetailTab = 'oversikt';
+  function setGoalDetailTab(t){ goalDetailTab = t; renderGoalDetail(); }
+  function goalResultStatsHTML(g){
+    if(g.kpiTarget === null || g.kpiTarget === undefined || !g.kpiHistory || g.kpiHistory.length < 2) return '';
+    var first = g.kpiHistory[0].actual, last = g.kpiActual;
+    var change = last - first;
+    var growthPct = first !== 0 ? Math.round((change/Math.abs(first))*100) : 0;
+    return '<div class="stat-grid" style="margin-top:14px;">' +
+      '<div class="stat"><div class="lbl">Nuvarande</div><div class="val">' + last + (g.kpiUnit?' '+g.kpiUnit:'') + '</div></div>' +
+      '<div class="stat"><div class="lbl">Sedan start</div><div class="val">' + (change>=0?'+':'') + change + '</div></div>' +
+      '<div class="stat"><div class="lbl">Tillväxt</div><div class="val">' + (growthPct>=0?'+':'') + growthPct + '%</div></div>' +
+      '</div>';
+  }
   function renderGoalDetail(){
     if(selectedGoalIdx === null) return;
     var g = lifeGoals[selectedGoalIdx];
+    if(g.notes === undefined) g.notes = '';
     var parentG = g.parentId ? lifeGoals.filter(function(x){ return x.id === g.parentId; })[0] : null;
-    var kpiHtml = (g.kpiTarget !== null && g.kpiTarget !== undefined)
-      ? '<div class="card-sub" style="margin-top:4px;display:flex;align-items:center;gap:8px;">KPI: <input type="number" id="ge_kpiActual" value="' + (g.kpiActual||0) + '" style="width:90px;padding:4px 8px;" onchange="editKpiActual(this.value)"> / ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + kpiTrendArrow(g) + '</div>' +
-        '<button class="change-btn" style="margin-top:8px;" onclick="requestReplan()">🔄 Recalculate Plan</button><div id="replanResult" style="margin-top:10px;"></div>'
-      : '';
-    var timeframeOpts = timeframeOrder.map(function(tf){ return '<option' + (g.timeframe===tf?' selected':'') + '>' + tf + '</option>'; }).join('');
-    var parentOpts = '<option value="">Inget överordnat mål</option>' + lifeGoals.filter(function(x){ return x.id !== g.id; }).map(function(x){ return '<option value="' + x.id + '"' + (g.parentId===x.id?' selected':'') + '>' + x.title + '</option>'; }).join('');
+    var daysLeft = g.deadline ? Math.round((new Date(g.deadline+'T00:00:00') - new Date())/86400000) : null;
     var card = document.getElementById('goalDetailCard');
-    var tfTag = '<span style="display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;margin-bottom:10px;">' + (g.timeframe || 'Ingen tidsnivå') + '</span>';
-    card.innerHTML =
-      '<div class="card-label">Redigera mål</div>' +
-      tfTag +
-      '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">' +
-        '<input type="text" id="ge_title" value="' + g.title.replace(/"/g,'&quot;') + '" onchange="editGoalField(\'title\',this.value)">' +
-        '<input type="text" id="ge_category" value="' + (g.category||'').replace(/"/g,'&quot;') + '" placeholder="Kategori" onchange="editGoalField(\'category\',this.value)">' +
-        '<select onchange="editGoalField(\'timeframe\',this.value)">' + timeframeOpts + '</select>' +
-        '<select onchange="editGoalField(\'parentId\',this.value?parseInt(this.value,10):null)">' + parentOpts + '</select>' +
+    var gd = GROUP_DEFS.filter(function(x){ return x.key === goalGroup(g); })[0];
+    var icon = gd ? gd.icon : categoryEmoji(g.category);
+    var badgeColor = groupBadgeColors[goalGroup(g)] || groupBadgeColors.business;
+    var statusLabel = goalStatusLabel(g);
+    var sc = statusPillColors[statusLabel] || statusPillColors['Long term'];
+    var kpiLine = (g.kpiTarget !== null && g.kpiTarget !== undefined && g.kpiActual !== null && g.kpiActual !== undefined)
+      ? g.kpiActual.toLocaleString('sv-SE') + ' / ' + g.kpiTarget.toLocaleString('sv-SE') + (g.kpiUnit ? ' ' + g.kpiUnit : '')
+      : '';
+
+    var tabs = ['oversikt','delmal','actions','statistik','ai','anteckningar'];
+    var tabLabels = { oversikt:'Översikt', delmal:'Delmål', actions:'Actions', statistik:'Statistik', ai:'AI-analys', anteckningar:'Anteckningar' };
+    var tabRow = '<div class="cat-tabs" style="margin:14px 0 18px;">' + tabs.map(function(t){
+      return '<div class="cat-tab' + (goalDetailTab===t?' active':'') + '" style="font-size:11px;padding:6px 12px;" onclick="setGoalDetailTab(\'' + t + '\')">' + tabLabels[t] + '</div>';
+    }).join('') + '</div>';
+
+    var header = '<div class="reflect-row" style="margin-bottom:14px;">' +
+        '<span style="font-size:13px;color:var(--text-soft);cursor:pointer;" onclick="closeGoalDetail()">← Tillbaka</span>' +
+        '<button class="change-btn" onclick="setGoalDetailTab(\'oversikt\')">✎ Redigera mål</button>' +
       '</div>' +
-      '<div class="card-sub">' + (g.deadline ? 'deadline ' + g.deadline : '') + '</div>' +
-      (parentG ? '<div class="card-sub" style="margin-top:-8px;">Överordnat mål: ' + parentG.title + '</div>' : '') +
-      kpiHtml +
-      '<div class="bar" style="margin-bottom:4px;margin-top:8px;"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div>' +
-      '<div style="font-size:12px;color:var(--text-soft);margin-bottom:16px;">' + g.progress + '% klart</div>' +
-      '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">Milstolpar</div>' +
-      '<ul class="task-list" id="goalMilestoneList" style="margin-bottom:10px;">' +
-        g.milestones.map(function(m, mi){ return '<li class="' + (m.done?'done':'') + '" onclick="toggleMilestone(' + mi + ')"><span class="box">' + (m.done?'✓':'') + '</span><span class="t">' + m.title + '</span></li>'; }).join('') +
-      '</ul>' +
-      '<div class="add-row" style="margin-bottom:18px;"><input type="text" id="goalMilestoneInput" placeholder="Lägg till milstolpe..."><button onclick="addMilestone()">Lägg till</button></div>' +
-      '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">Actions</div>' +
-      '<ul class="task-list" id="goalActionList" style="margin-bottom:10px;">' +
-        g.actions.map(function(a){ return '<li class="' + (a.done?'done':'') + '" onclick="toggleActionById(' + a.id + ')"><span class="box">' + (a.done?'✓':'') + '</span><span class="t">' + a.text + ' <span style="color:var(--text-soft);font-size:11px;">(' + a.freq + ')</span></span></li>'; }).join('') +
-      '</ul>' +
-      '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
-        '<input type="text" id="goalActionInput" placeholder="Ny action..." style="flex:1;min-width:120px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--surface-soft);color:var(--text);">' +
-        '<select id="goalActionFreq" style="border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text);"><option>Dagligen</option><option>Veckovis</option><option>Månadsvis</option><option>Kvartalsvis</option><option>Årligen</option></select>' +
-        '<button class="change-btn" onclick="addAction()">Lägg till</button>' +
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">' +
+        '<div style="width:44px;height:44px;border-radius:14px;background:' + badgeColor.bg + ';color:' + badgeColor.fg + ';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">' + icon + '</div>' +
+        '<div style="flex:1;">' +
+          '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:17px;font-weight:700;">' + (g.category || g.title) + '</span>' +
+          '<span class="status-pill active" style="cursor:default;font-size:10px;padding:3px 10px;background:' + sc.bg + ';color:' + sc.fg + ';border:none;">' + statusLabel + '</span></div>' +
+          '<div style="font-size:11px;color:var(--text-soft);">' + (g.timeframe || 'Ingen tidsnivå') + '</div>' +
+        '</div>' +
       '</div>' +
-      '<button class="change-btn" style="margin-top:16px;" onclick="closeGoalDetail()">Stäng</button>';
+      '<div class="bar" style="margin:12px 0 6px;"><div class="bar-fill" style="width:' + g.progress + '%;"></div></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-soft);margin-bottom:10px;">' +
+        '<span>' + (kpiLine || '&nbsp;') + '</span><span style="font-weight:600;color:var(--text);">' + g.progress + '%</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:16px;font-size:12px;color:var(--text-soft);">' +
+        (g.deadline ? '<span>📅 Deadline: ' + formatSwedishDate(g.deadline) + '</span>' : '') +
+        (daysLeft !== null ? '<span>⏱ ' + (daysLeft>=0? daysLeft+' dagar kvar' : Math.abs(daysLeft)+' dagar sen deadline') + '</span>' : '') +
+      '</div>';
+
+    var body = '';
+    if(goalDetailTab === 'oversikt'){
+      var timeframeOpts = timeframeOrder.map(function(tf){ return '<option' + (g.timeframe===tf?' selected':'') + '>' + tf + '</option>'; }).join('');
+      var parentOpts = '<option value="">Inget överordnat mål</option>' + lifeGoals.filter(function(x){ return x.id !== g.id; }).map(function(x){ return '<option value="' + x.id + '"' + (g.parentId===x.id?' selected':'') + '>' + x.title + '</option>'; }).join('');
+      var groupOpts = GROUP_DEFS.map(function(gd){ return '<option value="' + gd.key + '"' + (goalGroup(g)===gd.key?' selected':'') + '>' + gd.icon + ' ' + gd.label + '</option>'; }).join('');
+      var kpiHtml = (g.kpiTarget !== null && g.kpiTarget !== undefined)
+        ? '<div class="card-sub" style="margin-top:10px;display:flex;align-items:center;gap:8px;">KPI: <input type="number" id="ge_kpiActual" value="' + (g.kpiActual||0) + '" style="width:90px;padding:4px 8px;" onchange="editKpiActual(this.value)"> / ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + kpiTrendArrow(g) + '</div>'
+        : '<div class="card-sub" style="margin-top:10px;">Inget KPI satt — lägg till under Statistik-fliken om du vill spåra ett tal.</div>';
+      body =
+        '<div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;margin-bottom:6px;">' +
+          '<input type="text" id="ge_title" value="' + g.title.replace(/"/g,'&quot;') + '" onchange="editGoalField(\'title\',this.value)">' +
+          '<input type="text" id="ge_category" value="' + (g.category||'').replace(/"/g,'&quot;') + '" placeholder="Kategori" onchange="editGoalField(\'category\',this.value)">' +
+          '<select onchange="editGoalField(\'group\',this.value)">' + groupOpts + '</select>' +
+          '<select onchange="editGoalField(\'timeframe\',this.value)">' + timeframeOpts + '</select>' +
+          '<select onchange="editGoalField(\'parentId\',this.value?parseInt(this.value,10):null)">' + parentOpts + '</select>' +
+          '<input type="date" value="' + (g.deadline||'') + '" onchange="editGoalField(\'deadline\',this.value)">' +
+        '</div>' +
+        (parentG ? '<div class="card-sub">Överordnat mål: ' + parentG.title + '</div>' : '') +
+        kpiHtml +
+        goalResultStatsHTML(g);
+    } else if(goalDetailTab === 'delmal'){
+      body = '<div class="reflect-row" style="margin-top:14px;margin-bottom:10px;"><div class="card-sub" style="margin:0;">Delmål</div><button class="change-btn" onclick="document.getElementById(\'goalMilestoneInput\').focus()">+ Lägg till delmål</button></div>' +
+        g.milestones.map(function(m, mi){
+          var mStatus = m.done ? 'Klar' : 'Ej startad';
+          var mColor = m.done ? statusPillColors['On track'] : statusPillColors['Long term'];
+          return '<div class="list-item" style="display:flex;align-items:center;gap:12px;">' +
+            '<div onclick="toggleMilestone(' + mi + ')" style="width:22px;height:22px;border-radius:999px;background:' + (m.done?'var(--sage)':'#fff') + ';border:2px solid ' + (m.done?'var(--sage)':'var(--border)') + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;cursor:pointer;flex-shrink:0;">' + (m.done?'✓':'') + '</div>' +
+            '<div style="flex:1;">' +
+              '<div style="font-size:13px;font-weight:600;">' + m.title + '</div>' +
+              (m.targetDate ? '<div style="font-size:11px;color:var(--text-soft);">' + formatSwedishDate(m.targetDate) + '</div>' : '') +
+            '</div>' +
+            '<span class="status-pill active" style="cursor:default;font-size:10px;padding:3px 10px;background:' + mColor.bg + ';color:' + mColor.fg + ';border:none;">' + mStatus + '</span>' +
+            '<span style="color:var(--text-soft);font-size:15px;cursor:pointer;" onclick="removeMilestone(' + mi + ')">⋯</span>' +
+            '</div>';
+        }).join('') +
+        '<div class="add-row" style="margin:12px 0 8px;"><input type="text" id="goalMilestoneInput" placeholder="Lägg till milstolpe..."><button onclick="addMilestone()">Lägg till</button></div>' +
+        '<button class="change-btn" style="margin-bottom:10px;" onclick="requestMilestoneSuggestions()">🤖 Låt AI föreslå</button>' +
+        '<div id="goalMilestoneAiResult"></div>';
+    } else if(goalDetailTab === 'actions'){
+      body = '<div class="reflect-row" style="margin-top:14px;margin-bottom:8px;"><div class="card-sub" style="margin:0;">Actions</div></div>' +
+        '<ul class="task-list" id="goalActionList" style="margin-bottom:10px;">' +
+          g.actions.map(function(a){ return '<li class="' + (a.done?'done':'') + '" onclick="toggleActionById(' + a.id + ')"><span class="box">' + (a.done?'✓':'') + '</span><span class="t">' + a.text + ' <span style="color:var(--text-soft);font-size:11px;">(' + a.freq + ')</span></span></li>'; }).join('') +
+        '</ul>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+          '<input type="text" id="goalActionInput" placeholder="Ny action..." style="flex:1;min-width:120px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--surface-soft);color:var(--text);">' +
+          '<select id="goalActionFreq" style="border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text);"><option>Dagligen</option><option>Veckovis</option><option>Månadsvis</option><option>Kvartalsvis</option><option>Årligen</option></select>' +
+          '<button class="change-btn" onclick="addAction()">Lägg till</button>' +
+        '</div>';
+    } else if(goalDetailTab === 'statistik'){
+      var hasKpi = g.kpiTarget !== null && g.kpiTarget !== undefined;
+      body = '<div style="margin-top:14px;">';
+      if(hasKpi){
+        body += goalResultStatsHTML(g) || '<div class="list-empty">Behöver minst två KPI-uppdateringar för att visa tillväxt.</div>';
+        body += '<div class="card-sub" style="margin-top:14px;margin-bottom:6px;">KPI-historik</div>';
+        body += (g.kpiHistory||[]).slice(-10).reverse().map(function(h){ return '<div class="list-item">' + h.date + ' — ' + h.actual + ' ' + (g.kpiUnit||'') + '</div>'; }).join('') || '<div class="list-empty">Ingen historik än.</div>';
+      } else {
+        body += '<div class="list-empty">Inget KPI kopplat till det här målet — lägg till KPI-mål och nuvarande värde under Översikt för att se statistik.</div>';
+      }
+      if(daysLeft !== null){
+        body += '<div class="stat-grid" style="margin-top:14px;">' +
+          '<div class="stat"><div class="lbl">Dagar kvar</div><div class="val">' + daysLeft + '</div></div>' +
+          '<div class="stat"><div class="lbl">Progress</div><div class="val">' + g.progress + '%</div></div>' +
+          '</div>';
+      }
+      body += '</div>';
+    } else if(goalDetailTab === 'ai'){
+      var updatedNow = new Date();
+      var updatedStr = 'idag, ' + updatedNow.getDate() + ' ' + monthNamesShort[updatedNow.getMonth()] + ' ' + updatedNow.getFullYear();
+      body = '<div style="margin-top:14px;">' +
+        '<div class="reflect-row" style="margin-bottom:10px;"><div class="card-sub" style="margin:0;">🤖 AI-status</div><span style="font-size:11px;color:var(--text-soft);">Uppdaterad ' + updatedStr + '</span></div>' +
+        '<button class="save-btn" onclick="requestGoalAiStatus()">Generera AI-status</button>' +
+        '<div id="goalAiStatusResult" style="margin-top:12px;margin-bottom:18px;"></div>';
+      if(g.kpiTarget !== null && g.kpiTarget !== undefined){
+        body += '<button class="change-btn" onclick="requestReplan()">🔄 Recalculate Plan</button><div id="replanResult" style="margin-top:10px;"></div>';
+      }
+      body += '</div>';
+    } else if(goalDetailTab === 'anteckningar'){
+      body = '<div style="margin-top:14px;">' +
+        '<textarea id="ge_notes" placeholder="Fria anteckningar om det här målet..." style="min-height:160px;" onchange="editGoalField(\'notes\',this.value)">' + g.notes.replace(/</g,'&lt;') + '</textarea>' +
+        '</div>';
+    }
+
+    card.innerHTML = header + tabRow + body + renderGoalHierarchyMini(g) + renderGoalResultFooter(g);
+  }
+  function renderGoalHierarchyMini(g){
+    var chain = [];
+    var cur = g;
+    while(cur){ chain.unshift(cur); cur = cur.parentId ? lifeGoals.filter(function(x){ return x.id === cur.parentId; })[0] : null; }
+    var descendants = lifeGoals.filter(function(x){ return x.parentId === g.id; });
+    var all = chain.concat(descendants.filter(function(d){ return chain.indexOf(d) === -1; }));
+    if(all.length <= 1) return '';
+    var html = '<div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">' +
+      '<div class="reflect-row" style="margin-bottom:10px;"><div class="card-sub" style="margin:0;">Målhierarki</div><span style="font-size:11px;color:var(--text-soft);cursor:pointer;" onclick="setGoalView(\'hierarchy\');closeGoalDetail();">Visa i hierarki →</span></div>';
+    html += all.map(function(x){
+      var gd = GROUP_DEFS.filter(function(k){ return k.key === goalGroup(x); })[0];
+      var isCurrent = x.id === g.id;
+      return '<div class="list-item" style="display:flex;align-items:center;gap:10px;' + (isCurrent?'border:1.5px solid var(--text);':'') + '" onclick="openGoalDetail(' + lifeGoals.indexOf(x) + ')">' +
+        '<span style="font-size:14px;">' + (gd?gd.icon:'🎯') + '</span>' +
+        '<div style="flex:1;"><div style="font-size:12px;font-weight:600;">' + (x.timeframe||'') + '</div><div style="font-size:11px;color:var(--text-soft);">' + x.title.slice(0,60) + (x.title.length>60?'...':'') + '</div></div>' +
+        '<span style="color:var(--text-soft);">›</span>' +
+        '</div>';
+    }).join('');
+    html += '</div>';
+    return html;
+  }
+  function renderGoalResultFooter(g){
+    if(g.kpiTarget === null || g.kpiTarget === undefined || !g.kpiHistory || g.kpiHistory.length < 2) return '';
+    var first = g.kpiHistory[0].actual, last = g.kpiActual;
+    var change = last - first;
+    var growthPct = first !== 0 ? Math.round((change/Math.abs(first))*100) : 0;
+    return '<div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">' +
+      '<div class="card-sub" style="margin-bottom:10px;">Resultat</div>' +
+      '<div class="stat-grid">' +
+      '<div class="stat"><div class="lbl">Nuvarande</div><div class="val">' + last.toLocaleString('sv-SE') + (g.kpiUnit?' '+g.kpiUnit:'') + '</div></div>' +
+      '<div class="stat"><div class="lbl">Sedan start</div><div class="val">' + (change>=0?'+':'') + change.toLocaleString('sv-SE') + '</div></div>' +
+      '<div class="stat"><div class="lbl">Tillväxt</div><div class="val">' + (growthPct>=0?'+':'') + growthPct + '%</div></div>' +
+      '</div></div>';
   }
   function editKpiActual(val){
     var g = lifeGoals[selectedGoalIdx];
@@ -3624,9 +4008,69 @@
     tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
     document.body.appendChild(tag);
   }
+  function requestGoalAiStatus(){
+    var g = lifeGoals[selectedGoalIdx];
+    var el = document.getElementById('goalAiStatusResult');
+    el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var input = 'Mål: ' + g.title + '. Kategori: ' + (g.category||'') + '. Progress: ' + g.progress + '%. Deadline: ' + g.deadline + '.' + (g.kpiTarget !== null ? ' KPI: ' + (g.kpiActual||0) + ' / ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + '.' : '');
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      el.innerHTML = '<div style="background:var(--accent-soft);border-radius:16px;padding:16px;margin-bottom:10px;">' +
+        '<div style="font-size:14px;font-weight:700;margin-bottom:8px;">' + (r.status||'') + '</div>' +
+        '<div style="font-size:12px;color:var(--text);"><b>Nästa fokus:</b> ' + (r.nextStep||'') + '</div>' +
+        '</div>';
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=ai_status&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(input) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
+  var pendingMilestoneSuggestions = null;
+  function requestMilestoneSuggestions(){
+    var g = lifeGoals[selectedGoalIdx];
+    var el = document.getElementById('goalMilestoneAiResult');
+    el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var input = 'Mål: ' + g.title + '. Deadline: ' + (g.deadline || 'ingen satt') + '. Nuvarande progress: ' + g.progress + '%.' + (g.kpiTarget !== null ? ' KPI: ' + (g.kpiActual||0) + ' / ' + g.kpiTarget + ' ' + (g.kpiUnit||'') + '.' : '');
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      pendingMilestoneSuggestions = r.milestones || [];
+      el.innerHTML = '<div class="card-sub" style="margin-bottom:8px;">AI-förslag — godkänn de du vill ha</div>' +
+        pendingMilestoneSuggestions.map(function(m, i){
+          return '<div class="list-item" style="display:flex;justify-content:space-between;align-items:center;"><span>' + m.title + (m.targetDate?' <span style="color:var(--text-soft);font-size:11px;">— '+m.targetDate+'</span>':'') + '</span><button class="change-btn" style="padding:4px 10px;font-size:11px;" onclick="acceptMilestoneSuggestion(' + i + ')">Acceptera</button></div>';
+        }).join('') +
+        '<button class="save-btn" style="margin-top:8px;" onclick="acceptAllMilestoneSuggestions()">Acceptera alla</button>';
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=suggest_milestones&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(input) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
+  function acceptMilestoneSuggestion(i){
+    var m = pendingMilestoneSuggestions[i];
+    if(!m) return;
+    lifeGoals[selectedGoalIdx].milestones.push({ title: m.title, done:false, targetDate: m.targetDate||'' });
+    pendingMilestoneSuggestions.splice(i,1);
+    renderGoalDetail();
+    renderGoalsTable();
+  }
+  function acceptAllMilestoneSuggestions(){
+    (pendingMilestoneSuggestions||[]).forEach(function(m){
+      lifeGoals[selectedGoalIdx].milestones.push({ title: m.title, done:false, targetDate: m.targetDate||'' });
+    });
+    pendingMilestoneSuggestions = [];
+    renderGoalDetail();
+    renderGoalsTable();
+  }
   function editGoalField(field, value){
     lifeGoals[selectedGoalIdx][field] = value;
     renderGoalsTable();
+    renderGoalDetail();
   }
   function toggleMilestone(mi){
     var g = lifeGoals[selectedGoalIdx];
@@ -3638,6 +4082,11 @@
     var val = input.value.trim();
     if(!val) return;
     lifeGoals[selectedGoalIdx].milestones.push({ title: val, done:false });
+    renderGoalDetail();
+    renderGoalsTable();
+  }
+  function removeMilestone(mi){
+    lifeGoals[selectedGoalIdx].milestones.splice(mi,1);
     renderGoalDetail();
     renderGoalsTable();
   }
