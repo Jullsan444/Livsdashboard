@@ -1273,6 +1273,7 @@
   </div>
 
   <div class="view" id="view-mal">
+    <div id="goalsOverviewWrap">
     <div class="card">
       <div class="reflect-row">
         <div class="card-label" style="margin:0;">Mål</div>
@@ -1309,6 +1310,7 @@
       <textarea id="aiGoalInput" placeholder="T.ex. Jag vill nå 5000 följare på TikTok innan 31 december 2026..."></textarea>
       <button class="save-btn" style="margin-top:8px;" onclick="requestAiGoalSplit()">Föreslå uppdelning</button>
       <div id="aiGoalResult" style="margin-top:14px;"></div>
+    </div>
     </div>
 
     <div class="card" id="goalDetailCard" style="display:none;"></div>
@@ -3789,10 +3791,14 @@
     selectedGoalIdx = i;
     goalDetailTab = 'oversikt';
     renderGoalDetail();
-    document.getElementById('goalDetailCard').style.display = 'block';
+    document.getElementById('goalsOverviewWrap').style.display = 'none';
+    var el = document.getElementById('goalDetailCard');
+    el.style.display = 'block';
+    window.scrollTo({ top:0, behavior:'smooth' });
   }
   function closeGoalDetail(){
     document.getElementById('goalDetailCard').style.display = 'none';
+    document.getElementById('goalsOverviewWrap').style.display = 'block';
     selectedGoalIdx = null;
   }
   function kpiTrendArrow(g){
