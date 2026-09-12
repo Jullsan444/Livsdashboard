@@ -1527,13 +1527,14 @@
 
   function renderHabitTable(){
     var table = document.getElementById('habitTable');
-    var anyInRange = REAL_WEEK_DATES.some(function(dt){ return isInChallenge(isoDate(dt)); });
+    var viewedDates = getWeekDates(weekOffset);
+    var anyInRange = viewedDates.some(function(dt){ return isInChallenge(isoDate(dt)); });
     var rows = anyInRange ? hard75Rows : permanentRows;
     document.getElementById('hardCardLabel').textContent = anyInRange ? '75 Hard' : 'Habits';
 
     var html = '<tr><td></td>' + days7.map(function(d){ return '<td class="habit-head">' + d + '</td>'; }).join('') + '</tr>';
     rows.forEach(function(h){
-      html += '<tr><td class="rowlabel">' + h + flameHTML(computeStreak(h, isoDate(new Date()))) + '</td>' + REAL_WEEK_DATES.map(function(dt){
+      html += '<tr><td class="rowlabel">' + h + flameHTML(computeStreak(h, isoDate(new Date()))) + '</td>' + viewedDates.map(function(dt){
         var dk = isoDate(dt);
         if(anyInRange && !isInChallenge(dk)) return '<td><div class="habit-box" style="opacity:.3;cursor:default;"></div></td>';
         var done = habitState[h][dk];
@@ -1541,7 +1542,7 @@
       }).join('') + '</tr>';
     });
     table.innerHTML = html;
-    updateHabitPct(rows, anyInRange);
+    updateHabitPct(rows, anyInRange, viewedDates);
   }
   function toggleHabit(h,dk){
     habitState[h][dk] = !habitState[h][dk];
@@ -1663,9 +1664,10 @@
     }
   }
   var lastHabitPct = 0;
-  function updateHabitPct(rows, restrictToChallenge){
+  function updateHabitPct(rows, restrictToChallenge, dates){
+    var useDates = dates || REAL_WEEK_DATES;
     var total = 0, done = 0;
-    rows.forEach(function(h){ REAL_WEEK_DATES.forEach(function(dt){ if(restrictToChallenge && !isInChallenge(isoDate(dt))) return; total++; if(habitState[h][isoDate(dt)]) done++; }); });
+    rows.forEach(function(h){ useDates.forEach(function(dt){ if(restrictToChallenge && !isInChallenge(isoDate(dt))) return; total++; if(habitState[h][isoDate(dt)]) done++; }); });
     var pct = total ? Math.round((done/total)*100) : 0;
     document.getElementById('habitPct').textContent = pct + '%';
     document.getElementById('habitBar').style.width = pct + '%';
@@ -1919,6 +1921,7 @@
     document.getElementById('weekPicker').value = weekOffset;
     if(typeof renderWeekGoals === 'function') renderWeekGoals();
     if(typeof renderTaskDays === 'function') renderTaskDays();
+    if(typeof renderHabitTable === 'function') renderHabitTable();
   }
   function populateWeekPicker(){
     var picker = document.getElementById('weekPicker');
