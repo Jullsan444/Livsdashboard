@@ -3227,10 +3227,15 @@
     grid.innerHTML = idxs.map(function(i){
       var g = lifeGoals[i];
       var c = cardPalette[i % cardPalette.length];
+      var kpiSuffix = (g.kpiTarget !== null && g.kpiTarget !== undefined && g.kpiActual !== null && g.kpiActual !== undefined)
+        ? ' /' + g.kpiActual + (g.kpiUnit ? ' ' + g.kpiUnit : '')
+        : '';
       return '<div class="recipe-card" style="background:' + c.bg + ';border:none;padding:14px;cursor:pointer;" onclick="openGoalDetail(' + i + ')">' +
-        '<div style="font-size:13px;font-weight:600;color:' + c.fg + ';margin-bottom:10px;">' + g.title + '</div>' +
-        '<div style="font-size:12px;color:' + c.fg + ';margin-bottom:4px;">' + g.progress + ' %</div>' +
-        '<div class="bar"><div class="bar-fill" style="width:' + g.progress + '%;background:' + c.fg + ';"></div></div>' +
+        '<div style="font-size:13px;font-weight:600;color:' + c.fg + ';margin-bottom:10px;">' + g.title + kpiSuffix + '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<span style="font-size:12px;color:' + c.fg + ';white-space:nowrap;">' + g.progress + ' %</span>' +
+          '<div class="bar" style="flex:1;margin:0;"><div class="bar-fill" style="width:' + g.progress + '%;background:' + c.fg + ';"></div></div>' +
+        '</div>' +
         '</div>';
     }).join('');
   }
@@ -3455,8 +3460,10 @@
     var timeframeOpts = timeframeOrder.map(function(tf){ return '<option' + (g.timeframe===tf?' selected':'') + '>' + tf + '</option>'; }).join('');
     var parentOpts = '<option value="">Inget överordnat mål</option>' + lifeGoals.filter(function(x){ return x.id !== g.id; }).map(function(x){ return '<option value="' + x.id + '"' + (g.parentId===x.id?' selected':'') + '>' + x.title + '</option>'; }).join('');
     var card = document.getElementById('goalDetailCard');
+    var tfTag = '<span style="display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;margin-bottom:10px;">' + (g.timeframe || 'Ingen tidsnivå') + '</span>';
     card.innerHTML =
       '<div class="card-label">Redigera mål</div>' +
+      tfTag +
       '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">' +
         '<input type="text" id="ge_title" value="' + g.title.replace(/"/g,'&quot;') + '" onchange="editGoalField(\'title\',this.value)">' +
         '<input type="text" id="ge_category" value="' + (g.category||'').replace(/"/g,'&quot;') + '" placeholder="Kategori" onchange="editGoalField(\'category\',this.value)">' +
