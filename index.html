@@ -1403,12 +1403,18 @@
     alert('Den här vyn är inte byggd än — vi tar den nästa.');
   }
 
-  var weekGoals = [];
+  var weekGoalsByWeek = {};
+  function getWeekGoals(key){
+    if(!weekGoalsByWeek[key]) weekGoalsByWeek[key] = [];
+    return weekGoalsByWeek[key];
+  }
+  function currentViewedWeekKey(){ return isoDate(getWeekDates(weekOffset)[0]); }
   function renderWeekGoals(){
     var listEl = document.getElementById('w_goalList');
     var emptyEl = document.getElementById('w_goalEmpty');
-    emptyEl.style.display = weekGoals.length === 0 ? 'block' : 'none';
-    listEl.innerHTML = weekGoals.map(function(g, i){
+    var list = getWeekGoals(currentViewedWeekKey());
+    emptyEl.style.display = list.length === 0 ? 'block' : 'none';
+    listEl.innerHTML = list.map(function(g, i){
       return '<li><span>' + g + '</span><span class="x" onclick="removeGoalW(' + i + ')">×</span></li>';
     }).join('');
   }
@@ -1416,11 +1422,11 @@
     var input = document.getElementById('w_goalInput');
     var val = input.value.trim();
     if(!val) return;
-    weekGoals.push(val);
+    getWeekGoals(currentViewedWeekKey()).push(val);
     input.value = '';
     renderWeekGoals();
   }
-  function removeGoalW(i){ weekGoals.splice(i,1); renderWeekGoals(); }
+  function removeGoalW(i){ getWeekGoals(currentViewedWeekKey()).splice(i,1); renderWeekGoals(); }
 
   var hard75Rows = ['🥗 Hållt diet','📖 Läst 10 sidor','🚫 Ingen alkohol','🚶 Promenad 30-45 min','🏋️ Träning inne 30-45 min','📝 Dokumenterat dagen'];
   var otherRows = ['🧘 Meditation','🎵 Jobbat med TikTok','🧪 Jobbat med Dosed'];
@@ -1590,7 +1596,7 @@
     document.getElementById('hard75DaysLeft').textContent = daysLeft;
 
     document.getElementById('hard75Grid').innerHTML = dayStatuses.map(function(ds, i){
-      var color = ds.isFuture ? 'var(--surface-soft)' : (ds.isFull ? 'var(--accent)' : (ds.doneCount > 0 ? 'var(--sage-soft)' : 'var(--border)'));
+      var color = ds.isFuture ? 'var(--surface-soft)' : (ds.isFull ? 'var(--sage)' : 'var(--border)');
       return '<div title="' + ds.dk + ' — ' + ds.doneCount + '/' + hard75Rows.length + '" style="aspect-ratio:1;border-radius:5px;background:' + color + ';font-size:9px;display:flex;align-items:center;justify-content:center;color:var(--text-soft);">' + (i+1) + '</div>';
     }).join('');
 
@@ -1667,39 +1673,48 @@
     lastHabitPct = pct;
   }
 
-  var tasksByDay = {};
-  days7.forEach(function(d){ tasksByDay[d] = []; });
-  tasksByDay['Ons'] = [{t:'Skicka wordmark till tryck', done:false}];
+  var tasksByDayByWeek = {};
+  function getTasksByDay(key){
+    if(!tasksByDayByWeek[key]){
+      var obj = {};
+      days7.forEach(function(d){ obj[d] = []; });
+      tasksByDayByWeek[key] = obj;
+    }
+    return tasksByDayByWeek[key];
+  }
 
   function renderTaskDays(){
     var container = document.getElementById('taskDays');
+    var weekKey = currentViewedWeekKey();
+    var tbd = getTasksByDay(weekKey);
     container.innerHTML = days7.map(function(d){
-      var tasks = tasksByDay[d];
+      var tasks = tbd[d];
       var listHtml = tasks.map(function(task, i){
-        return '<li class="' + (task.done ? 'done' : '') + '" onclick="toggleDayTask(\'' + d + '\',' + i + ')">' +
+        return '<li class="' + (task.done ? 'done' : '') + '" onclick="toggleDayTask(\'' + weekKey + '\',\'' + d + '\',' + i + ')">' +
           '<span class="box">' + (task.done ? '✓' : '') + '</span><span class="t">' + task.t + '</span></li>';
       }).join('');
       return '<div class="day-block">' +
         '<div class="day-head">' + d + '</div>' +
         '<ul class="task-list">' + listHtml + '</ul>' +
-        '<div class="add-row"><input type="text" id="taskInput_' + d + '" placeholder="Vad ska göras ' + d + '..."><button onclick="addDayTask(\'' + d + '\')">Lägg till</button></div>' +
+        '<div class="add-row"><input type="text" id="taskInput_' + d + '" placeholder="Vad ska göras ' + d + '..."><button onclick="addDayTask(\'' + weekKey + '\',\'' + d + '\')">Lägg till</button></div>' +
         '</div>';
     }).join('');
   }
-  function toggleDayTask(d,i){
-    tasksByDay[d][i].done = !tasksByDay[d][i].done;
+  function toggleDayTask(weekKey,d,i){
+    getTasksByDay(weekKey)[d][i].done = !getTasksByDay(weekKey)[d][i].done;
     renderTaskDays();
     if(typeof renderDailyTodo === 'function') renderDailyTodo();
   }
-  function addDayTask(d){
+  function addDayTask(weekKey,d){
     var input = document.getElementById('taskInput_' + d);
     var val = input.value.trim();
     if(!val) return;
-    tasksByDay[d].push({t: val, done:false});
+    getTasksByDay(weekKey)[d].push({t: val, done:false});
     renderTaskDays();
     document.getElementById('taskInput_' + d).focus();
     if(typeof renderDailyTodo === 'function') renderDailyTodo();
   }
+  function weekKeyForDate(dateStr){ return isoDate(getMonday(new Date(dateStr + 'T00:00:00'))); }
   function currentDailyDayLabel(){
     var idx = (new Date(selectedDate + 'T00:00:00').getDay() + 6) % 7;
     return days7[idx];
@@ -1709,11 +1724,12 @@
     var listEl = document.getElementById('dailyTodoList');
     if(!labelEl || !listEl) return;
     var d = currentDailyDayLabel();
+    var wk = weekKeyForDate(selectedDate);
     labelEl.textContent = 'To do — ' + d;
-    var tasks = tasksByDay[d] || [];
+    var tasks = getTasksByDay(wk)[d] || [];
     listEl.innerHTML = tasks.length
       ? tasks.map(function(task, i){
-          return '<li class="' + (task.done ? 'done' : '') + '" onclick="toggleDayTask(\'' + d + '\',' + i + ')">' +
+          return '<li class="' + (task.done ? 'done' : '') + '" onclick="toggleDayTask(\'' + wk + '\',\'' + d + '\',' + i + ')">' +
             '<span class="box">' + (task.done ? '✓' : '') + '</span><span class="t">' + task.t + '</span></li>';
         }).join('')
       : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga tasks för ' + d + ' ännu — lägg till en, eller skriv in i Veckans tasks.</li>';
@@ -1723,7 +1739,8 @@
     var val = input.value.trim();
     if(!val) return;
     var d = currentDailyDayLabel();
-    tasksByDay[d].push({ t: val, done:false });
+    var wk = weekKeyForDate(selectedDate);
+    getTasksByDay(wk)[d].push({ t: val, done:false });
     input.value = '';
     renderDailyTodo();
     renderTaskDays();
@@ -1900,6 +1917,8 @@
     var dates = getWeekDates(weekOffset);
     document.getElementById('weekLabel').textContent = 'Vecka ' + isoWeekNumber(dates[0]) + (weekOffset === 0 ? ' · denna veckan' : '');
     document.getElementById('weekPicker').value = weekOffset;
+    if(typeof renderWeekGoals === 'function') renderWeekGoals();
+    if(typeof renderTaskDays === 'function') renderTaskDays();
   }
   function populateWeekPicker(){
     var picker = document.getElementById('weekPicker');
@@ -3295,8 +3314,8 @@
       longTermGoals: lifeGoals.filter(function(g){ return ['10 år','5 år','3 år'].indexOf(g.timeframe) > -1; }).map(function(g){ return { id:g.id, title:g.title, timeframe:g.timeframe, progress:g.progress }; }),
       activeGoals: lifeGoals.filter(function(g){ return !g.completed; }).map(function(g){ return { id:g.id, title:g.title, timeframe:g.timeframe, progress:g.progress, kpiTarget:g.kpiTarget, kpiActual:g.kpiActual, kpiUnit:g.kpiUnit, deadline:g.deadline, parentId:g.parentId }; }),
       activeProjects: projects.map(function(p){ return { title:p.title, status:p.status, progress:p.progress, deadline:p.deadline }; }),
-      todayTasks: (tasksByDay[todayLabelNow]||[]).map(function(t){ return { text:t.t, done:t.done }; }),
-      weeklyTargets: weekGoals,
+      todayTasks: (getTasksByDay(isoDate(REAL_WEEK_DATES[0]))[todayLabelNow]||[]).map(function(t){ return { text:t.t, done:t.done }; }),
+      weeklyTargets: getWeekGoals(isoDate(REAL_WEEK_DATES[0])),
       quarterlyTargetsByCategory: goals,
       tiktokKPIs: tiktokStats,
       dosedStatus: { revenue:dosedFinance.revenue, expenses:dosedFinance.expenses, stagesDone: dosedStagesData.filter(function(s){return s.done;}).length, stagesTotal: dosedStagesData.length, openTasks: dosedTasks.filter(function(t){return !t.done;}).length },
@@ -4324,7 +4343,8 @@
     var todayKey = isoDate(new Date());
     var todayLabelNow = days7[(new Date().getDay()+6)%7];
     var candidates = [];
-    (tasksByDay[todayLabelNow]||[]).forEach(function(t, i){ if(!t.done) candidates.push({ text:t.t, area:'Task', done:false, mark:function(){ tasksByDay[todayLabelNow][i].done = true; } }); });
+    var realWeekTasks = getTasksByDay(isoDate(REAL_WEEK_DATES[0]))[todayLabelNow] || [];
+    realWeekTasks.forEach(function(t, i){ if(!t.done) candidates.push({ text:t.t, area:'Task', done:false, mark:function(){ realWeekTasks[i].done = true; } }); });
     lifeGoals.forEach(function(g){
       g.actions.forEach(function(a){
         if(!a.done && a.freq === 'Dagligen') candidates.push({ text:a.text, area:g.title, done:false, mark:function(){ a.done = true; } });
@@ -4427,7 +4447,7 @@
       renderBucketList();
     } else if(r.type === 'Task'){
       var todayLabelNow = days7[(new Date().getDay()+6)%7];
-      tasksByDay[todayLabelNow].push({ t:p.text, done:false });
+      getTasksByDay(isoDate(REAL_WEEK_DATES[0]))[todayLabelNow].push({ t:p.text, done:false });
       renderTaskDays();
     } else if(r.type === 'Project'){
       projects.push({ title:p.text, status:'Idé', priority:'Medel', deadline:'', progress:0, milestones:[], tasks:[], notes:'Från Inbox: ' + r.reasoning });
@@ -4585,8 +4605,9 @@
     el.textContent = pct + '%';
     document.getElementById('homeWeekBar').style.width = pct + '%';
     var outcomesEl = document.getElementById('homeWeekOutcomes');
-    outcomesEl.innerHTML = weekGoals.length
-      ? weekGoals.slice(0,3).map(function(g){ return '<li style="cursor:default;"><span class="box"></span><span class="t">' + g + '</span></li>'; }).join('')
+    var realWeekGoals = getWeekGoals(isoDate(REAL_WEEK_DATES[0]));
+    outcomesEl.innerHTML = realWeekGoals.length
+      ? realWeekGoals.slice(0,3).map(function(g){ return '<li style="cursor:default;"><span class="box"></span><span class="t">' + g + '</span></li>'; }).join('')
       : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga veckans mål satta ännu — lägg till i Week.</li>';
     var daysOnTrack = 0;
     REAL_WEEK_DATES.forEach(function(dt){
@@ -4651,12 +4672,12 @@
     html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
       '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Detta kvartal</span>' +
       '<span style="font-size:12px;">' + doneCount + '/' + dosedChecklist.length + ' foundation-punkter klara</span></div>';
-    var weekMatch = weekGoals.filter(function(g){ return g.toLowerCase().indexOf('dosed') > -1; });
+    var weekMatch = getWeekGoals(isoDate(REAL_WEEK_DATES[0])).filter(function(g){ return g.toLowerCase().indexOf('dosed') > -1; });
     html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
       '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Denna vecka</span>' +
       '<span style="font-size:12px;">' + (weekMatch.length ? weekMatch.join(', ') : '<span style="color:var(--text-soft);font-style:italic;">inget DOSED-mål satt för veckan ännu</span>') + '</span></div>';
     var todayLabelNow = days7[(new Date().getDay()+6)%7];
-    var todayMatch = (tasksByDay[todayLabelNow]||[]).filter(function(t){ return t.t.toLowerCase().indexOf('dosed') > -1 || t.t.toLowerCase().indexOf('leverantör') > -1; });
+    var todayMatch = (getTasksByDay(isoDate(REAL_WEEK_DATES[0]))[todayLabelNow]||[]).filter(function(t){ return t.t.toLowerCase().indexOf('dosed') > -1 || t.t.toLowerCase().indexOf('leverantör') > -1; });
     html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
       '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Idag</span>' +
       '<span style="font-size:12px;">' + (todayMatch.length ? todayMatch.map(function(t){return t.t;}).join(', ') : '<span style="color:var(--text-soft);font-style:italic;">ingen DOSED-task satt för idag ännu</span>') + '</span></div>';
@@ -4756,7 +4777,7 @@
     try{
       var reflInput = document.getElementById('w_reflectionText');
       var state = {
-        weekGoals: weekGoals, habitState: habitState, tasksByDay: tasksByDay, calEvents: calEvents,
+        weekGoalsByWeek: weekGoalsByWeek, habitState: habitState, tasksByDayByWeek: tasksByDayByWeek, calEvents: calEvents,
         weekReflectionText: reflInput ? reflInput.value : weekReflectionText,
         dailyLog: dailyLog, measurementsLog: measurementsLog,
         goals: goals, quarterBooks: quarterBooks, quarterWins: quarterWins, quarterIdeas: quarterIdeas,
@@ -4783,9 +4804,11 @@
       var raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return;
       var s = JSON.parse(raw);
-      if(s.weekGoals) weekGoals = s.weekGoals;
+      if(s.weekGoalsByWeek) weekGoalsByWeek = s.weekGoalsByWeek;
+      else if(s.weekGoals) weekGoalsByWeek[isoDate(REAL_WEEK_DATES[0])] = s.weekGoals;
       if(s.habitState) habitState = s.habitState;
-      if(s.tasksByDay) tasksByDay = s.tasksByDay;
+      if(s.tasksByDayByWeek) tasksByDayByWeek = s.tasksByDayByWeek;
+      else if(s.tasksByDay) tasksByDayByWeek[isoDate(REAL_WEEK_DATES[0])] = s.tasksByDay;
       if(s.calEvents) calEvents = s.calEvents;
       if(s.weekReflectionText) weekReflectionText = s.weekReflectionText;
       if(s.dailyLog) dailyLog = s.dailyLog;
@@ -4852,15 +4875,14 @@
   loadAll();
 
   if(appDataVersion < 2){
-    weekGoals = [];
+    weekGoalsByWeek = {};
     lifeGoals = [];
     goalIdCounter = 0;
     goalActionIdCounter = 0;
     goals = { 'Dosed':[], 'Hälsa':[], 'Ekonomi':[], 'TikTok':[], 'Personligt':[] };
     habitState = {};
     allHabitRows.forEach(function(h){ habitState[h] = {}; });
-    tasksByDay = {};
-    days7.forEach(function(d){ tasksByDay[d] = []; });
+    tasksByDayByWeek = {};
     calEvents = [];
     dailyLog = {};
     measurementsLog = [];
