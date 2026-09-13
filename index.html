@@ -2882,6 +2882,9 @@
       try { delete window[cbName]; } catch(e){}
       renderCalEvents();
       renderDailyCalendar();
+      // Kalendervyn kan ha ritats innan händelserna kom — rita om den
+      if(typeof window.renderCalendarView === 'function') window.renderCalendarView();
+      if(window.LO && typeof LO.refresh === 'function') LO.refresh();
     };
     var tag = document.createElement('script');
     tag.src = HEALTH_ENDPOINT + '?action=calendar&callback=' + cbName;
