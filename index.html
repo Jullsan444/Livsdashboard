@@ -990,13 +990,36 @@
     </div>
 
     <div id="tiktokPane_oversikt">
-      <div class="card">
-        <div class="card-sub">mot 500 000 följare</div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-          <span>Följare</span><span id="tiktokFollowersLabel" style="color:var(--text-soft);">0 / 500 000 · 0%</span>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;">
+        <div class="card" style="margin-bottom:0;">
+          <div class="reflect-row" style="margin-bottom:10px;">
+            <span style="font-size:13px;color:var(--text-soft);">Följare</span>
+            <span style="color:var(--text-soft);cursor:pointer;" onclick="setTiktokTab('analys')">→</span>
+          </div>
+          <div style="font-size:22px;font-weight:700;margin-bottom:10px;"><span id="tiktokFollowersBig">0</span> <span style="font-size:14px;font-weight:400;color:var(--text-soft);">/ 500 000</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="bar" style="flex:1;margin:0;"><div class="bar-fill" id="tiktokFollowersBar" style="width:0%;"></div></div>
+            <span style="font-size:11px;color:var(--text-soft);" id="tiktokFollowersPct">0%</span>
+          </div>
+          <div style="font-size:11px;color:var(--sage);margin-top:10px;" id="tiktokFollowersDelta"></div>
         </div>
-        <div class="bar"><div class="bar-fill" id="tiktokFollowersBar" style="width:0%;"></div></div>
-        <div class="stat-grid" style="margin-top:14px;">
+        <div class="card" style="margin-bottom:0;">
+          <div style="font-size:13px;color:var(--text-soft);margin-bottom:10px;">Visningar (30 dagar)</div>
+          <div style="font-size:22px;font-weight:700;margin-bottom:8px;" id="tiktokViewsBig">0</div>
+          <div id="tiktokViewsSpark" style="height:32px;"></div>
+          <div style="font-size:11px;color:var(--sage);margin-top:10px;" id="tiktokViewsDelta"></div>
+        </div>
+        <div class="card" style="margin-bottom:0;">
+          <div style="font-size:13px;color:var(--text-soft);margin-bottom:10px;">Engagemang</div>
+          <div style="font-size:22px;font-weight:700;margin-bottom:8px;" id="tiktokEngagementBig">0%</div>
+          <div id="tiktokEngagementBars" style="height:32px;display:flex;align-items:flex-end;gap:3px;"></div>
+          <div style="font-size:11px;color:var(--sage);margin-top:10px;" id="tiktokEngagementDelta"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-sub" style="margin-bottom:12px;">Detaljerad statistik</div>
+        <div class="stat-grid">
           <div class="stat"><div class="stat-icon">👁️</div><div class="lbl">Views (senaste 20 klippen)</div><div class="val" id="tiktokViews">0</div></div>
           <div class="stat"><div class="stat-icon">💬</div><div class="lbl">Engagement</div><div class="val" id="tiktokEngagement">0%</div></div>
           <div class="stat"><div class="stat-icon">🎬</div><div class="lbl">Posts totalt</div><div class="val" id="tiktokPosts">0</div></div>
@@ -1016,8 +1039,8 @@
           <div class="card-label" style="margin:0;">Toppvideos</div>
           <span style="font-size:11px;color:var(--text-soft);cursor:pointer;" onclick="setTiktokTab('videos')">Visa alla →</span>
         </div>
-        <div class="card-sub">från dina senaste 20 klipp, rankade på visningar</div>
-        <div id="tiktokTopVideosPreview" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
+        <div class="card-sub">Senaste 30 dagar</div>
+        <div id="tiktokTopVideosPreview" style="margin-top:4px;"></div>
       </div>
 
       <div class="card">
@@ -1056,10 +1079,13 @@
     <div id="tiktokPane_analys" style="display:none;">
       <div class="card">
         <div class="reflect-row">
-          <div class="card-label" style="margin:0;">🤖 AI-analys</div>
-          <button class="save-btn" onclick="requestTiktokAiAnalysis()">Generera analys</button>
+          <div>
+            <div class="card-label" style="margin:0;display:inline;">AI-analys</div>
+            <span style="font-size:11px;color:var(--text-soft);margin-left:8px;" id="tiktokAnalysisUpdated"></span>
+          </div>
+          <button class="change-btn" onclick="requestTiktokAiAnalysis()">Se full analys →</button>
         </div>
-        <div id="tiktokAnalysisResult" style="margin-top:12px;"></div>
+        <div id="tiktokAnalysisResult" style="margin-top:14px;"></div>
       </div>
       <div class="card">
         <div class="card-label">Samarbeten & intäkter</div>
@@ -4697,13 +4723,15 @@
     if(t === 'videos' || t === 'oversikt') renderTiktokVideos();
     if(t === 'ideer') renderTiktokChat();
   }
-  function tiktokVideoRowHTML(v){
+  function tiktokVideoRowHTML(v, rank){
     var thumb = v.cover ? '<img src="' + v.cover + '" style="width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:44px;height:44px;border-radius:10px;background:var(--surface-soft);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;">🎬</div>';
     var link = v.url ? '<a href="' + v.url + '" target="_blank" style="color:var(--text);text-decoration:none;">' + (v.title || 'Namnlöst klipp') + '</a>' : (v.title || 'Namnlöst klipp');
-    return '<div class="list-item" style="display:flex;align-items:center;gap:10px;">' +
-      thumb +
+    var rankHtml = rank ? '<div style="width:18px;font-size:14px;font-weight:700;color:var(--text-soft);flex-shrink:0;">' + rank + '</div>' : '';
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;' + (rank && rank>1 ? 'border-top:1px solid var(--border);' : '') + '">' +
+      rankHtml + thumb +
       '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + link + '</div>' +
-      '<div style="font-size:11px;color:var(--text-soft);">' + v.views.toLocaleString('sv-SE') + ' visningar · ' + v.engagement + '% engagement</div></div>' +
+      '<div style="font-size:11px;color:var(--text-soft);">' + v.views.toLocaleString('sv-SE') + ' visningar</div></div>' +
+      '<div style="font-size:11px;color:var(--text-soft);white-space:nowrap;">' + v.engagement + ' % eng.</div>' +
       '</div>';
   }
   function renderTiktokVideos(){
@@ -4711,12 +4739,12 @@
     var allEl = document.getElementById('tiktokAllVideosList');
     if(previewEl){
       previewEl.innerHTML = tiktokVideos.length
-        ? tiktokVideos.slice(0,5).map(tiktokVideoRowHTML).join('')
+        ? tiktokVideos.slice(0,5).map(function(v,i){ return tiktokVideoRowHTML(v, i+1); }).join('')
         : '<div class="list-empty">Logga in och uppdatera från TikTok för att se dina videos här.</div>';
     }
     if(allEl){
       allEl.innerHTML = tiktokVideos.length
-        ? tiktokVideos.map(tiktokVideoRowHTML).join('')
+        ? tiktokVideos.map(function(v,i){ return tiktokVideoRowHTML(v, i+1); }).join('')
         : '<div class="list-empty">Logga in och uppdatera från TikTok för att se dina videos här.</div>';
     }
   }
@@ -4784,6 +4812,8 @@
   function requestTiktokAiAnalysis(){
     var el = document.getElementById('tiktokAnalysisResult');
     el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var now = new Date();
+    document.getElementById('tiktokAnalysisUpdated').textContent = 'Uppdaterad idag';
     var topTitles = tiktokVideos.slice(0,5).map(function(v){ return v.title || 'namnlöst'; }).join(', ');
     var input = 'Analysera min TikTok utifrån följare (' + tiktokStats.followers + '), views, engagement (' + tiktokStats.engagement + '%) och mina bäst presterande videos: ' + topTitles + '.';
     var cbName = 'aiCb_' + Date.now();
@@ -4791,10 +4821,18 @@
       try { delete window[cbName]; } catch(e){}
       if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
       var r = data.result || {};
-      el.innerHTML = '<div style="background:var(--accent-soft);border-radius:16px;padding:16px;margin-bottom:12px;">' +
-        (r.recommendation ? '<div style="font-size:14px;font-weight:700;margin-bottom:6px;">' + r.recommendation.text + '</div><div style="font-size:12px;">' + r.recommendation.why + '</div>' : '') +
+      var headline = r.recommendation ? r.recommendation.text : 'Ingen tydlig trend ännu';
+      var desc = r.recommendation ? r.recommendation.why : '';
+      el.innerHTML =
+        '<div style="background:var(--accent-soft);border-radius:16px;padding:16px;margin-bottom:18px;display:flex;gap:12px;">' +
+          '<div style="font-size:16px;">✨</div>' +
+          '<div><div style="font-size:14px;font-weight:700;margin-bottom:6px;">' + headline + '</div>' +
+          '<div style="font-size:12px;color:var(--text);">' + desc + '</div></div>' +
         '</div>' +
-        (r.insights||[]).map(function(i){ return '<div class="list-item"><div style="font-size:13px;">' + (i.emoji||'') + ' ' + i.text + '</div></div>'; }).join('');
+        '<div style="font-size:13px;font-weight:700;margin-bottom:8px;">Insikter</div>' +
+        '<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;">' +
+          (r.insights||[]).map(function(i){ return '<li style="font-size:13px;">' + i.text + '</li>'; }).join('') +
+        '</ul>';
     };
     var tag = document.createElement('script');
     tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=insights&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(input) + '&callback=' + cbName;
@@ -4811,14 +4849,50 @@
     return tiktokStats.followers - past.followers;
   }
   function renderTiktokHQ(){
-    var followersEl = document.getElementById('tiktokFollowersLabel');
-    if(!followersEl) return;
+    var bigEl = document.getElementById('tiktokFollowersBig');
+    if(!bigEl) return;
     var pct = Math.min(100, Math.round((tiktokStats.followers/500000)*100));
-    followersEl.textContent = tiktokStats.followers.toLocaleString('sv-SE') + ' / 500 000 · ' + pct + '%';
+    bigEl.textContent = tiktokStats.followers.toLocaleString('sv-SE');
+    document.getElementById('tiktokFollowersPct').textContent = pct + '%';
     document.getElementById('tiktokFollowersBar').style.width = pct + '%';
     document.getElementById('tiktokViews').textContent = tiktokStats.views.toLocaleString('sv-SE');
     document.getElementById('tiktokEngagement').textContent = tiktokStats.engagement + '%';
     document.getElementById('tiktokPosts').textContent = tiktokStats.posts;
+    document.getElementById('tiktokViewsBig').textContent = tiktokStats.views.toLocaleString('sv-SE');
+    document.getElementById('tiktokEngagementBig').textContent = tiktokStats.engagement + '%';
+
+    var dFollowers = tiktokDeltaSince(30);
+    document.getElementById('tiktokFollowersDelta').innerHTML = dFollowers !== null
+      ? '<span style="color:' + (dFollowers>=0?'var(--sage)':'var(--accent)') + ';">' + (dFollowers>=0?'↗':'↘') + ' ' + (dFollowers>=0?'+':'') + dFollowers.toLocaleString('sv-SE') + ' denna månad</span>'
+      : '<span style="color:var(--text-soft);">Spara fler mätningar för att se förändring</span>';
+
+    var recent = tiktokHistory.slice(-8);
+    if(recent.length >= 2){
+      var vViews = recent.map(function(h){ return h.views||0; });
+      var minV = Math.min.apply(null,vViews), maxV = Math.max.apply(null,vViews);
+      var range = maxV-minV || 1;
+      var w=100, h=32;
+      var pts = vViews.map(function(v,i){ return (i/(vViews.length-1)*w).toFixed(1) + ',' + (h-((v-minV)/range)*h).toFixed(1); }).join(' ');
+      document.getElementById('tiktokViewsSpark').innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:100%;"><polyline points="' + pts + '" fill="none" stroke="var(--text)" stroke-width="1.5"/></svg>';
+      var viewsDelta = vViews[vViews.length-1] - vViews[0];
+      var viewsDeltaPct = vViews[0] > 0 ? Math.round((viewsDelta/vViews[0])*100) : 0;
+      document.getElementById('tiktokViewsDelta').innerHTML = '<span style="color:' + (viewsDeltaPct>=0?'var(--sage)':'var(--accent)') + ';">' + (viewsDeltaPct>=0?'↗':'↘') + ' ' + (viewsDeltaPct>=0?'+':'') + viewsDeltaPct + '%</span>';
+
+      var vEng = recent.map(function(h){ return h.engagement||0; });
+      var maxE = Math.max.apply(null,vEng) || 1;
+      document.getElementById('tiktokEngagementBars').innerHTML = vEng.map(function(v){
+        var barH = Math.max(3, Math.round((v/maxE)*32));
+        return '<div style="flex:1;height:' + barH + 'px;background:var(--text);opacity:' + (0.3 + 0.7*(v/maxE)) + ';border-radius:2px;"></div>';
+      }).join('');
+      var engDelta = vEng[vEng.length-1] - vEng[0];
+      document.getElementById('tiktokEngagementDelta').innerHTML = '<span style="color:' + (engDelta>=0?'var(--sage)':'var(--accent)') + ';">' + (engDelta>=0?'↗':'↘') + ' ' + (engDelta>=0?'+':'') + engDelta.toFixed(1) + ' pp</span>';
+    } else {
+      document.getElementById('tiktokViewsSpark').innerHTML = '<div style="font-size:11px;color:var(--text-soft);">Spara fler mätningar för att se en graf</div>';
+      document.getElementById('tiktokEngagementBars').innerHTML = '';
+      document.getElementById('tiktokViewsDelta').innerHTML = '';
+      document.getElementById('tiktokEngagementDelta').innerHTML = '';
+    }
+
     document.getElementById('tiktokPillars').innerHTML = tiktokPillars.length
       ? tiktokPillars.map(function(p){ return '<li style="cursor:default;"><span class="box">🎯</span><span class="t">' + p + '</span></li>'; }).join('')
       : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga content pillars ännu.</li>';
