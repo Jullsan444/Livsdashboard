@@ -729,13 +729,13 @@
   .bar,.fin-track,.breakdown-row .track{height:9px;background:rgba(67,33,42,.08);box-shadow:inset 0 2px 4px rgba(67,33,42,.08);}
   input[type="text"],input[type="number"],input[type="date"],input[type="email"],select,textarea{background:rgba(255,255,255,.72)!important;box-shadow:inset 0 1px 3px rgba(67,33,42,.06),0 1px rgba(255,255,255,.7);}
 
-  #view-home{grid-template-columns:repeat(12,minmax(0,1fr));gap:20px;align-items:stretch;}
+  #view-home{grid-template-columns:repeat(12,minmax(0,1fr));gap:20px;align-items:start;}
   #view-home.active{display:grid;}
-  #view-home>.home-intro{grid-column:span 8;background:linear-gradient(135deg,rgba(217,75,104,.96),rgba(185,54,84,.92))!important;color:#FFF7F8;box-shadow:0 24px 46px -24px rgba(185,54,84,.7)!important;}
+  #view-home>.home-intro{grid-column:1/-1;background:linear-gradient(135deg,rgba(217,75,104,.96),rgba(185,54,84,.92))!important;color:#FFF7F8;box-shadow:0 24px 46px -24px rgba(185,54,84,.7)!important;}
   #view-home>.home-intro #homeHeaderDate{color:rgba(255,255,255,.72)!important;}
-  #view-home>.home-brief{grid-column:span 4;background:linear-gradient(145deg,var(--sage-soft),rgba(255,255,255,.8))!important;}
+  #view-home>.home-brief{grid-column:1/-1;background:linear-gradient(145deg,var(--sage-soft),rgba(255,255,255,.8))!important;}
   #view-home>.home-today-grid{grid-column:1/-1;display:grid;grid-template-columns:7fr 5fr;gap:20px;margin:0;}
-  #view-home>.home-today-grid>.card{margin:0;min-height:260px;}
+  #view-home>.home-today-grid>.card{margin:0;min-height:260px;align-self:stretch;}
   #view-home>.home-today-grid>.card:first-child{background:linear-gradient(145deg,var(--ink),#61313E);color:#FFF7F8;}
   #view-home>.home-today-grid>.card:first-child .card-label,#view-home>.home-today-grid>.card:first-child .stat .val{color:#FFF7F8;}
   #view-home>.home-today-grid>.card:first-child .stat{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.12);box-shadow:inset 0 1px rgba(255,255,255,.12);}
@@ -760,6 +760,221 @@
     #view-home{gap:14px;}.hero{border-radius:0 0 24px 24px;padding:28px 22px;}.top-row{top:6px;border-radius:14px;}
     #view-home>.home-today-grid>.card{min-height:0;}
   }
+  /* ---------- FIX: sidomenyn scrollar självständigt ---------- */
+  @media (min-width:821px){
+    .sidebar{
+      position:sticky;top:0;
+      height:100vh;max-height:100vh;min-height:100vh;
+      overflow-y:auto;overscroll-behavior:contain;
+      scrollbar-width:thin;
+    }
+    .sidebar-nav{flex:0 0 auto;}
+    .sidebar-footer{margin-top:auto;}
+  }
+
+  /* ---------- FIX: läsbarhet i Daily ---------- */
+  .mood-btn .lbl{color:#43212A;opacity:.78;font-weight:600;}
+  .mood-btn.active .lbl{opacity:1;color:var(--accent-deep);}
+  .stat .lbl{color:#43212A;opacity:.7;font-weight:650;}
+  .stat .val{color:#2E1219;}
+  #view-dagligen .card-label{color:#2E1219;}
+  #view-dagligen .task-list li{color:#2E1219;}
+
+  /* ---------- LO: undernavigation + periodrad ---------- */
+  .lo-subnav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px;}
+  .lo-subnav:empty{display:none;}
+  .lo-sub{
+    padding:8px 15px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;
+    background:rgba(255,255,255,.7);border:1px solid var(--border-soft);color:#5B564C;
+    transition:all .16s ease;backdrop-filter:blur(10px);
+  }
+  .lo-sub:hover{color:var(--ink);transform:translateY(-1px);}
+  .lo-sub.active{background:var(--grad-ink,linear-gradient(135deg,#43212A,#2E1219));color:#fff;border-color:transparent;box-shadow:0 6px 18px -10px rgba(67,33,42,.7);}
+  .lo-periodbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px;}
+  .lo-periodbar:empty{display:none;}
+  .lo-periodbar button{
+    width:34px;height:34px;border-radius:11px;border:1px solid var(--border-soft);
+    background:rgba(255,255,255,.8);cursor:pointer;font-size:15px;color:var(--ink);line-height:1;
+  }
+  .lo-periodbar button:hover{background:#fff;}
+  .lo-periodbar .lo-plabel{font-weight:700;font-size:14px;color:var(--ink);min-width:190px;}
+  .lo-periodbar .lo-today{width:auto;padding:0 13px;font-size:12px;font-weight:600;}
+  .lo-empty{font-size:13px;color:#6B655A;padding:10px 0;font-style:italic;}
+  .lo-kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--border-soft);font-size:13px;color:#2E1219;}
+  .lo-kv:first-child{border-top:none;}
+  .lo-kv b{font-weight:700;}
+
+  /* Målkedja */
+  .ladder-band{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:start;padding:12px 0;border-top:1px solid var(--border);}
+  .ladder-band:first-child{border-top:0;}
+  .ladder-band-label{display:flex;flex-direction:column;gap:2px;padding-top:6px;}
+  .ladder-band-label span{font-size:10px;letter-spacing:.12em;font-weight:800;color:var(--accent-deep);}
+  .ladder-band-label em{font-style:normal;font-size:10px;color:var(--text-soft);}
+  .ladder-band-nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;}
+  .ladder-node{background:rgba(255,255,255,.72);border:1px solid var(--border);border-radius:16px;padding:12px 13px;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;}
+  .ladder-node:hover{transform:translateY(-2px);box-shadow:0 14px 28px -20px rgba(67,33,42,.5);border-color:rgba(217,75,104,.35);}
+  .ladder-node.is-focus{border-color:var(--accent);box-shadow:0 14px 30px -20px rgba(217,75,104,.65);background:rgba(255,255,255,.95);}
+  .ladder-node.is-dim{opacity:.45;}
+  .ladder-node.is-done .ladder-node-title{text-decoration:line-through;opacity:.65;}
+  .ladder-node-title{font-size:13px;font-weight:650;color:#2E1219;line-height:1.35;}
+  .ladder-bar{height:5px;border-radius:99px;background:rgba(67,33,42,.1);margin:9px 0 7px;overflow:hidden;}
+  .ladder-bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-deep));}
+  .ladder-meta{font-size:10.5px;color:#43212A;opacity:.75;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+  .ladder-kpi{background:var(--sage-soft);color:#33472F;border-radius:6px;padding:2px 7px;font-size:10px;}
+  .ladder-open{margin-left:auto;color:var(--accent-deep);font-weight:700;}
+  .ladder-hint{font-size:12px;color:var(--text-soft);font-style:italic;}
+  .ladder-focus{border:1px solid var(--border);border-radius:18px;padding:16px;background:linear-gradient(145deg,var(--sage-soft),rgba(255,255,255,.8));}
+  .ladder-focus-head{display:flex;align-items:center;gap:10px;justify-content:space-between;}
+  .ladder-focus-tf{font-size:10px;letter-spacing:.1em;font-weight:800;color:var(--accent-deep);background:rgba(255,255,255,.7);border-radius:8px;padding:3px 9px;}
+  @media (max-width:640px){ .ladder-band{grid-template-columns:1fr;gap:6px;} .ladder-focus .grid2{grid-template-columns:1fr;} }
+  /* ---------- Kalender ---------- */
+  .cal-grid-head{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px;}
+  .cal-grid-head div{font-size:10px;letter-spacing:.1em;font-weight:800;color:var(--accent-deep);text-align:center;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .cal-cell{min-height:92px;border:1px solid var(--border);border-radius:14px;padding:7px 7px 8px;background:rgba(255,255,255,.72);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;overflow:hidden;}
+  .cal-cell:hover{border-color:rgba(217,75,104,.4);transform:translateY(-2px);box-shadow:0 12px 24px -20px rgba(67,33,42,.55);}
+  .cal-cell.is-out{opacity:.42;}
+  .cal-cell.is-today{border-color:var(--accent);background:rgba(255,255,255,.95);}
+  .cal-cell.is-sel{box-shadow:0 0 0 2px rgba(217,75,104,.35);}
+  .cal-num{font-size:12px;font-weight:750;color:#2E1219;margin-bottom:5px;}
+  .cal-chip{display:flex;gap:5px;align-items:baseline;font-size:10.5px;line-height:1.25;padding:3px 6px;border-radius:8px;margin-bottom:3px;background:rgba(107,139,107,.16);color:#2E1219;overflow:hidden;}
+  .cal-chip b{font-size:9.5px;opacity:.8;flex:0 0 auto;}
+  .cal-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cal-chip.k-apple{background:rgba(107,139,107,.2);}
+  .cal-chip.k-own{background:rgba(251,79,116,.16);}
+  .cal-chip.k-goal{background:rgba(251,79,116,.26);font-weight:650;}
+  .cal-chip.k-task,.cal-chip.k-todo{background:rgba(67,33,42,.08);}
+  .cal-chip.is-done span{text-decoration:line-through;opacity:.6;}
+  .cal-more{font-size:9.5px;color:var(--text-soft);font-style:italic;}
+  .cal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+  .cal-wcol{border:1px solid var(--border);border-radius:14px;padding:9px;background:rgba(255,255,255,.72);min-height:150px;cursor:pointer;}
+  .cal-wcol.is-today{border-color:var(--accent);}
+  .cal-wcol.is-sel{box-shadow:0 0 0 2px rgba(217,75,104,.3);}
+  .cal-whead{font-size:11px;font-weight:750;color:#2E1219;margin-bottom:7px;}
+  .cal-dim{font-size:11px;color:var(--text-soft);font-style:italic;}
+  .cal-sect{font-size:10px;letter-spacing:.1em;font-weight:800;color:var(--accent-deep);margin-bottom:6px;}
+  .cal-allday{border:1px solid var(--border);border-radius:14px;padding:10px;background:var(--sage-soft);margin-bottom:12px;}
+  .cal-hrow{display:grid;grid-template-columns:56px 1fr;gap:10px;border-top:1px solid var(--border);padding:6px 0;min-height:34px;align-items:center;}
+  .cal-h{font-size:10.5px;color:var(--text-soft);font-weight:700;}
+  .cal-agenda-day{display:grid;grid-template-columns:58px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--border);cursor:pointer;}
+  .cal-agenda-date{text-align:center;}
+  .cal-agenda-date b{display:block;font-size:19px;font-weight:800;color:#2E1219;line-height:1;}
+  .cal-agenda-date span{display:block;font-size:10px;color:var(--accent-deep);font-weight:700;text-transform:uppercase;}
+  .cal-agenda-date em{display:block;font-size:10px;color:var(--text-soft);font-style:normal;}
+  .cal-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:12px;}
+  .cal-row-t{flex:0 0 46px;font-weight:700;color:var(--accent-deep);font-size:11px;}
+  .cal-row-title{flex:1;color:#2E1219;}
+  .cal-row-title.is-done{text-decoration:line-through;opacity:.6;}
+  .cal-row-src{font-size:10px;color:var(--text-soft);}
+  .cal-x{cursor:pointer;color:var(--accent-deep);font-weight:800;padding:0 4px;}
+  @media (max-width:820px){
+    .cal-week{grid-template-columns:1fr;}
+    .cal-grid,.cal-grid-head{gap:3px;}
+    .cal-cell{min-height:68px;padding:5px;}
+    .cal-chip span{display:none;}
+    .cal-chip{justify-content:center;}
+  }
+  /* ---- TikTok idébank + content plan ---- */
+  .tt-idea{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--border);}
+  .tt-idea:first-child{border-top:0;}
+  .tt-idea-main{flex:1;min-width:0;}
+  .tt-idea-title{font-size:13.5px;font-weight:650;color:#2E1219;line-height:1.35;}
+  .tt-idea-hook{font-size:11.5px;color:#43212A;opacity:.78;margin-top:3px;}
+  .tt-idea-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:7px;font-size:10px;}
+  .tt-pill{background:var(--sage-soft);color:#33472F;border-radius:6px;padding:2px 7px;}
+  .tt-stage{background:rgba(251,79,116,.14);color:var(--accent-deep);border-radius:6px;padding:2px 7px;font-weight:700;}
+  .tt-planned{color:#43212A;opacity:.7;}
+  .tt-steps{display:flex;gap:5px;margin-top:9px;}
+  .tt-step{width:28px;height:5px;border-radius:99px;background:rgba(67,33,42,.12);cursor:pointer;transition:background .15s;}
+  .tt-step.on{background:linear-gradient(90deg,var(--accent),var(--accent-deep));}
+  .tt-idea-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .tt-week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+  .tt-wcol{background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:14px;padding:9px 8px;min-height:96px;}
+  .tt-wcol.is-today{border-color:var(--accent);background:rgba(255,255,255,.95);}
+  .tt-whead{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:7px;}
+  .tt-post{display:flex;gap:5px;align-items:baseline;font-size:10.5px;line-height:1.3;background:rgba(251,79,116,.13);border-radius:8px;padding:4px 6px;margin-bottom:4px;cursor:pointer;}
+  .tt-post.is-done{background:var(--sage-soft);}
+  .tt-post.is-done .tt-post-title{text-decoration:line-through;opacity:.65;}
+  .tt-post-t{font-size:9.5px;opacity:.8;flex:0 0 auto;}
+  .tt-post-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;color:#2E1219;}
+  @media (max-width:820px){ .tt-week{grid-template-columns:1fr;} .tt-wcol{min-height:0;} }
+
+/* ---- Hälsa ---- */
+.hl-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:10px 0 12px;}
+.hl-form label{display:flex;flex-direction:column;gap:5px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;color:#43212A;opacity:.8;}
+.hl-form label.wide{grid-column:span 2;}
+.hl-form input,.hl-form select{border:1px solid var(--border);border-radius:12px;padding:9px 11px;font:inherit;font-size:13px;background:rgba(255,255,255,.85);color:#2E1219;text-transform:none;letter-spacing:0;}
+.hl-chart{margin:0 0 18px;}
+.hl-chart-t{font-size:12px;font-weight:750;color:#2E1219;display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;}
+.hl-chart-t em{font-style:normal;font-size:11px;color:var(--text-soft);font-weight:600;}
+.hl-bars{display:flex;justify-content:flex-start;align-items:flex-end;gap:4px;height:118px;padding:6px 2px 0;border-bottom:1px solid var(--border);overflow-x:auto;}
+.hl-bar{flex:1 1 16px;max-width:44px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:4px;}
+.hl-bar span{display:block;width:100%;max-width:26px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,var(--accent),var(--accent-deep));}
+.hl-bar em{font-style:normal;font-size:9px;color:var(--text-soft);}
+@media (max-width:640px){ .hl-form label.wide{grid-column:span 1;} }
+
+  /* ===== EKONOMI ===== */
+  .btn{border:none;background:var(--grad-accent);color:#fff;border-radius:999px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .15s ease;}
+  .btn:hover{transform:translateY(-2px);}
+  .ek-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px;}
+  .ek-form label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:650;color:#43212A;opacity:.8;}
+  .ek-form label.wide{grid-column:span 2;}
+  .ek-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.6);box-shadow:var(--shadow-sm);margin-bottom:8px;}
+  .ek-row .t{flex:1;min-width:0;}
+  .ek-row .t b{display:block;font-size:14px;color:#2E1219;}
+  .ek-row .t span{font-size:11px;color:#43212A;opacity:.65;}
+  .ek-amt{font-weight:800;font-size:14px;white-space:nowrap;}
+  .ek-amt.in{color:var(--sage);} .ek-amt.out{color:var(--accent-deep);}
+  .ek-x{border:none;background:transparent;cursor:pointer;opacity:.45;font-size:15px;}
+  .ek-x:hover{opacity:1;}
+  .ek-bar{height:10px;border-radius:99px;background:rgba(0,0,0,.07);overflow:hidden;margin-top:6px;}
+  .ek-bar i{display:block;height:100%;border-radius:99px;background:var(--grad-accent);}
+  .ek-bar i.ok{background:linear-gradient(90deg,#8FB08F,#6B8B6B);}
+  .ek-bars{display:flex;align-items:flex-end;gap:8px;height:120px;justify-content:flex-start;}
+  .ek-col{flex:1 1 20px;max-width:54px;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .ek-col .pair{display:flex;align-items:flex-end;gap:3px;height:100px;}
+  .ek-col .pair i{display:block;width:10px;border-radius:6px 6px 0 0;}
+  .ek-col .pair i.in{background:linear-gradient(180deg,#8FB08F,#6B8B6B);}
+  .ek-col .pair i.out{background:var(--grad-accent);}
+  .ek-col span{font-size:10px;opacity:.6;}
+  @media (max-width:640px){ .ek-form label.wide{grid-column:span 1;} }
+
+  /* ===== BUSINESS ===== */
+  .biz-board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .biz-col{background:rgba(255,255,255,.5);border-radius:16px;padding:10px;min-height:80px;}
+  .biz-col h6{margin:0 0 8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.6;}
+  .biz-card{background:#fff;border-radius:12px;padding:10px;margin-bottom:8px;box-shadow:var(--shadow-sm);cursor:pointer;}
+  .biz-card b{display:block;font-size:13px;color:#2E1219;}
+  .biz-card span{font-size:11px;opacity:.6;}
+  .biz-move{display:flex;gap:4px;margin-top:6px;}
+  .biz-move button{flex:1;border:none;border-radius:8px;background:rgba(0,0,0,.05);font-size:11px;padding:3px 0;cursor:pointer;}
+  .biz-move button:hover{background:var(--accent);color:#fff;}
+  @media (max-width:820px){ .biz-board{grid-template-columns:1fr 1fr;} }
+
+  /* ===== UTBILDNING ===== */
+  .edu-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+  .edu-row:last-child{border-bottom:none;}
+  .edu-row .t{flex:1;}
+  .edu-row .t b{display:block;font-size:13px;color:#2E1219;}
+  .edu-row .t span{font-size:11px;opacity:.6;}
+  .edu-bars{display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:10px;}
+  .edu-bars div{flex:1;background:var(--grad-accent);border-radius:6px 6px 0 0;min-height:3px;position:relative;}
+  .edu-bar-labels{display:flex;gap:6px;margin-top:6px;}
+  .edu-bar-labels span{flex:1;text-align:center;font-size:10px;opacity:.55;}
+  .edu-del{border:none;background:none;cursor:pointer;opacity:.4;font-size:13px;}
+  .edu-del:hover{opacity:1;}
+
+  /* ===== ANTECKNINGAR ===== */
+  .nt-card{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+  .nt-head{display:flex;align-items:center;gap:8px;}
+  .nt-head b{flex:1;font-size:14px;color:#2E1219;}
+  .nt-body{white-space:pre-wrap;font-size:13px;color:#43212A;opacity:.85;margin-top:6px;}
+  .nt-meta{font-size:11px;opacity:.55;margin-top:8px;}
+  .nt-tag{display:inline-block;background:var(--accent-soft);color:var(--accent-deep);border-radius:999px;padding:2px 9px;font-size:10px;margin:0 4px 4px 0;}
+  .nt-btn{border:none;background:none;cursor:pointer;opacity:.45;font-size:14px;}
+  .nt-btn:hover{opacity:1;}
+  .nt-filter{display:inline-block;border:none;background:rgba(0,0,0,.05);border-radius:999px;padding:4px 12px;font-size:11px;margin:0 6px 6px 0;cursor:pointer;}
+  .nt-filter.on{background:var(--grad-accent);color:#fff;}
 </style>
 
 </head>
@@ -767,23 +982,7 @@
 <div class="app-shell">
   <nav class="sidebar">
     <div class="sidebar-logo">LIFE OS<div class="sidebar-logo-sub">Personal Operating System</div><div class="sidebar-tagline">One life.<br>A higher standard.</div></div>
-    <div class="sidebar-nav" id="tabRow">
-      <div class="tab active" data-view="home" onclick="switchView('home')"><span class="tab-ic">🏠</span>Home</div>
-      <div class="tab" data-view="dagligen" onclick="switchView('dagligen')"><span class="tab-ic">☀️</span>Daily</div>
-      <div class="tab" data-view="week" onclick="switchView('week')"><span class="tab-ic">📅</span>Week</div>
-      <div class="tab" data-view="hard75" onclick="switchView('hard75')"><span class="tab-ic">🔥</span>75 Hard</div>
-      <div class="tab" data-view="month" onclick="switchView('month')"><span class="tab-ic">🗓️</span>Monthly</div>
-      <div class="tab" data-view="quarter" onclick="switchView('quarter')"><span class="tab-ic">📊</span>Quarterly</div>
-      <div class="tab" data-view="year" onclick="switchView('year')"><span class="tab-ic">🎯</span>Yearly</div>
-      <div class="tab" data-view="habits" onclick="switchView('habits')"><span class="tab-ic">🔁</span>Habits</div>
-      <div class="tab" data-view="mal" onclick="switchView('mal')"><span class="tab-ic">🏆</span>Goals</div>
-      <div class="tab" data-view="projects" onclick="switchView('projects')"><span class="tab-ic">📁</span>Projects</div>
-      <div class="tab" data-view="money" onclick="switchView('money')"><span class="tab-ic">💰</span>Money</div>
-      <div class="tab" data-view="arkiv" onclick="switchView('arkiv')"><span class="tab-ic">🗄️</span>Archive</div>
-      <div class="tab" data-view="bucketlist" onclick="switchView('bucketlist')"><span class="tab-ic">🧭</span>Bucket list</div>
-      <div class="tab" data-view="tiktok" onclick="switchView('tiktok')"><span class="tab-ic">🎬</span>TikTok</div>
-      <div class="tab" data-view="dosed" onclick="switchView('dosed')"><span class="tab-ic">🧴</span>Dosed</div>
-    </div>
+    <div class="sidebar-nav" id="tabRow"></div>
     <div class="sidebar-footer">Discipline today.<br>Freedom tomorrow.</div>
   </nav>
 
@@ -816,6 +1015,9 @@
     </div>
   </div>
 
+  <div class="lo-subnav" id="loSubnav"></div>
+  <div class="lo-periodbar" id="loPeriodBar"></div>
+
   <div class="view active" id="view-home">
     <div class="card home-intro" style="background:linear-gradient(135deg,var(--accent-soft),var(--surface));">
       <div class="reflect-row">
@@ -825,15 +1027,6 @@
         </div>
         <div id="homeStatusPill" style="font-size:11px;font-weight:700;padding:6px 14px;border-radius:999px;white-space:nowrap;">—</div>
       </div>
-    </div>
-
-    <div class="card home-brief" style="background:linear-gradient(135deg,var(--accent-soft),var(--surface));">
-      <div class="reflect-row">
-        <div class="card-label">✨ AI CEO Brief</div>
-        <div style="font-size:11px;color:var(--text-soft);" id="briefUpdatedAt"></div>
-      </div>
-      <button class="save-btn" onclick="requestDailyBrief()">Generera Daily Brief</button>
-      <div id="dailyBriefResult" style="margin-top:12px;"></div>
     </div>
 
     <div class="grid2 home-today-grid">
@@ -857,8 +1050,13 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-label">Today's 3</div>
-        <div id="homeTop3"></div>
+        <div class="reflect-row" style="margin-bottom:8px;">
+          <div class="card-label" style="margin:0;">Today's 3</div>
+          <button class="change-btn" onclick="toggleTop3Edit()" id="homeTop3EditBtn">Välj</button>
+        </div>
+        <div class="card-sub">dina tre viktigaste saker idag — allt annat är bonus</div>
+        <div id="homeTop3" style="margin-top:10px;"></div>
+        <div id="homeTop3Picker" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;"></div>
       </div>
     </div>
 
@@ -873,17 +1071,30 @@
       <div style="font-size:11px;color:var(--text-soft);" id="homeWeekDaysOnTrack">—</div>
     </div>
 
-    <div class="card home-north" style="cursor:pointer;" onclick="switchView('mal')">
+    <div class="card home-north" style="cursor:pointer;" onclick="LO.go('mal')">
       <div class="card-label">🌟 Your North Star</div>
       <div class="card-sub">klicka för att öppna Goals</div>
       <div id="homeNorthStar" style="margin-top:8px;"></div>
     </div>
 
     <div class="card home-trajectory">
-      <div class="card-label">📈 Goal Trajectory — DOSED</div>
+      <div class="reflect-row" style="margin-bottom:4px;">
+        <div class="card-label" style="margin:0;">📈 Goal trajectory</div>
+        <select id="homeTrajectoryPick" onchange="setHomeTrajectoryGoal(this.value)" style="max-width:220px;"></select>
+      </div>
       <div class="card-sub">hur dagens jobb kopplas till den långsiktiga visionen</div>
       <div id="homeTrajectory" style="margin-top:8px;"></div>
     </div>
+
+    <div class="card home-brief" style="background:linear-gradient(135deg,var(--accent-soft),var(--surface));">
+      <div class="reflect-row">
+        <div class="card-label">✨ AI CEO Brief</div>
+        <div style="font-size:11px;color:var(--text-soft);" id="briefUpdatedAt"></div>
+      </div>
+      <button class="save-btn" onclick="requestDailyBrief()">Generera Daily Brief</button>
+      <div id="dailyBriefResult" style="margin-top:12px;"></div>
+    </div>
+
 
     <div class="card">
       <div class="reflect-row">
@@ -894,14 +1105,14 @@
     </div>
 
     <div class="grid2">
-      <div class="card" style="cursor:pointer;" onclick="switchView('money')">
+      <div class="card" style="cursor:pointer;" onclick="LO.go('ekonomi')">
         <div class="card-label">💰 Money</div>
         <div class="card-sub">klicka för att öppna Money</div>
         <div id="homeMoneyContent" style="margin-top:8px;"></div>
       </div>
-      <div class="card" style="cursor:pointer;" onclick="switchView('month')">
+      <div class="card" style="cursor:pointer;" onclick="LO.go('halsa')">
         <div class="card-label">❤️ Health</div>
-        <div class="card-sub">klicka för att öppna Monthly Health</div>
+        <div class="card-sub">klicka för att öppna Hälsa</div>
         <div id="homeHealthContent" style="margin-top:8px;"></div>
       </div>
     </div>
@@ -965,7 +1176,7 @@
   </div>
 
   <div class="view" id="view-hard75">
-    <div class="card">
+    <div class="card" data-hard="idag historik">
       <div class="reflect-row">
         <div class="card-label">🔥 75 Hard</div>
         <div style="font-size:13px;color:var(--text-soft);" id="hard75StatusLine">—</div>
@@ -985,21 +1196,46 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-hard="idag">
       <div class="card-label" id="hard75TodayLabel">Idag</div>
       <ul class="task-list" id="hard75TodayList"></ul>
     </div>
 
-    <div class="card">
+    <div class="card" data-hard="historik">
       <div class="card-label">Historik — alla 75 dagar</div>
       <div class="card-sub">grön = alla krav klara, gul = delvis, grå = inte påbörjad/framtid</div>
       <div id="hard75Grid" style="display:grid;grid-template-columns:repeat(15,1fr);gap:5px;margin-top:10px;"></div>
     </div>
 
-    <div class="card">
+    <div class="card" data-hard="pass">
       <div class="card-label">Träningspass under 75 Hard</div>
       <div class="card-sub">från Apple Health, senaste passen först</div>
       <div id="hard75WorkoutsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <div class="card" data-hard="idag">
+      <div class="card-label">Dagens logg</div>
+      <div class="card-sub">vikt, vattenmängd och en rad om hur dagen kändes</div>
+      <div id="hdLogForm"></div>
+    </div>
+
+    <div class="card" data-hard="historik">
+      <div class="card-label">Dag för dag</div>
+      <div class="card-sub">välj en dag och bocka av i efterhand om något missades</div>
+      <div id="hdDayPicker" style="margin-bottom:10px;"></div>
+      <ul class="task-list" id="hdDayList"></ul>
+    </div>
+
+    <div class="card" data-hard="dagbok">
+      <div class="card-label">Dagbok</div>
+      <div class="card-sub">dina anteckningar genom hela utmaningen</div>
+      <div id="hdJournal"></div>
+    </div>
+
+    <div class="card" data-hard="regler">
+      <div class="card-label">Regler & period</div>
+      <div class="card-sub">startdatum styr dag 1 — reglerna är de krav som måste bockas varje dag</div>
+      <div id="hdRules"></div>
     </div>
   </div>
 
@@ -1546,20 +1782,42 @@
   </div>
 
   <div class="view" id="view-projects">
-    <div class="card">
+    <div class="card" data-biz="oversikt">
+      <div class="card-label">Business — läget</div>
+      <div class="card-sub" id="bizSub">&nbsp;</div>
+      <div class="stat-grid" id="bizStats"></div>
+    </div>
+
+    <div class="card" data-biz="oversikt">
+      <div class="card-label">Kommande deadlines</div>
+      <div id="bizDeadlines"></div>
+    </div>
+
+    <div class="card" data-biz="oversikt">
+      <div class="card-label">Öppna tasks över alla projekt</div>
+      <div id="bizTasks"></div>
+    </div>
+
+    <div class="card" data-biz="tavla">
+      <div class="card-label">Projekttavla</div>
+      <div class="card-sub">flytta projekt mellan Idé → Aktiv → Pausad → Klar</div>
+      <div id="bizBoard"></div>
+    </div>
+
+    <div class="card" data-biz="projekt tavla">
       <div class="card-label">Projects</div>
-      <div class="card-sub">DOSED launch, Wellness app, TikTok 500k — allt du aktivt bygger</div>
+      <div class="card-sub">allt du aktivt bygger</div>
       <div id="projectsList"></div>
       <div class="add-row" style="margin-top:10px;">
         <input type="text" id="proj_title" placeholder="Projektnamn...">
         <button onclick="addProject()">Nytt projekt</button>
       </div>
     </div>
-    <div class="card" id="projectDetailCard" style="display:none;"></div>
+    <div class="card" id="projectDetailCard" data-biz="projekt tavla" style="display:none;"></div>
   </div>
 
   <div class="view" id="view-money">
-    <div class="card">
+    <div class="card" data-ekonomi="oversikt">
       <div class="card-label">Money — Private</div>
       <div class="stat-grid" id="moneyPrivateGrid">
         <div class="stat"><div class="lbl">Inkomst/mån</div><div class="val" id="moneyIncomeVal">0 kr</div></div>
@@ -1576,7 +1834,7 @@
       <div class="card-sub" style="margin-top:12px;margin-bottom:0;">Sparande hämtas automatiskt från dina Sparmål i Quarterly.</div>
     </div>
 
-    <div class="card">
+    <div class="card" data-ekonomi="skuld oversikt">
       <div class="card-label">Bolån — historik</div>
       <div class="card-sub">logga saldot en gång i månaden för att se en trend över tid</div>
       <div id="mortgageHistoryList" style="margin-bottom:10px;"></div>
@@ -1586,7 +1844,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-ekonomi="business">
       <div class="card-label">Money — Business</div>
       <div class="stat-grid">
         <div class="stat"><div class="lbl">Dosed-intäkter</div><div class="val" id="moneyDosedRevVal">0 kr</div></div>
@@ -1602,9 +1860,30 @@
       <div class="card-sub" style="margin-top:12px;margin-bottom:0;">Dosed-intäkter/utgifter hämtas automatiskt från Dosed HQ.</div>
     </div>
 
-    <div class="card">
+    <div class="card" data-ekonomi="sparmal oversikt">
       <div class="card-label">Sparmål (från Quarterly)</div>
       <div id="moneySavingsGoalsList"></div>
+    </div>
+
+    <div class="card" data-ekonomi="oversikt transaktioner">
+      <div class="card-label">Perioden i siffror</div>
+      <div class="card-sub" id="ekPeriodSub">&nbsp;</div>
+      <div class="stat-grid" id="ekPeriodStats"></div>
+      <div id="ekFlowChart" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="card" data-ekonomi="transaktioner">
+      <div class="card-label">Transaktioner</div>
+      <div class="card-sub">logga inkomster och utgifter — de summeras per period och kategori</div>
+      <div id="ekTxForm"></div>
+      <div id="ekTxList" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card" data-ekonomi="budget">
+      <div class="card-label">Budget per kategori</div>
+      <div class="card-sub">sätt en månadsbudget — staplarna visar hur mycket du använt i perioden</div>
+      <div id="ekBudgetForm"></div>
+      <div id="ekBudgetList" style="margin-top:12px;"></div>
     </div>
   </div>
 
@@ -1717,7 +1996,7 @@
 
     <div class="card">
       <div class="card-label">Sessioner — höjdpunkter</div>
-      <div class="card-sub">exempeldata, riktiga passnamn kräver backend-utökningen</div>
+      <div class="card-sub">från din hälsodata</div>
       <div id="yearSessionsList" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
 
@@ -1728,6 +2007,48 @@
       <div class="barchart-labels" id="yearSleepLabels"></div>
     </div>
   </div>
+  <div class="view" id="view-utbildning">
+    <div class="card" data-edu="oversikt">
+      <div class="card-label">Utbildning — läget</div>
+      <div class="card-sub" id="eduSub">&nbsp;</div>
+      <div class="stat-grid" id="eduStats"></div>
+    </div>
+
+    <div class="card" data-edu="oversikt">
+      <div class="card-label">Kommande deadlines</div>
+      <div id="eduDeadlines"></div>
+    </div>
+
+    <div class="card" data-edu="oversikt pass">
+      <div class="card-label">Studietid</div>
+      <div class="card-sub" id="eduTimeSub">&nbsp;</div>
+      <div id="eduTimeChart"></div>
+    </div>
+
+    <div class="card" data-edu="kurser">
+      <div class="card-label">Kurser</div>
+      <div class="card-sub">kurs, poäng, progress och tentadatum</div>
+      <div class="add-row" id="eduCourseForm" style="flex-wrap:wrap;gap:8px;">
+        <input type="text" id="eduCTitle" placeholder="Kursnamn" style="flex:2;min-width:150px;">
+        <input type="number" id="eduCPoints" placeholder="hp" style="width:80px;">
+        <input type="date" id="eduCDate" style="width:auto;">
+        <button onclick="eduAddCourse()">Lägg till</button>
+      </div>
+      <div id="eduCourseList" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card" data-edu="pass">
+      <div class="card-label">Logga studiepass</div>
+      <div class="add-row" id="eduSessionForm" style="flex-wrap:wrap;gap:8px;">
+        <input type="date" id="eduSDate" style="width:auto;">
+        <input type="text" id="eduSSubject" placeholder="Ämne / kurs" style="flex:2;min-width:140px;">
+        <input type="number" id="eduSMin" placeholder="minuter" style="width:100px;">
+        <button onclick="eduAddSession()">Spara</button>
+      </div>
+      <div id="eduSessionList" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
   <div class="view" id="view-arkiv">
     <div class="arkiv-grid" id="arkivGrid"></div>
 
@@ -1907,6 +2228,30 @@
     </div>
   </div>
 
+  <div class="view" id="view-anteckningar">
+    <div class="card">
+      <div class="card-label">Ny anteckning</div>
+      <div class="add-row" style="flex-wrap:wrap;gap:8px;">
+        <input type="text" id="ntTitle" placeholder="Rubrik" style="flex:2;min-width:160px;">
+        <input type="text" id="ntTags" placeholder="taggar, komma-separerat" style="flex:1;min-width:140px;">
+      </div>
+      <textarea id="ntBody" rows="4" placeholder="Skriv fritt..." style="width:100%;margin-top:8px;"></textarea>
+      <button class="save-btn" style="margin-top:8px;" onclick="ntAdd()">Spara anteckning</button>
+    </div>
+
+    <div class="card">
+      <div class="reflect-row">
+        <div class="card-label" style="margin:0;">Alla anteckningar</div>
+        <div id="ntCount" style="font-size:11px;color:var(--text-soft);"></div>
+      </div>
+      <div class="add-row" style="margin-top:10px;">
+        <input type="text" id="ntSearch" placeholder="Sök i rubrik, text eller tagg..." oninput="ntRender()">
+      </div>
+      <div id="ntTagBar" style="margin-top:10px;"></div>
+      <div id="ntList" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
   <div class="view" id="view-bucketlist">
     <div class="card">
       <div class="card-label">Bucket list</div>
@@ -1932,6 +2277,169 @@
       <div id="ideaVaultList" style="margin-top:12px;"></div>
     </div>
   </div>
+
+  <div class="view" id="view-kalender">
+    <div class="card">
+      <div class="reflect-row">
+        <div class="card-label" id="calTitle" style="margin:0;">Kalender</div>
+        <div id="calCount" style="font-size:11px;color:var(--text-soft);"></div>
+      </div>
+      <div class="card-sub">Apple-kalender, egna händelser, dagens tasks och måldeadlines — samlat på ett ställe</div>
+      <div id="calBody" style="margin-top:14px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Lägg till händelse</div>
+      <div class="add-row" style="flex-wrap:wrap;gap:8px;">
+        <input type="date" id="calNewDate" style="flex:0 0 155px;">
+        <input type="time" id="calNewTime" style="flex:0 0 110px;">
+        <input type="text" id="calNewTitle" placeholder="Vad händer?" style="flex:1;min-width:170px;">
+        <select id="calNewType" style="flex:0 0 140px;">
+          <option value="event">Händelse</option>
+          <option value="deadline">Deadline</option>
+          <option value="training">Träning</option>
+          <option value="focus">Fokustid</option>
+        </select>
+        <button onclick="calAddItem()">Lägg till</button>
+      </div>
+      <div id="calDayPanel" style="margin-top:16px;"></div>
+    </div>
+  </div>
+
+
+  <div class="view" id="view-halsa">
+    <div class="card" data-halsa="oversikt">
+      <div class="card-label">Hälsa — översikt</div>
+      <div class="card-sub">allt hämtas från din faktiska hälsodata och dina egna loggar</div>
+      <div class="stat-grid" id="halsaOverviewGrid"></div>
+    </div>
+    <div class="card" data-halsa="oversikt logg">
+      <div class="card-label">Logga idag</div>
+      <div class="card-sub">fyll i det du vill följa — tomt fält hoppas över</div>
+      <div id="halsaLogForm"></div>
+    </div>
+    <div class="card" data-halsa="trender">
+      <div class="card-label">Trender — vald period</div>
+      <div class="card-sub">steg, sömn och vikt över tid</div>
+      <div id="halsaTrends"></div>
+    </div>
+    <div class="card" data-halsa="traning">
+      <div class="card-label">Träning — vald period</div>
+      <div id="halsaTrainingList"></div>
+    </div>
+    <div class="card" data-halsa="traning">
+      <div class="card-label">Lägg till pass manuellt</div>
+      <div id="halsaWorkoutForm"></div>
+    </div>
+    <div class="card" data-halsa="somn">
+      <div class="card-label">Sömn — senaste 7 dagarna</div>
+      <div id="halsaSleep"></div>
+    </div>
+    <div class="card" data-halsa="matningar">
+      <div class="card-label">Mätningar</div>
+      <div id="halsaMeasurements"></div>
+    </div>
+    <div class="card" data-halsa="oversikt insikter">
+      <div class="card-label">AI insights</div>
+      <div class="card-sub">mönster beräknade på din faktiska data — ingen diagnos, inga gissningar</div>
+      <div id="halsaInsights"></div>
+    </div>
+  </div>
+
+
+  <div class="view" id="view-ai">
+    <div class="card">
+      <div class="card-label">AI — intelligenslagret</div>
+      <div class="card-sub">Fakta hämtas alltid från LIFE OS. Analys och rekommendation bygger endast på den faktan.</div>
+      <div class="cat-tabs" id="aiModeTabs"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">1 · Fakta</div>
+      <div id="aiFacts"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">2 · Analys</div>
+      <div id="aiAnalysis"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Perioden i siffror</div>
+      <div class="card-sub" id="aiPeriodSub">&nbsp;</div>
+      <div id="aiNumbers"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Jämfört med förra perioden</div>
+      <div id="aiCompare"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">3 · Rekommendation</div>
+      <div id="aiRecommendation"></div>
+      <button class="save-btn" style="margin-top:12px;" onclick="LO.askAi()">Be AI om en djupare analys</button>
+      <div id="aiRemote" style="margin-top:10px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Din genomgång</div>
+      <div class="card-sub" id="aiReviewSub">sparas per period</div>
+      <textarea id="aiRevWin" rows="2" placeholder="Vad gick bra?" style="width:100%;margin-bottom:8px;"></textarea>
+      <textarea id="aiRevLesson" rows="2" placeholder="Vad lärde jag mig?" style="width:100%;margin-bottom:8px;"></textarea>
+      <textarea id="aiRevNext" rows="2" placeholder="Vad gör jag annorlunda nästa period?" style="width:100%;"></textarea>
+      <button class="save-btn" style="margin-top:10px;" onclick="aiSaveReview()">Spara genomgång</button>
+      <div id="aiRevSaved" style="font-size:11px;color:var(--text-soft);margin-top:8px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Tidigare genomgångar</div>
+      <div id="aiRevHistory"></div>
+    </div>
+  </div>
+
+  <div class="view" id="view-installningar">
+    <div class="card" data-set="profil">
+      <div class="card-label">Profil</div>
+      <div class="card-sub">används i hälsningen på Home och i AI-analyserna</div>
+      <div id="settingsProfile" style="display:flex;flex-direction:column;gap:10px;margin-top:10px;"></div>
+      <button class="save-btn" style="margin-top:12px;" onclick="LO.saveProfile()">Spara profil</button>
+      <div id="settingsProfileSaved" style="font-size:11px;color:var(--text-soft);margin-top:8px;"></div>
+    </div>
+    <div class="card" data-set="profil">
+      <div class="card-label">Mål och riktvärden</div>
+      <div class="card-sub">används för progressbarer i Hälsa, Home och 75 HARD</div>
+      <div id="settingsTargets" style="display:flex;flex-direction:column;gap:10px;margin-top:10px;"></div>
+      <button class="save-btn" style="margin-top:12px;" onclick="LO.saveProfile()">Spara riktvärden</button>
+    </div>
+
+    <div class="card" data-set="integrationer">
+      <div class="card-label">Integrationer</div>
+      <div id="settingsIntegrations"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+        <button class="save-btn" onclick="LO.retryHealth()">Hämta hälsodata igen</button>
+      </div>
+    </div>
+
+    <div class="card" data-set="data">
+      <div class="card-label">Din data</div>
+      <div class="card-sub">allt sparas lokalt i din webbläsare på den här adressen</div>
+      <div id="settingsDataInfo"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+        <button class="save-btn" onclick="LO.exportData()">Exportera säkerhetskopia</button>
+        <button class="btn-light-full" style="width:auto;padding:10px 16px;" onclick="document.getElementById('lo_importFile').click()">Importera säkerhetskopia</button>
+        <input type="file" id="lo_importFile" accept="application/json" style="display:none;" onchange="LO.importData(this)">
+      </div>
+    </div>
+    <div class="card" data-set="data">
+      <div class="card-label">Radera enskilda delar</div>
+      <div class="card-sub">tar bara bort den valda delen — resten är kvar</div>
+      <div id="settingsParts" style="margin-top:10px;"></div>
+    </div>
+    <div class="card" data-set="data">
+      <div class="card-label">Nollställ</div>
+      <div class="card-sub">raderar all lokal LIFE OS-data på den här adressen. Exportera först.</div>
+      <button class="save-btn" style="background:#B4384F;" onclick="LO.resetData()">Radera all data</button>
+    </div>
+
+    <div class="card" data-set="om">
+      <div class="card-label">Om LIFE OS</div>
+      <div id="settingsAbout"></div>
+    </div>
+  </div>
+
 
   <div id="studyFormOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;align-items:center;justify-content:center;">
     <div style="background:var(--surface);border-radius:14px;padding:22px;max-width:420px;width:90%;max-height:85vh;overflow-y:auto;">
@@ -2221,7 +2729,7 @@
     var workoutsEl = document.getElementById('hard75WorkoutsList');
     if(workoutsEl){
       if(!healthLoaded){
-        workoutsEl.innerHTML = '<div class="list-empty">Hämtar hälsodata... (fungerar när sidan är publicerad på GitHub Pages)</div>';
+        workoutsEl.innerHTML = '<div class="list-empty">Ingen hälsodata ännu — synkas automatiskt när den finns.</div>';
       } else {
         var rangeEnd = todayKey < challengeEnd ? todayKey : challengeEnd;
         var passes = workoutsInRange(challengeStart, rangeEnd).sort(function(a,b){ return (b.start||'').localeCompare(a.start||''); });
@@ -2418,6 +2926,7 @@
 
   // ---------- GENERAL TO-DO (backlog utan datum → blir task när datum sätts) ----------
   var generalTodos = [];
+  var top3Pins = {};
   var todoIdCounter = 0;
   function addGeneralTodo(inputId){
     var input = document.getElementById(inputId);
@@ -3011,13 +3520,14 @@
 
   var healthData = { metrics: [], workouts: [] };
   var healthLoaded = false;
+  var healthFailed = false;
 
   function fetchHealthData(){
     var cbName = 'healthCb_' + Date.now();
     window[cbName] = function(data){
       healthData.metrics = (data.data && data.data.metrics) || [];
       healthData.workouts = (data.data && data.data.workouts) || [];
-      healthLoaded = true;
+      healthLoaded = true; healthFailed = false;
       try { delete window[cbName]; } catch(e){}
       renderSessionsAndSleep();
       renderYearSessionsAndSleep();
@@ -3112,7 +3622,7 @@
     var workoutsEl = document.getElementById('dailyWorkoutsList');
     if(!healthLoaded){
       stepsEl.textContent = '—'; energyEl.textContent = '—'; sleepEl.textContent = '—';
-      workoutsEl.innerHTML = '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Hämtar hälsodata...</li>';
+      workoutsEl.innerHTML = '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Ingen hälsodata ännu</li>';
       return;
     }
     var steps = metricSumInRange('step_count', selectedDate, selectedDate);
@@ -3181,7 +3691,7 @@
   function renderWeekStepsChart(){
     var el = document.getElementById('weekStepsBars');
     if(!el) return;
-    if(!healthLoaded){ el.innerHTML=''; document.getElementById('weekStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('weekStepsCount').textContent = 'Ingen hälsodata ännu'; return; }
     var count = 0;
     var weekdayShort4 = ['mån','tis','ons','tor','fre','lör','sön'];
     el.innerHTML = REAL_WEEK_DATES.map(function(dt, i){
@@ -3200,7 +3710,7 @@
   function renderMonthStepsChart(){
     var el = document.getElementById('monthStepsBars');
     if(!el) return;
-    if(!healthLoaded){ el.innerHTML=''; document.getElementById('monthStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('monthStepsCount').textContent = 'Ingen hälsodata ännu'; return; }
     var y = currentMonthDate.getFullYear(), m = currentMonthDate.getMonth();
     var daysInM = new Date(y, m+1, 0).getDate();
     var count = 0;
@@ -3220,7 +3730,7 @@
   function renderQuarterStepsChart(){
     var el = document.getElementById('quarterStepsBars');
     if(!el) return;
-    if(!healthLoaded){ el.innerHTML=''; document.getElementById('quarterStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('quarterStepsCount').textContent = 'Ingen hälsodata ännu'; return; }
     var totalCount = 0;
     var html = '';
     for(var w = 12; w >= 0; w--){
@@ -3244,7 +3754,7 @@
   function renderYearStepsChart(){
     var el = document.getElementById('yearStepsBars');
     if(!el) return;
-    if(!healthLoaded){ el.innerHTML=''; document.getElementById('yearStepsCount').textContent = 'Hämtar hälsodata...'; return; }
+    if(!healthLoaded){ el.innerHTML=''; document.getElementById('yearStepsCount').textContent = 'Ingen hälsodata ännu'; return; }
     var y = currentYear();
     var totalCount = 0;
     var html = '';
@@ -3313,7 +3823,7 @@
     var subEl = document.getElementById(subElId);
     if(!chartEl) return;
     if(!healthLoaded){
-      chartEl.innerHTML = '<div class="list-empty">Hämtar hälsodata...</div>';
+      chartEl.innerHTML = '<div class="list-empty">Ingen hälsodata ännu</div>';
       return;
     }
     var m = metricByName('weight_body_mass');
@@ -3382,13 +3892,13 @@
     var breakdownEl = document.getElementById('monthBreakdown');
 
     if(!healthLoaded){
-      if(listEl) listEl.innerHTML = '<div class="list-empty">Hämtar hälsodata... (fungerar när sidan är publicerad på GitHub Pages)</div>';
+      if(listEl) listEl.innerHTML = '<div class="list-empty">Ingen hälsodata ännu — synkas automatiskt när den finns.</div>';
       return;
     }
     var srcNoteEl = document.getElementById('healthSourceNote');
     if(srcNoteEl){
-      srcNoteEl.innerHTML = healthLoaded === 'demo'
-        ? '<div class="dot" style="background:var(--accent);"></div>Exempeldata visas — kunde inte hämta riktig hälsodata just nu (fungerar på GitHub Pages).'
+      srcNoteEl.innerHTML = healthFailed
+        ? '<div class="dot" style="background:var(--accent);"></div>Ingen hälsodata ännu — kunde inte hämtas just nu (fungerar på GitHub Pages).'
         : '<div class="dot"></div>Hämtas automatiskt från Apple Health via samma pipeline som veckovyn — passtyp, steg och energi grupperas per kalendermånad.';
     }
 
@@ -5660,39 +6170,93 @@
         }).join('');
   }
 
-  function renderHomeTop3(){
-    var el = document.getElementById('homeTop3');
-    if(!el) return;
+  function homeTop3Candidates(){
     var todayKey = isoDate(new Date());
     var todayLabelNow = days7[(new Date().getDay()+6)%7];
-    var candidates = [];
+    var out = [];
     var realWeekTasks = getTasksByDay(isoDate(REAL_WEEK_DATES[0]))[todayLabelNow] || [];
-    realWeekTasks.forEach(function(t, i){ if(!t.done) candidates.push({ text:t.t, area:'Task', done:false, mark:function(){ realWeekTasks[i].done = true; } }); });
+    realWeekTasks.forEach(function(t, i){
+      if(t.done) return;
+      out.push({ key:'task|'+t.t, text:t.t, area:'Dagens task', mark:function(){ realWeekTasks[i].done = true; } });
+    });
     lifeGoals.forEach(function(g){
-      g.actions.forEach(function(a){
-        if(!a.done && a.freq === 'Dagligen') candidates.push({ text:a.text, area:g.title, done:false, mark:function(){ a.done = true; } });
+      (g.actions||[]).forEach(function(a){
+        if(a.done) return;
+        out.push({ key:'goal|'+g.id+'|'+a.text, text:a.text, area:g.title, mark:function(){ a.done = true; } });
       });
     });
     bucketItemsDueInRange(todayKey, todayKey).forEach(function(item){
       var idx = bucketItems.indexOf(item);
-      candidates.push({ text:item.text, area:'Bucket list', done:false, mark:function(){ bucketItems[idx].done = true; } });
+      if(item.done) return;
+      out.push({ key:'bucket|'+item.text, text:item.text, area:'Bucket list', mark:function(){ bucketItems[idx].done = true; } });
     });
-    var top3 = candidates.slice(0,3);
-    el.innerHTML = top3.length === 0
-      ? '<div class="list-empty">Inga toppactions satta för idag — lägg till i Veckans tasks eller Mål-actions.</div>'
-      : top3.map(function(c, i){
-          return '<div class="goal-row" onclick="markHomeTop3Done(' + i + ')" style="margin-bottom:8px;">' +
-            '<div class="box"></div><span class="t"><span style="color:var(--accent);font-weight:700;">0' + (i+1) + '</span> ' + c.text + ' <span style="color:var(--text-soft);font-size:11px;">— ' + c.area + '</span></span>' +
-            '</div>';
-        }).join('');
-    window._homeTop3Candidates = top3;
+    (generalTodos||[]).forEach(function(t){
+      if(t.done) return;
+      out.push({ key:'todo|'+t.id, text:t.text, area:'To-do', mark:function(){ t.done = true; } });
+    });
+    return out;
   }
-  function markHomeTop3Done(i){
-    var c = window._homeTop3Candidates[i];
-    if(c) c.mark();
+  var homeTop3Editing = false;
+  function toggleTop3Edit(){
+    homeTop3Editing = !homeTop3Editing;
+    renderHomeTop3();
+  }
+  function togglePinTop3(key){
+    var todayKey = isoDate(new Date());
+    var list = (top3Pins[todayKey] || []).slice();
+    var i = list.indexOf(key);
+    if(i > -1) list.splice(i, 1);
+    else { if(list.length >= 3) list.shift(); list.push(key); }
+    top3Pins[todayKey] = list;
     saveAll();
     renderHomeTop3();
+  }
+  function renderHomeTop3(){
+    var el = document.getElementById('homeTop3');
+    if(!el) return;
+    var todayKey = isoDate(new Date());
+    var cands = homeTop3Candidates();
+    var pins = (top3Pins[todayKey] || []).filter(function(k){
+      return cands.some(function(c){ return c.key === k; });
+    });
+    var chosen = pins.map(function(k){ return cands.filter(function(c){ return c.key === k; })[0]; });
+    var isAuto = false;
+    if(!chosen.length){ chosen = cands.slice(0,3); isAuto = true; }
+
+    el.innerHTML = !chosen.length
+      ? '<div class="list-empty">Inga actions att välja mellan idag — lägg till i Veckans tasks, Mål-actions eller To-do.</div>'
+      : chosen.map(function(c, i){
+          return '<div class="goal-row" onclick="markHomeTop3Done(\''+c.key+'\')" style="margin-bottom:8px;">' +
+            '<div class="box"></div><span class="t"><span style="color:var(--accent);font-weight:700;">0' + (i+1) + '</span> ' +
+            c.text + ' <span style="color:var(--text-soft);font-size:11px;">— ' + c.area + '</span></span></div>';
+        }).join('') + (isAuto && chosen.length ? '<div style="font-size:11px;color:var(--text-soft);margin-top:4px;">Förslag — tryck Välj för att bestämma själv.</div>' : '');
+
+    var btn = document.getElementById('homeTop3EditBtn');
+    if(btn) btn.textContent = homeTop3Editing ? 'Klar' : 'Välj';
+    var picker = document.getElementById('homeTop3Picker');
+    if(picker){
+      picker.style.display = homeTop3Editing ? 'block' : 'none';
+      if(homeTop3Editing){
+        picker.innerHTML = !cands.length
+          ? '<div class="list-empty">Inget att välja mellan ännu.</div>'
+          : '<div class="card-sub" style="margin-bottom:8px;">Markera upp till tre</div>' + cands.map(function(c){
+              var on = pins.indexOf(c.key) > -1;
+              return '<div class="goal-row" onclick="togglePinTop3(\''+c.key+'\')" style="margin-bottom:6px;opacity:'+(on?1:0.75)+';">' +
+                '<div class="box"' + (on ? ' style="background:var(--accent);border-color:var(--accent);"' : '') + '></div>' +
+                '<span class="t">' + c.text + ' <span style="color:var(--text-soft);font-size:11px;">— ' + c.area + '</span></span></div>';
+            }).join('');
+      }
+    }
+  }
+  function markHomeTop3Done(key){
+    if(homeTop3Editing) return;
+    var c = homeTop3Candidates().filter(function(x){ return x.key === key; })[0];
+    if(c) c.mark();
+    var todayKey = isoDate(new Date());
+    if(top3Pins[todayKey]) top3Pins[todayKey] = top3Pins[todayKey].filter(function(k){ return k !== key; });
+    saveAll();
     renderHome();
+    if(typeof renderAllGeneralTodos === 'function') renderAllGeneralTodos();
   }
 
   function renderHomeUpcoming(){
@@ -5971,39 +6535,66 @@
     el.innerHTML = html;
   }
 
+  var homeTrajectoryGoalId = null;
+  function setHomeTrajectoryGoal(id){
+    homeTrajectoryGoalId = id ? Number(id) : null;
+    renderHomeTrajectory();
+  }
   function renderHomeTrajectory(){
     var el = document.getElementById('homeTrajectory');
     if(!el) return;
-    var dosedGoal = lifeGoals.filter(function(g){ return g.category === 'DOSED'; })[0];
-    if(!dosedGoal){
-      el.innerHTML = '<div class="list-empty">Inget DOSED-mål hittat under Goals ännu.</div>';
+    var pick = document.getElementById('homeTrajectoryPick');
+    var open = lifeGoals.filter(function(g){ return !g.completed; });
+    if(!open.length){
+      if(pick) pick.innerHTML = '';
+      el.innerHTML = '<div class="list-empty">Inga mål satta ännu — lägg till ett mål under Mål så visas kedjan hit.</div>';
       return;
     }
-    var chain = [];
-    var cur = dosedGoal;
-    while(cur){
+    var goal = open.filter(function(g){ return g.id === homeTrajectoryGoalId; })[0];
+    if(!goal){
+      var withDeadline = open.filter(function(g){ return g.deadline; })
+        .sort(function(a,b){ return (a.deadline||'').localeCompare(b.deadline||''); });
+      goal = withDeadline[0] || open[0];
+      homeTrajectoryGoalId = goal.id;
+    }
+    if(pick){
+      pick.innerHTML = open.map(function(g){
+        return '<option value="' + g.id + '"' + (g.id === goal.id ? ' selected' : '') + '>' + g.title.slice(0,44) + '</option>';
+      }).join('');
+    }
+
+    var chain = [], cur = goal, guard = 0;
+    while(cur && guard++ < 12){
       chain.unshift(cur);
       cur = cur.parentId ? lifeGoals.filter(function(x){ return x.id === cur.parentId; })[0] : null;
     }
-    var html = chain.map(function(g, i){
-      return '<div style="padding:6px 0;' + (i>0?'border-top:1px solid var(--border);':'') + '">' +
-        '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + g.timeframe + '</span>' +
-        '<span style="font-size:12px;">' + g.title + '</span></div>';
-    }).join('');
-    var dosedChecklist = goals['Dosed'] || [];
-    var doneCount = dosedChecklist.filter(function(t){ return t.done; }).length;
-    html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
-      '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Detta kvartal</span>' +
-      '<span style="font-size:12px;">' + doneCount + '/' + dosedChecklist.length + ' foundation-punkter klara</span></div>';
-    var weekMatch = getWeekGoals(isoDate(REAL_WEEK_DATES[0])).filter(function(g){ return g.toLowerCase().indexOf('dosed') > -1; });
-    html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
-      '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Denna vecka</span>' +
-      '<span style="font-size:12px;">' + (weekMatch.length ? weekMatch.join(', ') : '<span style="color:var(--text-soft);font-style:italic;">inget DOSED-mål satt för veckan ännu</span>') + '</span></div>';
+    function row(tag, text, muted){
+      return '<div style="padding:7px 0;border-top:1px solid var(--border);">' +
+        '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">' + tag + '</span>' +
+        '<span style="font-size:12.5px;' + (muted ? 'color:var(--text-soft);font-style:italic;' : '') + '">' + text + '</span></div>';
+    }
+    var html = chain.map(function(g){ return row(g.timeframe || 'Mål', g.title); }).join('');
+
+    var acts = goal.actions || [];
+    var doneActs = acts.filter(function(a){ return a.done; }).length;
+    html += row('Actions', acts.length ? (doneActs + '/' + acts.length + ' klara') : 'inga actions satta ännu', !acts.length);
+
+    var needle = (goal.title || '').toLowerCase().split(' ')[0] || '';
+    var weekMatch = getWeekGoals(isoDate(REAL_WEEK_DATES[0])).filter(function(g){
+      return needle && g.toLowerCase().indexOf(needle) > -1;
+    });
+    html += row('Denna vecka', weekMatch.length ? weekMatch.join(', ') : 'inget veckomål kopplat till det här målet', !weekMatch.length);
+
     var todayLabelNow = days7[(new Date().getDay()+6)%7];
-    var todayMatch = (getTasksByDay(isoDate(REAL_WEEK_DATES[0]))[todayLabelNow]||[]).filter(function(t){ return t.t.toLowerCase().indexOf('dosed') > -1 || t.t.toLowerCase().indexOf('leverantör') > -1; });
-    html += '<div style="padding:6px 0;border-top:1px solid var(--border);">' +
-      '<span style="font-size:10px;color:var(--text-soft);background:var(--surface-soft);border-radius:6px;padding:2px 7px;margin-right:6px;">Idag</span>' +
-      '<span style="font-size:12px;">' + (todayMatch.length ? todayMatch.map(function(t){return t.t;}).join(', ') : '<span style="color:var(--text-soft);font-style:italic;">ingen DOSED-task satt för idag ännu</span>') + '</span></div>';
+    var todayMatch = (getTasksByDay(isoDate(REAL_WEEK_DATES[0]))[todayLabelNow] || []).filter(function(t){
+      return needle && t.t.toLowerCase().indexOf(needle) > -1;
+    });
+    html += row('Idag', todayMatch.length ? todayMatch.map(function(t){ return t.t; }).join(', ') : 'ingen task kopplad till det här målet idag', !todayMatch.length);
+
+    if(goal.deadline){
+      var left = Math.round((new Date(goal.deadline) - new Date()) / 86400000);
+      html += row('Deadline', goal.deadline + (left >= 0 ? ' · ' + left + ' dagar kvar' : ' · passerad'));
+    }
     el.innerHTML = html;
   }
 
@@ -6112,7 +6703,7 @@
         projects: projects, ideaVaultItems: ideaVaultItems,
         moneyPrivate: moneyPrivate, moneyBusiness: moneyBusiness, visionData: visionData,
         physicalStats: physicalStats, physicalMilestones: physicalMilestones, mortgageHistory: mortgageHistory, weekFocus: weekFocus, appStagesData: appStagesData,
-        generalTodos: generalTodos, todoIdCounter: todoIdCounter,
+        generalTodos: generalTodos, todoIdCounter: todoIdCounter, top3Pins: top3Pins,
         weekOffset: weekOffset, quarterOffset: quarterOffset, yearOffset: yearOffset, dagligenWeekOffset: dagligenWeekOffset,
         selectedDate: selectedDate, currentCat: currentCat, currentArkivCat: currentArkivCat,
         bookFilter: bookFilter, recipeView: recipeView, goalView: goalView,
@@ -6183,6 +6774,7 @@
       if(s.weekFocus) weekFocus = s.weekFocus;
       if(s.appStagesData) appStagesData = s.appStagesData;
       if(s.generalTodos) generalTodos = s.generalTodos;
+      if(s.top3Pins) top3Pins = s.top3Pins;
       if(s.todoIdCounter) todoIdCounter = s.todoIdCounter;
       if(s.appDataVersion) appDataVersion = s.appDataVersion;
     } catch(e){ /* korrupt data — kör vidare med standardvärden */ }
@@ -6273,9 +6865,7 @@
       });
     }
 
-    if(tiktokStats.followers === 0 && tiktokHistory.length === 0){
-      tiktokStats = { followers:76, views:0, engagement:0, posts:0 };
-    }
+    /* Ingen demodata: TikTok-siffror kommer från riktig sync. */
     if(tiktokPillars.length === 0){
       tiktokPillars.push(
         'Recept — 20%',
@@ -6330,9 +6920,7 @@
       );
     }
 
-    if(moneyPrivate.debt === 0 && moneyPrivate.income === 0 && moneyPrivate.expenses === 0){
-      moneyPrivate = { income:0, expenses:0, debt:1982132 };
-    }
+    /* Ingen demodata för ekonomi — siffror kommer från dina egna poster. */
 
     if(!visionData.v3){
       visionData = {
@@ -6345,50 +6933,12 @@
   seedIfEmpty();
 
 
-  var healthDemoTimeout = setTimeout(function(){
+  /* Demodata borttagen: hälsodata visas bara när riktig data hämtats. */
+  setTimeout(function(){
     if(healthLoaded) return;
-    healthLoaded = 'demo';
-    var today = new Date();
-    var y = today.getFullYear(), m = today.getMonth();
-    var stepPts = [], energyPts = [], sleepPts = [];
-    for(var i = 0; i <= 100; i++){
-      var d = new Date(today); d.setDate(d.getDate() - i);
-      var dstr = isoDate(d) + ' 12:00:00 +0200';
-      var roll = Math.random();
-      var stepQty = roll < 0.45 ? (10200 + Math.round(Math.random()*4500)) : (5200 + Math.round(Math.random()*4300));
-      stepPts.push({ date: dstr, qty: stepQty });
-      energyPts.push({ date: dstr, qty: 250 + Math.round(Math.random()*200) });
-    }
-    for(var j = 6; j >= 0; j--){
-      var sd = new Date(); sd.setDate(sd.getDate()-j);
-      sleepPts.push({ date: isoDate(sd) + ' 00:00:00 +0200', totalSleep: 6.2 + Math.random()*2.5 });
-    }
-    healthData.metrics = [
-      { name:'step_count', units:'count', data: stepPts },
-      { name:'active_energy', units:'kcal', data: energyPts },
-      { name:'weight_body_mass', units:'kg', data: [{ date: isoDate(new Date(y,m,8))+' 08:00:00 +0200', qty: 66.4 }] },
-      { name:'sleep_analysis', units:'hr', data: sleepPts }
-    ];
-    healthData.workouts = [
-      { name:'Yoga', start: isoDate(new Date(y,m,8))+' 20:48:00 +0200', duration: 900 },
-      { name:'Utomhusgång', start: isoDate(new Date(y,m,7))+' 07:30:00 +0200', duration: 1800 },
-      { name:'Styrketräning', start: isoDate(new Date(y,m,5))+' 17:00:00 +0200', duration: 2700 },
-      { name:'Löpning', start: isoDate(new Date(y,m,3))+' 06:45:00 +0200', duration: 1500 }
-    ];
-    renderSessionsAndSleep();
-    renderYearSessionsAndSleep();
-    renderWeekTrainingSleep();
-      renderWeekStepsChart();
-      renderMonthStepsChart();
-      renderQuarterStepsChart();
-      if(typeof renderQuarterWeightChart === "function") renderQuarterWeightChart();
-      if(typeof renderWeightTrendChart === "function") renderWeightTrendChart();
-      if(typeof renderYearWeightChart === "function") renderYearWeightChart();
-      renderYearStepsChart();
-    renderDailyTraining();
-    renderHard75View();
-    renderHome();
-  }, 2500);
+    healthFailed = true;
+    if(typeof renderHome === 'function') renderHome();
+  }, 4000);
 
   renderWeekGoals();
   renderHabitTable();
@@ -6491,6 +7041,2258 @@
   }
   var activeTab = document.querySelector('.tab.active');
   paint(activeTab ? activeTab.getAttribute('data-view') : 'home');
+})();
+</script>
+<script>
+/* =========================================================================
+   LIFE OS — strukturlager
+   Navigation (URL), gemensam tidsperiod, nya vyer (Hälsa/AI/Inställningar).
+   Ligger ovanpå befintlig kod: inga befintliga funktioner tas bort.
+   ========================================================================= */
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var busy = false;
+
+  /* ---------------- Gruppstruktur ---------------- */
+  var GROUPS = [
+    { id:'home', icon:'🏠', label:'Home', subs:[ {id:'oversikt', label:'Översikt', view:'home'} ] },
+    { id:'mal', icon:'🏆', label:'Mål', subs:[
+      {id:'kort', label:'Mål', view:'mal', on:function(){ if(window.setGoalView) setGoalView('cards'); }},
+      {id:'tabell', label:'Tabell', view:'mal', on:function(){ if(window.setGoalView) setGoalView('table'); }},
+      {id:'kedja', label:'Kedja', view:'mal', on:function(){ if(window.setGoalView) setGoalView('ladder'); }},
+      {id:'hierarki', label:'Hierarki', view:'mal', on:function(){ if(window.setGoalView) setGoalView('hierarchy'); }}
+    ]},
+    { id:'kalender', icon:'🗓️', label:'Kalender', subs:[
+      {id:'manad', label:'Månad', view:'kalender', unit:'month', on:function(){ if(window.setCalMode) setCalMode('month'); }},
+      {id:'vecka', label:'Vecka', view:'kalender', unit:'week', on:function(){ if(window.setCalMode) setCalMode('week'); }},
+      {id:'dag', label:'Dag', view:'kalender', unit:'day', on:function(){ if(window.setCalMode) setCalMode('day'); }},
+      {id:'agenda', label:'Agenda', view:'kalender', unit:'month', on:function(){ if(window.setCalMode) setCalMode('agenda'); }},
+      {id:'dagsplan', label:'Dagsplan', view:'dagligen', unit:'day'},
+      {id:'veckoplan', label:'Veckoplan', view:'week', unit:'week'},
+      {id:'manadsplan', label:'Månadsplan', view:'month', unit:'month'},
+      {id:'kvartal', label:'Kvartal', view:'quarter', unit:'quarter'},
+      {id:'ar', label:'År', view:'year', unit:'year'}
+    ]},
+    { id:'hard75', icon:'🔥', label:'75 HARD', subs:[
+      {id:'idag', label:'Idag', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('idag'); }},
+      {id:'historik', label:'Historik', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('historik'); }},
+      {id:'pass', label:'Pass', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('pass'); }},
+      {id:'dagbok', label:'Dagbok', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('dagbok'); }},
+      {id:'regler', label:'Regler', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('regler'); }}
+    ] },
+    { id:'halsa', icon:'💚', label:'Hälsa', subs:[
+      {id:'oversikt', label:'Overview', view:'halsa', unit:'week', on:function(){ if(window.setHalsaTab) setHalsaTab('oversikt'); }},
+      {id:'trender', label:'Trender', view:'halsa', unit:'month', on:function(){ if(window.setHalsaTab) setHalsaTab('trender'); }},
+      {id:'traning', label:'Träning', view:'halsa', unit:'week', on:function(){ if(window.setHalsaTab) setHalsaTab('traning'); }},
+      {id:'somn', label:'Sömn', view:'halsa', unit:'week', on:function(){ if(window.setHalsaTab) setHalsaTab('somn'); }},
+      {id:'matningar', label:'Mätningar', view:'halsa', unit:'month', on:function(){ if(window.setHalsaTab) setHalsaTab('matningar'); }},
+      {id:'insikter', label:'AI insights', view:'halsa', unit:'week', on:function(){ if(window.setHalsaTab) setHalsaTab('insikter'); }},
+      {id:'vanor', label:'Vanor', view:'habits'}
+    ]},
+
+    { id:'ekonomi', icon:'💰', label:'Ekonomi', subs:[
+      {id:'oversikt', label:'Översikt', view:'money', unit:'month', on:function(){ if(window.setEkonomiTab) setEkonomiTab('oversikt'); }},
+      {id:'transaktioner', label:'Transaktioner', view:'money', unit:'month', on:function(){ if(window.setEkonomiTab) setEkonomiTab('transaktioner'); }},
+      {id:'budget', label:'Budget', view:'money', unit:'month', on:function(){ if(window.setEkonomiTab) setEkonomiTab('budget'); }},
+      {id:'sparmal', label:'Sparmål', view:'money', on:function(){ if(window.setEkonomiTab) setEkonomiTab('sparmal'); }},
+      {id:'skuld', label:'Skuld', view:'money', on:function(){ if(window.setEkonomiTab) setEkonomiTab('skuld'); }},
+      {id:'business', label:'Business', view:'money', unit:'month', on:function(){ if(window.setEkonomiTab) setEkonomiTab('business'); }}
+    ] },
+    { id:'tiktok', icon:'🎬', label:'TikTok', subs:[
+      {id:'oversikt', label:'Overview', view:'tiktok', on:function(){ if(window.setTiktokTab) setTiktokTab('oversikt'); }},
+      {id:'ideer', label:'Idébank', view:'tiktok', on:function(){ if(window.setTiktokTab) setTiktokTab('ideas'); }},
+      {id:'plan', label:'Content plan', view:'tiktok', unit:'week', on:function(){ if(window.setTiktokTab) setTiktokTab('plan'); }},
+      {id:'videos', label:'Videos', view:'tiktok', on:function(){ if(window.setTiktokTab) setTiktokTab('videos'); }},
+      {id:'analytics', label:'Analytics', view:'tiktok', on:function(){ if(window.setTiktokTab) setTiktokTab('analys'); }},
+      {id:'agent', label:'AI Agent', view:'tiktok', on:function(){ if(window.setTiktokTab) setTiktokTab('ideer'); }}
+    ]},
+    { id:'business', icon:'🚀', label:'Business', subs:[
+      {id:'oversikt', label:'Översikt', view:'projects', on:function(){ if(window.setBizTab) setBizTab('oversikt'); }},
+      {id:'projekt', label:'Projekt', view:'projects', on:function(){ if(window.setBizTab) setBizTab('projekt'); }},
+      {id:'tavla', label:'Tavla', view:'projects', on:function(){ if(window.setBizTab) setBizTab('tavla'); }},
+      {id:'dosed', label:'DOSED', view:'dosed'}
+    ]},
+    { id:'utbildning', icon:'🎓', label:'Utbildning', subs:[
+      {id:'oversikt', label:'Översikt', view:'utbildning', unit:'month', on:function(){ if(window.setEduTab) setEduTab('oversikt'); }},
+      {id:'kurser', label:'Kurser', view:'utbildning', on:function(){ if(window.setEduTab) setEduTab('kurser'); }},
+      {id:'pass', label:'Studiepass', view:'utbildning', unit:'month', on:function(){ if(window.setEduTab) setEduTab('pass'); }},
+      {id:'studier', label:'Studieplaner', view:'arkiv', on:function(){ if(window.selectArkivCat) selectArkivCat('studera'); }},
+      {id:'bocker', label:'Böcker', view:'arkiv', on:function(){ if(window.selectArkivCat) selectArkivCat('bocker'); }}
+    ]},
+    { id:'anteckningar', icon:'📝', label:'Anteckningar', subs:[
+      {id:'anteckningar', label:'Anteckningar', view:'anteckningar'},
+      {id:'idéer', label:'Idévalv & bucket list', view:'bucketlist'},
+      {id:'recept', label:'Recept', view:'arkiv', on:function(){ if(window.selectArkivCat) selectArkivCat('recept'); }}
+    ]},
+    { id:'ai', icon:'🤖', label:'AI', subs:[
+      {id:'daily', label:'Daily', view:'ai', unit:'day', on:function(){ if(window.LO&&LO.setAiMode) LO.setAiMode('daily'); }},
+      {id:'weekly', label:'Weekly', view:'ai', unit:'week', on:function(){ if(window.LO&&LO.setAiMode) LO.setAiMode('weekly'); }},
+      {id:'monthly', label:'Monthly', view:'ai', unit:'month', on:function(){ if(window.LO&&LO.setAiMode) LO.setAiMode('monthly'); }},
+      {id:'quarterly', label:'Quarterly', view:'ai', unit:'quarter', on:function(){ if(window.LO&&LO.setAiMode) LO.setAiMode('quarterly'); }},
+      {id:'yearly', label:'Yearly', view:'ai', unit:'year', on:function(){ if(window.LO&&LO.setAiMode) LO.setAiMode('yearly'); }}
+    ] },
+    { id:'installningar', icon:'⚙️', label:'Inställningar', subs:[
+      {id:'profil', label:'Profil', view:'installningar', on:function(){ setSettingsTab('profil'); }},
+      {id:'integrationer', label:'Integrationer', view:'installningar', on:function(){ setSettingsTab('integrationer'); }},
+      {id:'data', label:'Data & backup', view:'installningar', on:function(){ setSettingsTab('data'); }},
+      {id:'om', label:'Om', view:'installningar', on:function(){ setSettingsTab('om'); }}
+    ] }
+  ];
+
+  var HERO_EXTRA = {
+    halsa:        ['Health · Energy · Recovery','Hälsa','Din kropp är fundamentet för allt annat.','"Take care of your body. It is the only place you have to live."'],
+    kalender:     ['Time · Rhythm · Presence','Kalender','Din tid är din viktigaste resurs — se hela bilden.','"How you spend your days is how you spend your life."'],
+    ai:           ['Facts · Analysis · Recommendation','AI','Analys av vad som faktiskt händer i ditt liv.','"Clarity comes from data, not from feelings."'],
+    hard75:       ['Discipline · Grit · Transformation','75 HARD','Bygg den bästa versionen av dig själv.','"Discipline is choosing what you want most over what you want now."'],
+    mal:          ['Goals · Strategy · Progress','Mål','Stora visioner. Konkreta steg. Ett liv du bygger.','"A strategic mind creates freedom."'],
+    tiktok:       ['Create · Analyze · Grow','TikTok','Strategi. Kreativitet. Resultat.','"A disciplined creator is a free creator."'],
+    projects:     ['Projects · Build · Ship','Projekt','Från idé till lansering.','"Done is the engine of more."'],
+    dosed:        ['Brand · Product · Vision','DOSED','From concept to reality.','"Build the thing you wish existed."'],
+    arkiv:        ['Archive · Memory · Reference','Arkiv','Allt du sparat, samlat på ett ställe.','"Keep what matters."'],
+    bucketlist:   ['Life · Adventure · Meaning','Bucket list','Livet du vill leva, inte bara planera.','"Collect moments."'],
+    habits:       ['Habits · Systems · Identity','Vanor','Du blir det du upprepar.','"You do not rise to your goals, you fall to your systems."'],
+    money:        ['Money · Control · Freedom','Ekonomi','Få koll på flödet och bygg din frihet.','"Wealth is quiet, freedom is loud."'],
+    installningar:['Setup · Data · Control','Inställningar','Integrationer, säkerhetskopior och kontroll.','"Own your system."']
+  };
+
+  function groupById(id){ for(var i=0;i<GROUPS.length;i++){ if(GROUPS[i].id===id) return GROUPS[i]; } return null; }
+
+  /* ---------------- Tidsperiod (gemensam) ---------------- */
+  function pad2(n){ return n<10 ? '0'+n : ''+n; }
+  function iso(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+  function monday(d){ var x=new Date(d); var dow=x.getDay(); x.setDate(x.getDate()+((dow===0)?-6:1-dow)); x.setHours(0,0,0,0); return x; }
+  var MONTHS = ['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+  function weekNo(d){ var x=new Date(d.getTime()); x.setHours(0,0,0,0); x.setDate(x.getDate()+3-((x.getDay()+6)%7));
+    var w1=new Date(x.getFullYear(),0,4); return 1+Math.round(((x-w1)/86400000-3+((w1.getDay()+6)%7))/7); }
+
+  var state = { group:'home', sub:'oversikt', anchor: iso(new Date()) };
+
+  function currentSub(){
+    var g = groupById(state.group) || GROUPS[0];
+    for(var i=0;i<g.subs.length;i++){ if(g.subs[i].id===state.sub) return g.subs[i]; }
+    return g.subs[0];
+  }
+  function currentUnit(){ var s = currentSub(); return s && s.unit ? s.unit : null; }
+
+  function shiftAnchor(dir){
+    var unit = currentUnit(); if(!unit) return;
+    var d = new Date(state.anchor+'T00:00:00');
+    if(unit==='day') d.setDate(d.getDate()+dir);
+    else if(unit==='week') d.setDate(d.getDate()+7*dir);
+    else if(unit==='month') d.setMonth(d.getMonth()+dir);
+    else if(unit==='quarter') d.setMonth(d.getMonth()+3*dir);
+    else if(unit==='year') d.setFullYear(d.getFullYear()+dir);
+    state.anchor = iso(d);
+    syncPeriod();
+    writeUrl();
+    renderPeriodBar();
+  }
+  function goToday(){ state.anchor = iso(new Date()); syncPeriod(); writeUrl(); renderPeriodBar(); }
+
+  /* Skriver den gemensamma perioden till appens befintliga variabler och ritar om. */
+  function syncPeriod(){
+    if(busy) return; busy = true;
+    try{
+      var d = new Date(state.anchor+'T00:00:00');
+      var now = new Date();
+      var wo = Math.round((monday(d) - monday(now)) / 604800000);
+      window.weekOffset = wo;
+      window.dagligenWeekOffset = wo;
+      if(typeof getWeekDates === 'function') window.viewedWeekDates = getWeekDates(wo);
+      window.selectedDate = state.anchor;
+      if(window.currentMonthDate) window.currentMonthDate = new Date(d.getFullYear(), d.getMonth(), 1);
+      window.quarterOffset = (d.getFullYear()*4 + Math.floor(d.getMonth()/3)) - (now.getFullYear()*4 + Math.floor(now.getMonth()/3));
+      window.yearOffset = d.getFullYear() - now.getFullYear();
+
+      safe('refreshWeekNav'); safe('refreshMonthView'); safe('refreshQuarterNav'); safe('refreshYearNav');
+      safe('renderDaySelector'); safe('renderMoodRow'); safe('renderDailyHabits'); safe('renderDailyTodo');
+      safe('renderDailyGeneralTodos'); safe('renderDailyCalendar'); safe('renderDailyTraining');
+      safe('renderDailyNoteArea'); safe('renderMeasureSection'); safe('renderWeekGoals'); safe('renderTaskDays');
+      safe('renderHabitTable'); safe('renderWeekTrainingSleep'); safe('renderWeekStepsChart');
+      safe('renderWeekMoodSummary'); safe('renderWeekDailyReflections'); safe('renderCalEvents');
+      safe('renderCalendarView');
+      safe('renderEkonomi');
+      safe('renderEdu');
+      safe('renderAiExtra');
+      safe('saveAll');
+    } catch(e){ console.warn('syncPeriod', e); }
+    busy = false;
+    renderHalsa();
+  }
+  function safe(name){ try{ if(typeof window[name]==='function') window[name](); } catch(e){} }
+
+  /* Om användaren använder appens egna period-knappar: fånga upp och sprid. */
+  function pullFrom(getter){
+    if(busy) return;
+    try{
+      var d = getter(); if(!d) return;
+      var next = iso(d);
+      if(next === state.anchor){ renderPeriodBar(); return; }
+      state.anchor = next;
+      syncPeriod(); writeUrl(); renderPeriodBar();
+    } catch(e){}
+  }
+  function wrap(name, getter){
+    var orig = window[name];
+    if(typeof orig !== 'function') return;
+    window[name] = function(){ var r = orig.apply(this, arguments); pullFrom(getter); return r; };
+  }
+  function wireExistingPeriodControls(){
+    wrap('shiftWeek', function(){ return getWeekDates(window.weekOffset)[0]; });
+    wrap('pickWeek', function(){ return getWeekDates(window.weekOffset)[0]; });
+    wrap('shiftDagligenWeek', function(){ return getWeekDates(window.dagligenWeekOffset)[0]; });
+    wrap('pickDate', function(){ return new Date(window.selectedDate+'T00:00:00'); });
+    wrap('selectDate', function(){ return new Date(window.selectedDate+'T00:00:00'); });
+    wrap('shiftMonth', function(){ return new Date(window.currentMonthDate); });
+    wrap('pickMonth', function(){ return new Date(window.currentMonthDate); });
+    wrap('shiftQuarter', function(){ var n=new Date(); var t=n.getFullYear()*4+Math.floor(n.getMonth()/3)+window.quarterOffset;
+      return new Date(Math.floor(t/4), (t%4)*3, 1); });
+    wrap('pickQuarter', function(){ var n=new Date(); var t=n.getFullYear()*4+Math.floor(n.getMonth()/3)+window.quarterOffset;
+      return new Date(Math.floor(t/4), (t%4)*3, 1); });
+    wrap('shiftYear', function(){ return new Date(new Date().getFullYear()+window.yearOffset, 0, 1); });
+    wrap('pickYear', function(){ return new Date(new Date().getFullYear()+window.yearOffset, 0, 1); });
+  }
+
+  function periodLabel(){
+    var unit = currentUnit(); if(!unit) return '';
+    var d = new Date(state.anchor+'T00:00:00');
+    if(unit==='day'){
+      var days=['söndag','måndag','tisdag','onsdag','torsdag','fredag','lördag'];
+      return days[d.getDay()].charAt(0).toUpperCase()+days[d.getDay()].slice(1)+' '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3);
+    }
+    if(unit==='week'){ var m=monday(d), su=new Date(m); su.setDate(m.getDate()+6);
+      return 'Vecka '+weekNo(m)+' · '+m.getDate()+'/'+(m.getMonth()+1)+'–'+su.getDate()+'/'+(su.getMonth()+1); }
+    if(unit==='month') return MONTHS[d.getMonth()].charAt(0).toUpperCase()+MONTHS[d.getMonth()].slice(1)+' '+d.getFullYear();
+    if(unit==='quarter') return 'Q'+(Math.floor(d.getMonth()/3)+1)+' '+d.getFullYear();
+    if(unit==='year') return ''+d.getFullYear();
+    return '';
+  }
+  function periodRange(){
+    var unit = currentUnit() || 'week';
+    var d = new Date(state.anchor+'T00:00:00'), a, b;
+    if(unit==='day'){ a=new Date(d); b=new Date(d); }
+    else if(unit==='week'){ a=monday(d); b=new Date(a); b.setDate(a.getDate()+6); }
+    else if(unit==='month'){ a=new Date(d.getFullYear(),d.getMonth(),1); b=new Date(d.getFullYear(),d.getMonth()+1,0); }
+    else if(unit==='quarter'){ var q=Math.floor(d.getMonth()/3); a=new Date(d.getFullYear(),q*3,1); b=new Date(d.getFullYear(),q*3+3,0); }
+    else { a=new Date(d.getFullYear(),0,1); b=new Date(d.getFullYear(),11,31); }
+    return { start: iso(a), end: iso(b) };
+  }
+
+  function renderPeriodBar(){
+    var bar = $('loPeriodBar'); if(!bar) return;
+    if(!currentUnit()){ bar.innerHTML=''; return; }
+    bar.innerHTML =
+      '<button title="Föregående" onclick="LO.shift(-1)">‹</button>' +
+      '<span class="lo-plabel">' + periodLabel() + '</span>' +
+      '<button title="Nästa" onclick="LO.shift(1)">›</button>' +
+      '<button class="lo-today" onclick="LO.today()">Idag</button>';
+  }
+
+  /* ---------------- Navigation / URL ---------------- */
+  function renderSidebar(){
+    var row = $('tabRow'); if(!row) return;
+    row.innerHTML = GROUPS.map(function(g){
+      return '<div class="tab' + (g.id===state.group?' active':'') + '" data-group="' + g.id + '" onclick="LO.go(\'' + g.id + '\')">' +
+        '<span class="tab-ic">' + g.icon + '</span>' + g.label + '</div>';
+    }).join('');
+  }
+  function renderSubnav(){
+    var el = $('loSubnav'); if(!el) return;
+    var g = groupById(state.group);
+    if(!g || g.subs.length < 2){ el.innerHTML=''; return; }
+    el.innerHTML = g.subs.map(function(sb){
+      return '<div class="lo-sub' + (sb.id===state.sub?' active':'') + '" onclick="LO.go(\'' + g.id + '\',\'' + sb.id + '\')">' + sb.label + '</div>';
+    }).join('');
+  }
+
+  function writeUrl(replace){
+    var h = '#/' + state.group + '/' + state.sub + (currentUnit() ? '/d/' + state.anchor : '');
+    if(location.hash === h) return;
+    if(replace && history.replaceState) history.replaceState(null, '', h);
+    else if(history.pushState) history.pushState(null, '', h);
+    else location.hash = h;
+  }
+  function readUrl(){
+    var raw = (location.hash||'').replace(/^#\/?/, '');
+    if(!raw) return null;
+    var parts = raw.split('/');
+    var g = groupById(parts[0]); if(!g) return null;
+    var sub = g.subs[0].id;
+    if(parts[1]){ for(var i=0;i<g.subs.length;i++){ if(g.subs[i].id===parts[1]) sub = parts[1]; } }
+    var anchor = null;
+    if(parts[2]==='d' && /^\d{4}-\d{2}-\d{2}$/.test(parts[3]||'')) anchor = parts[3];
+    return { group:g.id, sub:sub, anchor:anchor };
+  }
+
+  function apply(){
+    var g = groupById(state.group) || GROUPS[0];
+    var sb = currentSub();
+    renderSidebar(); renderSubnav();
+    if(typeof window.switchView === 'function'){
+      try{ window.switchView(sb.view); } catch(e){ console.warn(e); }
+    }
+    if(sb.on) { try{ sb.on(); } catch(e){} }
+    var wn = $('weekNavBox'); if(wn) wn.style.display = 'none';
+    var st = $('viewSubtitle'); if(st) st.textContent = '— ' + g.label.toLowerCase() + (g.subs.length>1 ? ' · ' + sb.label.toLowerCase() : '');
+    if(HERO_EXTRA[sb.view]){
+      var h = HERO_EXTRA[sb.view];
+      if($('heroEyebrow')) $('heroEyebrow').textContent = h[0];
+      if($('heroTitle')) $('heroTitle').textContent = h[1];
+      if($('heroSub')) $('heroSub').textContent = h[2];
+      if($('heroQuote')) $('heroQuote').textContent = h[3];
+    }
+    renderPeriodBar();
+    if(sb.view==='halsa') renderHalsa();
+    if(sb.view==='kalender' && typeof window.renderCalendarView==='function') window.renderCalendarView();
+    if(sb.view==='ai') renderAI();
+    if(sb.view==='installningar') renderSettings();
+    try{ window.scrollTo({ top:0, behavior:'smooth' }); } catch(e){ window.scrollTo(0,0); }
+  }
+
+  function go(group, sub){
+    var g = groupById(group); if(!g) return;
+    state.group = g.id;
+    var ok = false;
+    if(sub){ for(var i=0;i<g.subs.length;i++){ if(g.subs[i].id===sub) ok=true; } }
+    state.sub = ok ? sub : g.subs[0].id;
+    writeUrl();
+    apply();
+  }
+
+  /* ---------------- Hälsa ---------------- */
+  function hasHealth(){ return window.healthLoaded === true; }
+  function num(v){ return (v===null || v===undefined || isNaN(v)) ? null : v; }
+  function emptyMsg(txt){ return '<div class="lo-empty">' + (txt || 'Ingen data ännu — börja registrera för att se din utveckling.') + '</div>'; }
+
+  function renderHalsa(){
+    var grid = $('halsaOverviewGrid'); if(!grid) return;
+    var r = periodRange();
+    var today = iso(new Date());
+    var steps = (hasHealth() && typeof metricSumInRange==='function') ? metricSumInRange('step_count', r.start, r.end) : null;
+    var stepsToday = (hasHealth() && typeof metricSumInRange==='function') ? metricSumInRange('step_count', today, today) : null;
+    var workouts = (hasHealth() && typeof workoutsInRange==='function') ? workoutsInRange(r.start, r.end) : [];
+    var sleepM = (hasHealth() && typeof metricByName==='function') ? metricByName('sleep_analysis') : null;
+    var sleepPts = sleepM ? sleepM.data.filter(function(p){ var d=(p.date||'').slice(0,10); return d>=r.start && d<=r.end; }) : [];
+    var sleepAvg = sleepPts.length ? (sleepPts.reduce(function(a,p){ return a+(p.totalSleep||p.qty||0); },0)/sleepPts.length) : null;
+    var weightM = (hasHealth() && typeof metricByName==='function') ? metricByName('weight_body_mass') : null;
+    var lastWeight = null;
+    if(weightM && weightM.data.length) lastWeight = weightM.data[weightM.data.length-1].qty;
+    var mlog = (window.measurementsLog || []).slice().sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
+    if(lastWeight===null){
+      for(var i=mlog.length-1;i>=0 && lastWeight===null;i--){
+        var v = mlog[i].values || {};
+        if(v.weight) lastWeight = v.weight;
+      }
+    }
+    function tile(icon,label,val){
+      return '<div class="stat"><div class="stat-icon">'+icon+'</div><div class="lbl">'+label+'</div><div class="val">'+(val===null||val===undefined||val===''?'Ingen data':val)+'</div></div>';
+    }
+    grid.innerHTML =
+      tile('👣','Steg idag', num(stepsToday)!==null ? Math.round(stepsToday).toLocaleString('sv-SE') : null) +
+      tile('📈','Steg i perioden', num(steps)!==null ? Math.round(steps).toLocaleString('sv-SE') : null) +
+      tile('🏋️','Träningspass', hasHealth() ? workouts.length : null) +
+      tile('💤','Sömn i snitt', sleepAvg!==null ? sleepAvg.toFixed(1)+' h' : null) +
+      tile('⚖️','Senaste vikt', lastWeight ? lastWeight+' kg' : null) +
+      tile('📏','Mätningar loggade', mlog.length ? mlog.length : null);
+
+    var tl = $('halsaTrainingList');
+    if(tl){
+      tl.innerHTML = (!hasHealth() || !workouts.length)
+        ? emptyMsg('Inga träningspass i den valda perioden.')
+        : workouts.slice().sort(function(a,b){ return (b.start||'').localeCompare(a.start||''); }).map(function(w){
+            var mins = Math.round((w.duration||0)/60);
+            return '<div class="lo-kv"><span>'+(w.name||'Pass')+'<span style="color:#6B655A;"> · '+(w.start||'').slice(0,10)+'</span></span><b>'+mins+' min</b></div>';
+          }).join('');
+    }
+    var sl = $('halsaSleep');
+    if(sl){
+      var last7 = [];
+      if(sleepM){
+        for(var j=6;j>=0;j--){ var d=new Date(); d.setDate(d.getDate()-j); var k=iso(d);
+          var pt = sleepM.data.filter(function(p){ return (p.date||'').slice(0,10)===k; })[0];
+          last7.push({ k:k, v: pt ? (pt.totalSleep||pt.qty||0) : null });
+        }
+      }
+      sl.innerHTML = !last7.length ? emptyMsg('Ingen sömndata ännu.') :
+        last7.map(function(x){ return '<div class="lo-kv"><span>'+x.k+'</span><b>'+(x.v!==null? x.v.toFixed(1)+' h':'Ingen data')+'</b></div>'; }).join('');
+    }
+    var ms = $('halsaMeasurements');
+    if(ms){
+      var recent = mlog.slice(-8).reverse();
+      ms.innerHTML = !recent.length ? emptyMsg('Inga mätningar registrerade ännu.') :
+        recent.map(function(m){
+          var v = m.values || {}, parts = [];
+          Object.keys(v).forEach(function(f){ if(v[f]!=='' && v[f]!==null && v[f]!==undefined) parts.push(f+': '+v[f]); });
+          return '<div class="lo-kv"><span>'+(m.date||m.weekKey||'—')+'</span><b>'+(parts.join(' · ')||'—')+'</b></div>';
+        }).join('');
+    }
+    var ins = $('halsaInsights');
+    if(ins){
+      var out = [];
+      if(sleepAvg!==null){
+        out.push(sleepAvg >= 7
+          ? 'Sömnen ligger på '+sleepAvg.toFixed(1)+' h i snitt — över 7 h, vilket är bra för återhämtning.'
+          : 'Sömnen ligger på '+sleepAvg.toFixed(1)+' h i snitt — under 7 h i den här perioden.');
+      }
+      if(num(steps)!==null){
+        var days = Math.max(1, Math.round((new Date(r.end) - new Date(r.start))/86400000)+1);
+        out.push('Snitt '+Math.round(steps/days).toLocaleString('sv-SE')+' steg per dag i perioden.');
+      }
+      if(hasHealth()) out.push(workouts.length ? workouts.length+' träningspass registrerade i perioden.' : 'Inga träningspass registrerade i perioden.');
+      ins.innerHTML = out.length ? out.map(function(t){ return '<div class="lo-kv"><span>'+t+'</span></div>'; }).join('')
+        : emptyMsg('AI-insikter visas när det finns hälsodata att analysera.');
+    }
+  }
+
+  /* ---------------- AI ---------------- */
+  var AI_MODES = [ {id:'daily',label:'Daily'}, {id:'weekly',label:'Weekly'}, {id:'monthly',label:'Monthly'}, {id:'quarterly',label:'Quarterly'}, {id:'yearly',label:'Yearly'} ];
+  var aiMode = 'weekly';
+  function setAiMode(m){ aiMode = m; renderAI(); }
+
+  function collectFacts(){
+    var f = [];
+    var r = periodRange();
+    var goalsList = window.lifeGoals || [];
+    var active = goalsList.filter(function(g){ return !g.completed; });
+    f.push(['Aktiva mål', active.length]);
+    var withDeadline = active.filter(function(g){ return g.deadline; });
+    f.push(['Mål med deadline', withDeadline.length]);
+    var actions = 0, doneActions = 0;
+    goalsList.forEach(function(g){ (g.actions||[]).forEach(function(a){ actions++; if(a.done) doneActions++; }); });
+    f.push(['Actions kopplade till mål', actions + (actions ? ' (' + doneActions + ' klara)' : '')]);
+    var todos = window.generalTodos || [];
+    f.push(['Öppna tasks', todos.filter(function(t){ return !t.done; }).length]);
+    var ev = window.calEvents || [];
+    var inRange = (ev.length && ev.filter) ? ev.filter(function(e){ var d=(e.date||e.start||'').slice(0,10); return d>=r.start && d<=r.end; }).length : 0;
+    f.push(['Kalenderhändelser i perioden', inRange]);
+    if(window.healthLoaded === true && typeof metricSumInRange === 'function'){
+      var st = metricSumInRange('step_count', r.start, r.end);
+      if(st!==null) f.push(['Steg i perioden', Math.round(st).toLocaleString('sv-SE')]);
+      var w = (typeof workoutsInRange==='function') ? workoutsInRange(r.start, r.end) : [];
+      f.push(['Träningspass i perioden', w.length]);
+    } else { f.push(['Hälsodata', 'Ingen data ännu']); }
+    var ts = window.tiktokStats || {};
+    f.push(['TikTok följare', ts.followers ? ts.followers : 'Ingen data ännu']);
+    f.push(['TikTok videos loggade', (window.tiktokVideos||[]).length]);
+    var mp = window.moneyPrivate || {};
+    f.push(['Ekonomi (inkomst/utgift)', (mp.income||mp.expenses) ? ((mp.income||0).toLocaleString('sv-SE')+' / '+(mp.expenses||0).toLocaleString('sv-SE')+' kr') : 'Ingen data ännu']);
+    return f;
+  }
+
+  function renderAI(){
+    var tabs = $('aiModeTabs');
+    if(tabs){
+      tabs.innerHTML = AI_MODES.map(function(m){
+        return '<div class="cat-tab'+(m.id===aiMode?' active':'')+'" onclick="LO.setAiMode(\''+m.id+'\')">'+m.label+'</div>';
+      }).join('');
+    }
+    var facts = collectFacts();
+    var fe = $('aiFacts');
+    if(fe) fe.innerHTML = facts.map(function(p){ return '<div class="lo-kv"><span>'+p[0]+'</span><b>'+p[1]+'</b></div>'; }).join('');
+
+    var an = [], rec = [];
+    var goalsList = (window.lifeGoals||[]).filter(function(g){ return !g.completed; });
+    var noDeadline = goalsList.filter(function(g){ return !g.deadline; });
+    var noActions = goalsList.filter(function(g){ return !(g.actions||[]).length; });
+    if(!goalsList.length){ an.push('Inga aktiva mål finns registrerade — systemet har inget att mäta mot.'); rec.push('Skapa ditt första mål under Mål.'); }
+    if(noDeadline.length) { an.push(noDeadline.length+' aktiva mål saknar deadline.'); rec.push('Sätt deadline på: '+noDeadline.slice(0,3).map(function(g){ return g.title.slice(0,48); }).join(' · ')); }
+    if(noActions.length) { an.push(noActions.length+' aktiva mål saknar actions — de kan inte utföras, bara önskas.'); rec.push('Bryt ner till konkreta actions: '+noActions.slice(0,3).map(function(g){ return g.title.slice(0,48); }).join(' · ')); }
+    var openTodos = (window.generalTodos||[]).filter(function(t){ return !t.done; });
+    if(openTodos.length > 12) { an.push('Du har '+openTodos.length+' öppna tasks — det är fler än en vecka rymmer.'); rec.push('Välj ut max 3 tasks för idag och parkera resten.'); }
+    if(window.healthLoaded !== true) { an.push('Hälsodata kunde inte hämtas — träning, steg och sömn saknas i analysen.'); rec.push('Kontrollera hälsokopplingen under Inställningar.'); }
+    if(!(window.tiktokVideos||[]).length) { an.push('Inga TikTok-videos är loggade, så innehållsanalys går inte att göra.'); rec.push('Logga dina publicerade videos under TikTok → Videos.'); }
+    if(!an.length) an.push('Inga tydliga flaskhalsar hittade i den data som finns.');
+    if(!rec.length) rec.push('Fortsätt registrera resultat så blir analysen skarpare.');
+    if($('aiAnalysis')) $('aiAnalysis').innerHTML = an.map(function(t){ return '<div class="lo-kv"><span>'+t+'</span></div>'; }).join('');
+    if($('aiRecommendation')) $('aiRecommendation').innerHTML = rec.map(function(t,i){ return '<div class="lo-kv"><span><b>'+(i+1)+'.</b> '+t+'</span></div>'; }).join('');
+  }
+
+  function askAi(){
+    var el = $('aiRemote'); if(!el) return;
+    if(typeof HEALTH_ENDPOINT === 'undefined'){ el.innerHTML = emptyMsg('AI-kopplingen är inte tillgänglig här.'); return; }
+    el.innerHTML = '<div class="lo-empty">Frågar AI...</div>';
+    var cb = 'loAi_' + Date.now();
+    window[cb] = function(data){
+      try{ delete window[cb]; }catch(e){}
+      if(!data || data.error){ el.innerHTML = emptyMsg('Kunde inte nå AI just nu.'); return; }
+      var r = data.result;
+      el.innerHTML = '<div class="lo-kv"><span>'+(typeof r==='string' ? r : JSON.stringify(r)).replace(/</g,'&lt;')+'</span></div>';
+    };
+    var ctx = (typeof buildAIContext==='function' ? buildAIContext() : '') + '\nFAKTA: ' + collectFacts().map(function(p){ return p[0]+'='+p[1]; }).join('; ');
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=' + aiMode + '_brief&context=' + encodeURIComponent(ctx) + '&callback=' + cb;
+    tag.onerror = function(){ el.innerHTML = emptyMsg('Kunde inte nå AI just nu.'); };
+    document.body.appendChild(tag);
+  }
+
+  /* ---------------- Inställningar ---------------- */
+  var SETTINGS_KEY = 'lo_settings_v1';
+  var LO_KEYS = [
+    ['livsdashboard_v1','Mål, tasks, vanor, projekt och arkiv'],
+    ['lo_cal_items_v1','Egna kalenderhändelser'],
+    ['lo_health_log_v1','Egen hälsologg och träningspass'],
+    ['lo_money_v1','Ekonomi: transaktioner, budget, sparmål'],
+    ['lo_hard_v1','75 HARD: dagar, logg och dagbok'],
+    ['lo_tt_ideas_v1','TikTok: idébank'],
+    ['lo_tt_plan_v1','TikTok: content plan'],
+    ['lo_edu_v1','Utbildning: kurser och studiepass'],
+    ['lo_notes_v1','Anteckningar'],
+    ['lo_reviews_v1','AI-genomgångar'],
+    [SETTINGS_KEY,'Profil och riktvärden']
+  ];
+  var settingsTab = 'profil';
+  var profile = { name:'', focus:'', stepGoal:10000, sleepGoal:8, waterGoal:4, currency:'kr', hardStart:'' };
+  function loadProfile(){
+    try{ var r = localStorage.getItem(SETTINGS_KEY); if(r){ var o = JSON.parse(r); for(var k in o){ if(o[k]!==undefined && o[k]!==null) profile[k]=o[k]; } } }catch(e){}
+  }
+  function storeProfile(){ try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(profile)); }catch(e){} }
+  loadProfile();
+  window.LO_PROFILE = profile;
+
+  function setSettingsTab(t){
+    settingsTab = t || 'profil';
+    var v = $('view-installningar'); if(!v) return;
+    var cards = v.querySelectorAll('[data-set]');
+    for(var i=0;i<cards.length;i++){
+      cards[i].style.display = (cards[i].getAttribute('data-set')===settingsTab) ? '' : 'none';
+    }
+  }
+  function field(id, label, value, type, extra){
+    return '<label style="display:block;"><span style="display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft);margin-bottom:4px;">'+label+'</span>'+
+      '<input id="'+id+'" type="'+(type||'text')+'" value="'+String(value===null||value===undefined?'':value).replace(/"/g,'&quot;')+'" '+(extra||'')+' style="width:100%;"></label>';
+  }
+  function renderSettings(){
+    setSettingsTab(settingsTab);
+
+    var pf = $('settingsProfile');
+    if(pf){
+      pf.innerHTML =
+        field('set_name','Namn', profile.name, 'text', 'placeholder="Julia"') +
+        field('set_focus','Årets fokus / North Star', profile.focus, 'text', 'placeholder="Bygg DOSED och nå 5 000 följare"') +
+        field('set_currency','Valuta', profile.currency, 'text', 'placeholder="kr"');
+    }
+    var tg = $('settingsTargets');
+    if(tg){
+      tg.innerHTML =
+        field('set_steps','Stegmål per dag', profile.stepGoal, 'number', 'min="0" step="500"') +
+        field('set_sleep','Sömnmål (timmar)', profile.sleepGoal, 'number', 'min="0" step="0.5"') +
+        field('set_water','Vattenmål (liter)', profile.waterGoal, 'number', 'min="0" step="0.5"') +
+        field('set_hard','75 HARD startdatum', profile.hardStart, 'date');
+    }
+
+    var el = $('settingsIntegrations');
+    if(el){
+      var rows = [
+        ['Apple Health / träning', window.healthLoaded===true ? 'Ansluten' : (window.healthFailed ? 'Ingen data just nu' : 'Hämtar...')],
+        ['Kalender', (window.calEvents && window.calEvents.length) ? (window.calEvents.length + ' händelser') : 'Ingen data ännu'],
+        ['TikTok', (window.tiktokStats && window.tiktokStats.followers) ? 'Ansluten' : 'Ingen data ännu'],
+        ['AI', typeof HEALTH_ENDPOINT !== 'undefined' ? 'Konfigurerad' : 'Saknas']
+      ];
+      el.innerHTML = rows.map(function(r){ return '<div class="lo-kv"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'; }).join('');
+    }
+
+    var di = $('settingsDataInfo');
+    if(di){
+      var total = 0, html = '';
+      for(var i=0;i<LO_KEYS.length;i++){
+        var raw = ''; try{ raw = localStorage.getItem(LO_KEYS[i][0]) || ''; }catch(e){}
+        total += raw.length;
+        html += '<div class="lo-kv"><span>'+LO_KEYS[i][1]+'</span><b>'+(raw ? Math.round(raw.length/1024*10)/10+' kB' : 'Tom')+'</b></div>';
+      }
+      di.innerHTML = html +
+        '<div class="lo-kv"><span>Totalt</span><b>'+Math.round(total/1024*10)/10+' kB</b></div>' +
+        '<div class="lo-kv"><span>Adress</span><b>'+location.host+'</b></div>';
+    }
+
+    var pp = $('settingsParts');
+    if(pp){
+      pp.innerHTML = LO_KEYS.map(function(k){
+        return '<div class="lo-kv"><span>'+k[1]+'</span>'+
+          '<button class="btn" style="background:#B4384F;padding:6px 14px;font-size:12px;" onclick="LO.clearPart(\''+k[0]+'\')">Radera</button></div>';
+      }).join('');
+    }
+
+    var ab = $('settingsAbout');
+    if(ab){
+      ab.innerHTML =
+        '<div class="lo-kv"><span>Version</span><b>LIFE OS 2.0</b></div>' +
+        '<div class="lo-kv"><span>Lagring</span><b>Lokalt i webbläsaren</b></div>' +
+        '<div class="lo-kv"><span>Nuvarande vy</span><b>'+location.hash.replace('#/','')+'</b></div>' +
+        '<div style="margin-top:12px;font-size:13px;color:var(--text-soft);line-height:1.6;">' +
+        'Adressen minns var du är — du kan bokmärka en flik och komma tillbaka till exakt samma vy. ' +
+        'Vald period (dag, vecka, månad, kvartal, år) följer med mellan flikarna. ' +
+        'Exportera en säkerhetskopia innan du byter webbläsare eller dator.</div>';
+    }
+  }
+  function saveProfile(){
+    var g = function(id){ var e = $(id); return e ? e.value : ''; };
+    if($('set_name') !== null){
+      profile.name = g('set_name').trim();
+      profile.focus = g('set_focus').trim();
+      profile.currency = g('set_currency').trim() || 'kr';
+    }
+    if($('set_steps') !== null){
+      profile.stepGoal = parseFloat(g('set_steps')) || 0;
+      profile.sleepGoal = parseFloat(g('set_sleep')) || 0;
+      profile.waterGoal = parseFloat(g('set_water')) || 0;
+      profile.hardStart = g('set_hard');
+    }
+    storeProfile();
+    window.LO_PROFILE = profile;
+    applyProfile();
+    var s = $('settingsProfileSaved'); if(s){ s.textContent = 'Sparat.'; setTimeout(function(){ s.textContent=''; }, 2000); }
+  }
+  function applyProfile(){
+    if(profile.name){
+      var t = $('heroTitle');
+      if(t && state.group==='home') t.textContent = 'Good morning, ' + profile.name + '.';
+    }
+    if(profile.focus){
+      var ns = document.getElementById('northStarText');
+      if(ns && !ns.textContent.trim()) ns.textContent = profile.focus;
+    }
+  }
+  function retryHealth(){
+    if(typeof window.fetchHealthData === 'function'){
+      window.healthFailed = false;
+      try{ window.fetchHealthData(); }catch(e){}
+      setTimeout(renderSettings, 1500);
+    }
+  }
+  function clearPart(key){
+    var label = key; for(var i=0;i<LO_KEYS.length;i++){ if(LO_KEYS[i][0]===key) label = LO_KEYS[i][1]; }
+    if(!confirm('Radera "'+label+'"? Detta går inte att ångra.')) return;
+    try{ localStorage.removeItem(key); }catch(e){}
+    location.reload();
+  }
+  function exportData(){
+    var out = { _lifeos:'backup', _date:new Date().toISOString(), data:{} };
+    for(var i=0;i<LO_KEYS.length;i++){
+      var raw = ''; try{ raw = localStorage.getItem(LO_KEYS[i][0]); }catch(e){}
+      if(raw) out.data[LO_KEYS[i][0]] = raw;
+    }
+    var blob = new Blob([JSON.stringify(out)], { type:'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'life-os-backup-' + iso(new Date()) + '.json';
+    a.click();
+  }
+  function importData(input){
+    var file = input.files && input.files[0]; if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var obj = JSON.parse(reader.result);
+        if(obj && obj._lifeos === 'backup' && obj.data){
+          for(var k in obj.data){ try{ localStorage.setItem(k, obj.data[k]); }catch(e){} }
+        } else {
+          localStorage.setItem('livsdashboard_v1', reader.result);
+        }
+        alert('Säkerhetskopian är importerad. Sidan laddas om.');
+        location.reload();
+      } catch(e){ alert('Filen kunde inte läsas som en LIFE OS-säkerhetskopia.'); }
+    };
+    reader.readAsText(file);
+  }
+  function resetData(){
+    if(!confirm('Radera all LIFE OS-data i den här webbläsaren? Detta går inte att ångra.')) return;
+    for(var i=0;i<LO_KEYS.length;i++){ try{ localStorage.removeItem(LO_KEYS[i][0]); }catch(e){} }
+    location.reload();
+  }
+
+
+  /* ---------------- Start ---------------- */
+  function boot(){
+    wireExistingPeriodControls();
+    var fromUrl = readUrl();
+    if(fromUrl){
+      state.group = fromUrl.group; state.sub = fromUrl.sub;
+      if(fromUrl.anchor) state.anchor = fromUrl.anchor;
+    }
+    syncPeriod();
+    apply();
+    applyProfile();
+    writeUrl(true);
+    window.addEventListener('hashchange', function(){
+      var r = readUrl(); if(!r) return;
+      if(r.group===state.group && r.sub===state.sub && (!r.anchor || r.anchor===state.anchor)) return;
+      state.group=r.group; state.sub=r.sub;
+      if(r.anchor && r.anchor!==state.anchor){ state.anchor=r.anchor; syncPeriod(); }
+      apply();
+    });
+  }
+
+  window.LO = {
+    go: go, shift: shiftAnchor, today: goToday,
+    setAiMode: setAiMode, askAi: askAi,
+    exportData: exportData, importData: importData, resetData: resetData,
+    renderHalsa: renderHalsa, renderAI: renderAI, renderSettings: renderSettings,
+    saveProfile: saveProfile, clearPart: clearPart, retryHealth: retryHealth,
+    profile: function(){ return profile; },
+    period: function(){ return { anchor: state.anchor, unit: currentUnit(), range: periodRange() }; }
+  };
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+
+<script>
+/* =========================================================================
+   LIFE OS — Mål: kedjevy (10 år → ... → vecka → actions → resultat)
+   ========================================================================= */
+(function(){
+  var TF = ['10 år','5 år','3 år','Årligen','Kvartalsvis','Månadsvis','Veckovis','Dagligen'];
+  var LBL = {'10 år':'10 ÅR','5 år':'5 ÅR','3 år':'3 ÅR','Årligen':'ÅR','Kvartalsvis':'KVARTAL','Månadsvis':'MÅNAD','Veckovis':'VECKA','Dagligen':'DAG'};
+  var focusId = null;
+
+  function goals(){ return (window.lifeGoals||[]); }
+  function byId(id){ var a=goals(); for(var i=0;i<a.length;i++){ if(a[i].id===id) return a[i]; } return null; }
+  function idxOf(g){ return goals().indexOf(g); }
+  function esc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function chainIds(){
+    var set = {};
+    var g = focusId ? byId(focusId) : null;
+    if(!g) return null;
+    var cur = g;
+    while(cur){ set[cur.id]=true; cur = cur.parentId ? byId(cur.parentId) : null; }
+    (function down(node){
+      goals().forEach(function(x){ if(x.parentId===node.id){ set[x.id]=true; down(x); } });
+    })(g);
+    return set;
+  }
+
+  function ensureDom(){
+    if(document.getElementById('goalLadderCard')) return;
+    var wrap = document.getElementById('goalsOverviewWrap');
+    if(!wrap) return;
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'goalLadderCard';
+    card.style.display = 'none';
+    card.innerHTML =
+      '<div class="reflect-row"><div class="card-label" style="margin:0;">Målkedjan</div>' +
+      '<button class="save-btn" id="ladderResetBtn" style="display:none;" onclick="goalLadderFocus(null)">Visa alla</button></div>' +
+      '<div class="card-sub">från livsvision till det du gör i veckan — klicka på ett mål för att följa dess kedja</div>' +
+      '<div id="goalLadderBands" style="margin-top:14px;"></div>' +
+      '<div id="goalLadderFocusPanel" style="margin-top:18px;"></div>';
+    var kids = wrap.querySelectorAll(':scope > .card');
+    if(kids.length >= 3) wrap.insertBefore(card, kids[2]); else wrap.appendChild(card);
+
+    // extra flik i "Visa som"
+    var tabs = document.getElementById('goalViewHierarchy');
+    if(tabs && !document.getElementById('goalViewLadder')){
+      var t = document.createElement('div');
+      t.className='cat-tab'; t.id='goalViewLadder';
+      t.style.cssText='font-size:11px;padding:5px 10px;';
+      t.textContent='Kedja';
+      t.onclick=function(){ setGoalView('ladder'); };
+      tabs.parentNode.insertBefore(t, tabs);
+    }
+  }
+
+  function pct(g){ return Math.max(0, Math.min(100, parseInt(g.progress||0,10))); }
+
+  function goalCard(g, dim){
+    var i = idxOf(g);
+    var p = pct(g);
+    var kids = goals().filter(function(x){ return x.parentId===g.id; }).length;
+    var kpi = (g.kpiTarget!==null && g.kpiTarget!==undefined)
+      ? '<span class="ladder-kpi">' + (g.kpiActual||0) + '/' + g.kpiTarget + ' ' + esc(g.kpiUnit||'') + '</span>' : '';
+    return '<div class="ladder-node' + (g.id===focusId?' is-focus':'') + (dim?' is-dim':'') + (g.completed?' is-done':'') + '" onclick="goalLadderFocus(' + g.id + ')">' +
+      '<div class="ladder-node-title">' + esc(g.title) + '</div>' +
+      '<div class="ladder-bar"><span style="width:' + p + '%"></span></div>' +
+      '<div class="ladder-meta">' + p + '%' + (kids? ' · ' + kids + ' under' : '') + (g.deadline? ' · ' + esc(g.deadline) : '') + kpi +
+      ' <span class="ladder-open" onclick="event.stopPropagation();openGoalDetail(' + i + ')">Öppna →</span></div>' +
+      '</div>';
+  }
+
+  function render(){
+    ensureDom();
+    var bands = document.getElementById('goalLadderBands');
+    if(!bands) return;
+    var rb = document.getElementById('ladderResetBtn');
+    if(rb) rb.style.display = focusId ? 'inline-flex' : 'none';
+    if(focusId && !byId(focusId)) focusId = null;
+    if(!goals().length){ bands.innerHTML = '<div class="list-empty">Inga mål ännu — skapa ditt första mål högst upp.</div>';
+      document.getElementById('goalLadderFocusPanel').innerHTML=''; return; }
+    var set = chainIds();
+    var html = '';
+    TF.forEach(function(tf){
+      var list = goals().filter(function(g){ return (g.timeframe||'') === tf; });
+      if(!list.length) return;
+      var visible = set ? list.filter(function(g){ return set[g.id]; }) : list;
+      if(set && !visible.length) return;
+      html += '<div class="ladder-band">' +
+        '<div class="ladder-band-label"><span>' + LBL[tf] + '</span><em>' + visible.length + '</em></div>' +
+        '<div class="ladder-band-nodes">' + visible.map(function(g){ return goalCard(g, false); }).join('') + '</div>' +
+        '</div>';
+    });
+    var noTf = goals().filter(function(g){ return TF.indexOf(g.timeframe||'') === -1; });
+    if(noTf.length && !set){
+      html += '<div class="ladder-band"><div class="ladder-band-label"><span>ÖVRIGT</span><em>' + noTf.length + '</em></div>' +
+        '<div class="ladder-band-nodes">' + noTf.map(function(g){ return goalCard(g,false); }).join('') + '</div></div>';
+    }
+    bands.innerHTML = html || '<div class="list-empty">Inga mål på den här nivån.</div>';
+    renderFocusPanel();
+  }
+
+  function renderFocusPanel(){
+    var el = document.getElementById('goalLadderFocusPanel');
+    if(!el) return;
+    var g = focusId ? byId(focusId) : null;
+    if(!g){ el.innerHTML = '<div class="ladder-hint">Klicka på ett mål för att se dess actions och resultat.</div>'; return; }
+    var acts = g.actions || [];
+    var done = acts.filter(function(a){ return a.done; }).length;
+    var ms = g.milestones || [];
+    var msDone = ms.filter(function(m){ return m.done; }).length;
+    var nextTf = TF[Math.min(TF.length-1, Math.max(0, TF.indexOf(g.timeframe||'Årligen')+1))];
+
+    var actHtml = acts.length
+      ? '<ul class="task-list">' + acts.map(function(a){
+          return '<li class="' + (a.done?'done':'') + '" onclick="toggleActionById(' + a.id + ');goalLadderRefresh()">' +
+            '<span class="box">' + (a.done?'✓':'') + '</span><span class="t">' + esc(a.text) +
+            ' <span style="color:var(--text-soft);font-size:11px;">(' + esc(a.freq||'') + ')</span></span></li>';
+        }).join('') + '</ul>'
+      : '<div class="list-empty">Inga actions ännu.</div>';
+
+    var resHtml = '';
+    if(g.kpiTarget!==null && g.kpiTarget!==undefined){
+      var p = g.kpiTarget ? Math.min(100, Math.round(((g.kpiActual||0)/g.kpiTarget)*100)) : 0;
+      resHtml += '<div class="stat"><div class="lbl">Resultat</div><div class="val">' + (g.kpiActual||0) + ' / ' + g.kpiTarget + ' ' + esc(g.kpiUnit||'') + '</div></div>' +
+                 '<div class="stat"><div class="lbl">Av målet</div><div class="val">' + p + '%</div></div>';
+    } else {
+      resHtml += '<div class="stat"><div class="lbl">Progress</div><div class="val">' + pct(g) + '%</div></div>' +
+                 '<div class="stat"><div class="lbl">Deadline</div><div class="val" style="font-size:13px;">' + (g.deadline ? esc(g.deadline) : 'Ingen satt') + '</div></div>';
+    }
+    resHtml += '<div class="stat"><div class="lbl">Actions klara</div><div class="val">' + done + '/' + acts.length + '</div></div>' +
+               '<div class="stat"><div class="lbl">Delmål klara</div><div class="val">' + msDone + '/' + ms.length + '</div></div>';
+
+    el.innerHTML =
+      '<div class="ladder-focus">' +
+        '<div class="ladder-focus-head"><div class="card-label" style="margin:0;">' + esc(g.title) + '</div>' +
+          '<span class="ladder-focus-tf">' + esc(g.timeframe||'') + '</span></div>' +
+        '<div class="grid2" style="margin-top:12px;gap:16px;">' +
+          '<div><div class="card-sub" style="margin-bottom:6px;">Actions</div>' + actHtml +
+            '<div class="add-row" style="margin-top:8px;">' +
+              '<input type="text" id="ladderActionInput" placeholder="Ny action..." style="flex:2;">' +
+              '<select id="ladderActionFreq" style="flex:1;"><option>Dagligen</option><option selected>Veckovis</option><option>Månadsvis</option></select>' +
+              '<button onclick="goalLadderAddAction()">Lägg till</button>' +
+            '</div>' +
+          '</div>' +
+          '<div><div class="card-sub" style="margin-bottom:6px;">Resultat</div><div class="stat-grid">' + resHtml + '</div>' +
+            '<div class="add-row" style="margin-top:10px;">' +
+              '<input type="text" id="ladderChildInput" placeholder="Bryt ner till ' + esc(nextTf).toLowerCase() + '-mål..." style="flex:2;">' +
+              '<button onclick="goalLadderAddChild()">+ Delmål</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  window.goalLadderFocus = function(id){ focusId = (id===focusId? null : id); render(); };
+  window.goalLadderRefresh = function(){ render(); if(window.saveAll) saveAll(); };
+  window.goalLadderAddAction = function(){
+    var g = byId(focusId); if(!g) return;
+    var inp = document.getElementById('ladderActionInput');
+    var v = inp ? inp.value.trim() : ''; if(!v) return;
+    window.goalActionIdCounter = (window.goalActionIdCounter||0) + 1;
+    g.actions = g.actions || [];
+    g.actions.push({ id: window.goalActionIdCounter, text:v, freq: document.getElementById('ladderActionFreq').value, done:false });
+    if(window.renderAllGoalActionWidgets) renderAllGoalActionWidgets();
+    if(window.saveAll) saveAll();
+    render();
+  };
+  window.goalLadderAddChild = function(){
+    var g = byId(focusId); if(!g) return;
+    var inp = document.getElementById('ladderChildInput');
+    var v = inp ? inp.value.trim() : ''; if(!v) return;
+    var nextTf = TF[Math.min(TF.length-1, Math.max(0, TF.indexOf(g.timeframe||'Årligen')+1))];
+    window.goalIdCounter = (window.goalIdCounter||0) + 1;
+    goals().push({ id: window.goalIdCounter, title:v, category:g.category||'', group:g.group, timeframe:nextTf,
+      parentId:g.id, completed:false, progress:0, deadline:'', kpiTarget:null, kpiActual:null, kpiUnit:'',
+      notes:'', milestones:[], actions:[] });
+    if(window.saveAll) saveAll();
+    if(window.renderGoalsTable) renderGoalsTable();
+    render();
+  };
+  window.renderGoalLadder = render;
+
+  function hookSetGoalView(){
+    var orig = window.setGoalView;
+    if(typeof orig !== 'function') return;
+    window.setGoalView = function(v){
+      ensureDom();
+      var card = document.getElementById('goalLadderCard');
+      var tab = document.getElementById('goalViewLadder');
+      if(v === 'ladder'){
+        orig('hierarchy');
+        ['goalsCardGrid','goalsTableWrap','goalTreeWrap','goalHierarchyWrap'].forEach(function(id){
+          var e=document.getElementById(id); if(e) e.style.display='none';
+        });
+        ['goalViewCards','goalViewTable','goalViewTree','goalViewHierarchy'].forEach(function(id){
+          var e=document.getElementById(id); if(e) e.classList.remove('active');
+        });
+        if(tab) tab.classList.add('active');
+        if(card) card.style.display='block';
+        render();
+        return;
+      }
+      if(tab) tab.classList.remove('active');
+      if(card) card.style.display='none';
+      return orig.apply(this, arguments);
+    };
+  }
+
+  function hookRenderGoalsTable(){
+    var orig = window.renderGoalsTable;
+    if(typeof orig !== 'function') return;
+    window.renderGoalsTable = function(){
+      var r = orig.apply(this, arguments);
+      var card = document.getElementById('goalLadderCard');
+      if(card && card.style.display !== 'none') render();
+      return r;
+    };
+  }
+
+  function init(){
+    ensureDom(); hookSetGoalView(); hookRenderGoalsTable();
+    setTimeout(function(){
+      if((location.hash||'').indexOf('/mal/kedja') > -1 && window.setGoalView) setGoalView('ladder');
+    }, 60);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
+<script>
+/* =========================================================================
+   LIFE OS — Kalender (månad / vecka / dag / agenda)
+   ========================================================================= */
+(function(){
+  var KEY = 'lo_cal_items_v1';
+  var mode = 'month';
+  var items = [];
+  var selDay = null;
+  var DAYS = ['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
+  var MON = ['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+  var TYPES = { event:{ic:'📌',lbl:'Händelse'}, deadline:{ic:'⏳',lbl:'Deadline'}, training:{ic:'🏋️',lbl:'Träning'}, focus:{ic:'🎯',lbl:'Fokustid'} };
+
+  function pad(n){ return n<10?'0'+n:''+n; }
+  function iso(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function dt(s){ return new Date(s+'T00:00:00'); }
+  function monday(d){ var x=new Date(d); var w=x.getDay(); x.setDate(x.getDate()+((w===0)?-6:1-w)); x.setHours(0,0,0,0); return x; }
+  function esc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function $(id){ return document.getElementById(id); }
+
+  function load(){ try{ var r=localStorage.getItem(KEY); items = r?JSON.parse(r):[]; }catch(e){ items=[]; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(items)); }catch(e){} }
+
+  function anchorDate(){
+    try{ if(window.LO && LO.period) return LO.period().anchor; }catch(e){}
+    return iso(new Date());
+  }
+
+  /* ---------- samla händelser för ett datum ---------- */
+  function eventsFor(dk){
+    var out = [];
+    (window.fetchedCalendarEvents||[]).forEach(function(ev){
+      if((ev.start||'').slice(0,10) !== dk) return;
+      out.push({ time: (ev.start||'').length>10 ? ev.start.slice(11,16) : '', title: ev.summary||'Händelse', kind:'apple', type:'event' });
+    });
+    items.forEach(function(it){
+      if(it.date !== dk) return;
+      out.push({ time: it.time||'', title: it.title, kind:'own', type: it.type||'event', id: it.id, done: !!it.done });
+    });
+    try{
+      var wk = iso(monday(dt(dk)));
+      var idx = (dt(dk).getDay()+6)%7;
+      var tbd = (window.tasksByDayByWeek||{})[wk];
+      if(tbd && tbd[DAYS[idx]]){
+        tbd[DAYS[idx]].forEach(function(t){ out.push({ time:'', title:t.t, kind:'task', type:'task', done:!!t.done }); });
+      }
+    }catch(e){}
+    (window.generalTodos||[]).forEach(function(t){
+      if(t.date === dk) out.push({ time:'', title:t.text, kind:'todo', type:'task', done:!!t.done });
+    });
+    (window.lifeGoals||[]).forEach(function(g){
+      if(g.deadline === dk && !g.completed) out.push({ time:'', title:'Mål: '+g.title, kind:'goal', type:'deadline' });
+    });
+    try{ if(typeof window.loCalExtra === 'function'){ (window.loCalExtra(dk)||[]).forEach(function(e){ out.push(e); }); } }catch(e){}
+    out.sort(function(a,b){ return (a.time||'99').localeCompare(b.time||'99'); });
+    return out;
+  }
+
+  function chip(ev, i){
+    var t = TYPES[ev.type] || TYPES.event;
+    var cls = 'cal-chip k-'+ev.kind + (ev.done?' is-done':'');
+    return '<div class="'+cls+'" title="'+esc(ev.title)+'">' +
+      (ev.time ? '<b>'+ev.time+'</b>' : '<b>'+t.ic+'</b>') +
+      '<span>'+esc(ev.title)+'</span></div>';
+  }
+
+  /* ---------- vyer ---------- */
+  function renderMonth(){
+    var a = dt(anchorDate());
+    var first = new Date(a.getFullYear(), a.getMonth(), 1);
+    var start = monday(first);
+    var today = iso(new Date());
+    var html = '<div class="cal-grid-head">' + DAYS.map(function(d){ return '<div>'+d+'</div>'; }).join('') + '</div><div class="cal-grid">';
+    var cur = new Date(start);
+    for(var i=0;i<42;i++){
+      var dk = iso(cur);
+      var out = (cur.getMonth() !== a.getMonth());
+      var evs = eventsFor(dk);
+      html += '<div class="cal-cell'+(out?' is-out':'')+(dk===today?' is-today':'')+(dk===selDay?' is-sel':'')+'" onclick="calPickDay(\''+dk+'\')">' +
+        '<div class="cal-num">'+cur.getDate()+'</div>' +
+        evs.slice(0,3).map(chip).join('') +
+        (evs.length>3 ? '<div class="cal-more">+'+(evs.length-3)+' till</div>' : '') +
+        '</div>';
+      cur.setDate(cur.getDate()+1);
+    }
+    return html + '</div>';
+  }
+
+  function renderWeek(){
+    var m = monday(dt(anchorDate()));
+    var today = iso(new Date());
+    var html = '<div class="cal-week">';
+    for(var i=0;i<7;i++){
+      var d = new Date(m); d.setDate(m.getDate()+i);
+      var dk = iso(d);
+      var evs = eventsFor(dk);
+      html += '<div class="cal-wcol'+(dk===today?' is-today':'')+(dk===selDay?' is-sel':'')+'" onclick="calPickDay(\''+dk+'\')">' +
+        '<div class="cal-whead">'+DAYS[i]+' '+d.getDate()+'</div>' +
+        (evs.length ? evs.map(chip).join('') : '<div class="cal-dim">—</div>') +
+        '</div>';
+    }
+    return html + '</div>';
+  }
+
+  function renderDay(){
+    var dk = selDay || anchorDate();
+    var evs = eventsFor(dk);
+    var timed = evs.filter(function(e){ return e.time; });
+    var allday = evs.filter(function(e){ return !e.time; });
+    var html = '<div class="cal-daywrap">';
+    html += '<div class="cal-allday"><div class="cal-sect">Hela dagen</div>' +
+      (allday.length ? allday.map(chip).join('') : '<div class="cal-dim">Inget inplanerat</div>') + '</div>';
+    html += '<div class="cal-hours">';
+    for(var h=6; h<=22; h++){
+      var hh = pad(h)+':00';
+      var inHour = timed.filter(function(e){ return parseInt(e.time.slice(0,2),10) === h; });
+      html += '<div class="cal-hrow"><div class="cal-h">'+hh+'</div><div class="cal-hbody">' +
+        (inHour.length ? inHour.map(chip).join('') : '') + '</div></div>';
+    }
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderAgenda(){
+    var start = dt(anchorDate());
+    var html = '';
+    var count = 0;
+    for(var i=0;i<60;i++){
+      var d = new Date(start); d.setDate(start.getDate()+i);
+      var dk = iso(d);
+      var evs = eventsFor(dk);
+      if(!evs.length) continue;
+      count++;
+      html += '<div class="cal-agenda-day" onclick="calPickDay(\''+dk+'\')">' +
+        '<div class="cal-agenda-date"><b>'+d.getDate()+'</b><span>'+MON[d.getMonth()].slice(0,3)+'</span><em>'+DAYS[(d.getDay()+6)%7]+'</em></div>' +
+        '<div class="cal-agenda-items">' + evs.map(chip).join('') + '</div></div>';
+    }
+    return count ? html : '<div class="lo-empty">Inget inplanerat de kommande 60 dagarna.</div>';
+  }
+
+  function dayPanel(){
+    var el = $('calDayPanel'); if(!el) return;
+    var dk = selDay;
+    if(!dk){ el.innerHTML = '<div class="cal-dim">Klicka på en dag för att se och redigera den.</div>'; return; }
+    var d = dt(dk);
+    var evs = eventsFor(dk);
+    el.innerHTML = '<div class="card-label" style="margin-bottom:6px;">' + DAYS[(d.getDay()+6)%7] + ' ' + d.getDate() + ' ' + MON[d.getMonth()] + '</div>' +
+      (evs.length ? evs.map(function(e){
+        var t = TYPES[e.type] || TYPES.event;
+        var src = e.kind==='apple' ? 'Apple-kalender' : e.kind==='task' ? 'Task' : e.kind==='todo' ? 'Att göra' : e.kind==='goal' ? 'Mål' : t.lbl;
+        return '<div class="cal-row"><span class="cal-row-t">'+(e.time||'—')+'</span>' +
+          '<span class="cal-row-title'+(e.done?' is-done':'')+'">'+esc(e.title)+'</span>' +
+          '<span class="cal-row-src">'+src+'</span>' +
+          (e.kind==='own' ? '<span class="cal-x" onclick="calRemove(\''+e.id+'\')">×</span>' : '') +
+          '</div>';
+      }).join('') : '<div class="cal-dim">Inget inplanerat den här dagen.</div>');
+  }
+
+  function render(){
+    var body = $('calBody'); if(!body) return;
+    load();
+    var titleEl = $('calTitle');
+    var a = dt(anchorDate());
+    if(titleEl){
+      titleEl.textContent = mode==='month' ? (MON[a.getMonth()].charAt(0).toUpperCase()+MON[a.getMonth()].slice(1)+' '+a.getFullYear())
+        : mode==='week' ? 'Veckovy'
+        : mode==='day' ? 'Dagsvy'
+        : 'Agenda';
+    }
+    body.className = 'cal-mode-' + mode;
+    body.innerHTML = mode==='month' ? renderMonth() : mode==='week' ? renderWeek() : mode==='day' ? renderDay() : renderAgenda();
+    var c = $('calCount');
+    if(c){
+      var r = (window.LO && LO.period) ? LO.period().range : null;
+      var n = 0;
+      if(r){ var cur = dt(r.start), end = dt(r.end);
+        while(cur <= end){ n += eventsFor(iso(cur)).length; cur.setDate(cur.getDate()+1); } }
+      c.textContent = n ? n + ' poster i perioden' : 'Inget inplanerat i perioden';
+    }
+    if(!selDay) selDay = anchorDate();
+    var di = $('calNewDate'); if(di && !di.value) di.value = selDay;
+    dayPanel();
+  }
+
+  window.setCalMode = function(m){ mode = m || 'month'; selDay = selDay || anchorDate(); render(); };
+  window.renderCalendarView = render;
+  window.calPickDay = function(dk){
+    selDay = dk;
+    var di = $('calNewDate'); if(di) di.value = dk;
+    render();
+  };
+  window.calAddItem = function(){
+    var d = $('calNewDate'), t = $('calNewTime'), ti = $('calNewTitle'), ty = $('calNewType');
+    if(!d || !ti) return;
+    var title = (ti.value||'').trim();
+    var date = d.value || selDay || anchorDate();
+    if(!title){ ti.focus(); return; }
+    load();
+    items.push({ id:'c'+Date.now()+Math.floor(Math.random()*999), date:date, time:(t&&t.value)||'', title:title, type:(ty&&ty.value)||'event' });
+    save();
+    ti.value = ''; if(t) t.value = '';
+    selDay = date;
+    render();
+  };
+  window.calRemove = function(id){
+    load();
+    items = items.filter(function(x){ return x.id !== id; });
+    save();
+    render();
+  };
+
+  function init(){
+    load();
+    setTimeout(function(){
+      var h = location.hash || '';
+      if(h.indexOf('/kalender/') > -1){
+        var m = h.indexOf('/vecka')>-1 ? 'week' : h.indexOf('/dag')>-1 ? 'day' : h.indexOf('/agenda')>-1 ? 'agenda' : 'month';
+        if(h.indexOf('/manad')>-1) m = 'month';
+        setCalMode(m);
+      }
+    }, 80);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
+<script>
+/* =========================================================================
+   LIFE OS — TikTok: idébank + content plan
+   ========================================================================= */
+(function(){
+  var IKEY = 'lo_tt_ideas_v1', PKEY = 'lo_tt_plan_v1';
+  var ideas = [], plan = [];
+  var STAGES = ['Idé','Manus','Inspelad','Klippt','Publicerad'];
+  var DAYS = ['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
+  var filterStage = 'alla';
+
+  function pad(n){ return n<10?'0'+n:''+n; }
+  function iso(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function dt(s){ return new Date(s+'T00:00:00'); }
+  function monday(d){ var x=new Date(d); var w=x.getDay(); x.setDate(x.getDate()+((w===0)?-6:1-w)); x.setHours(0,0,0,0); return x; }
+  function esc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function $(id){ return document.getElementById(id); }
+  function load(){
+    try{ ideas = JSON.parse(localStorage.getItem(IKEY)||'[]'); }catch(e){ ideas=[]; }
+    try{ plan  = JSON.parse(localStorage.getItem(PKEY)||'[]'); }catch(e){ plan=[]; }
+  }
+  function save(){
+    try{ localStorage.setItem(IKEY, JSON.stringify(ideas)); localStorage.setItem(PKEY, JSON.stringify(plan)); }catch(e){}
+  }
+  function anchorDate(){ try{ if(window.LO && LO.period) return LO.period().anchor; }catch(e){} return iso(new Date()); }
+  function pillars(){ return (window.tiktokPillars||[]).map(function(p){ return typeof p === 'string' ? p : (p.t||p.title||''); }).filter(Boolean); }
+
+  /* ---------------- DOM ---------------- */
+  function ensureDom(){
+    var view = $('view-tiktok'); if(!view) return false;
+    if($('ttIdeasPane')) return true;
+    var tabsBox = view.querySelector('.cat-tabs');
+    if(tabsBox){
+      var t1 = document.createElement('div'); t1.className='cat-tab'; t1.id='tiktokTabIdeas'; t1.textContent='Idébank';
+      t1.onclick = function(){ setTiktokTab('ideas'); };
+      var t2 = document.createElement('div'); t2.className='cat-tab'; t2.id='tiktokTabPlan'; t2.textContent='Content plan';
+      t2.onclick = function(){ setTiktokTab('plan'); };
+      tabsBox.appendChild(t1); tabsBox.appendChild(t2);
+    }
+
+    var ip = document.createElement('div');
+    ip.id = 'ttIdeasPane'; ip.style.display = 'none';
+    ip.innerHTML =
+      '<div class="card">' +
+        '<div class="card-label">Ny idé</div>' +
+        '<div class="card-sub">samla allt du vill spela in — hook, pillar och status</div>' +
+        '<div class="add-row" style="flex-wrap:wrap;gap:8px;margin-top:8px;">' +
+          '<input type="text" id="ttIdeaTitle" placeholder="Idé / ämne" style="flex:1;min-width:170px;">' +
+          '<input type="text" id="ttIdeaHook" placeholder="Hook (första 2 sek)" style="flex:1;min-width:170px;">' +
+          '<select id="ttIdeaPillar" style="flex:0 0 160px;"></select>' +
+          '<button onclick="ttAddIdea()">Lägg till</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="reflect-row"><div class="card-label" style="margin:0;">Idébank</div><div id="ttIdeaCount" style="font-size:11px;color:var(--text-soft);"></div></div>' +
+        '<div class="cat-tabs" id="ttStageTabs" style="margin-top:10px;"></div>' +
+        '<div id="ttIdeaList" style="margin-top:12px;"></div>' +
+      '</div>';
+
+    var pp = document.createElement('div');
+    pp.id = 'ttPlanPane'; pp.style.display = 'none';
+    pp.innerHTML =
+      '<div class="card">' +
+        '<div class="reflect-row"><div class="card-label" style="margin:0;" id="ttPlanTitle">Content plan</div>' +
+        '<div id="ttPlanStats" style="font-size:11px;color:var(--text-soft);"></div></div>' +
+        '<div class="card-sub">planera publiceringar — de dyker upp i din kalender automatiskt</div>' +
+        '<div id="ttPlanWeek" style="margin-top:14px;"></div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-label">Planera en publicering</div>' +
+        '<div class="add-row" style="flex-wrap:wrap;gap:8px;">' +
+          '<input type="date" id="ttPlanDate" style="flex:0 0 155px;">' +
+          '<input type="time" id="ttPlanTime" style="flex:0 0 110px;">' +
+          '<select id="ttPlanIdea" style="flex:1;min-width:180px;"></select>' +
+          '<button onclick="ttAddPlan()">Planera</button>' +
+        '</div>' +
+        '<div class="card-sub" style="margin-top:10px;">Välj en idé ur idébanken, eller skriv en egen nedan.</div>' +
+        '<div class="add-row" style="margin-top:6px;">' +
+          '<input type="text" id="ttPlanFree" placeholder="Egen titel (valfritt)">' +
+        '</div>' +
+      '</div>';
+
+    view.appendChild(ip); view.appendChild(pp);
+    return true;
+  }
+
+  /* ---------------- render ---------------- */
+  function renderIdeas(){
+    load();
+    var sel = $('ttIdeaPillar');
+    if(sel){
+      var ps = pillars();
+      sel.innerHTML = '<option value="">Ingen pillar</option>' + ps.map(function(p){ return '<option value="'+esc(p)+'">'+esc(p)+'</option>'; }).join('');
+    }
+    var tabs = $('ttStageTabs');
+    if(tabs){
+      tabs.innerHTML = ['alla'].concat(STAGES).map(function(s){
+        var n = s==='alla' ? ideas.length : ideas.filter(function(i){ return i.stage===s; }).length;
+        return '<div class="cat-tab'+(filterStage===s?' active':'')+'" onclick="ttFilterStage(\''+s+'\')">'+(s==='alla'?'Alla':s)+' ('+n+')</div>';
+      }).join('');
+    }
+    var list = $('ttIdeaList');
+    var shown = ideas.filter(function(i){ return filterStage==='alla' || i.stage===filterStage; });
+    if(list){
+      list.innerHTML = shown.length ? shown.map(function(i){
+        var si = STAGES.indexOf(i.stage||'Idé');
+        return '<div class="tt-idea">' +
+          '<div class="tt-idea-main">' +
+            '<div class="tt-idea-title">'+esc(i.title)+'</div>' +
+            (i.hook ? '<div class="tt-idea-hook">🎣 '+esc(i.hook)+'</div>' : '') +
+            '<div class="tt-idea-meta">' + (i.pillar ? '<span class="tt-pill">'+esc(i.pillar)+'</span>' : '') +
+              '<span class="tt-stage">'+esc(i.stage||'Idé')+'</span>' +
+              (i.planned ? '<span class="tt-planned">📅 '+i.planned+'</span>' : '') + '</div>' +
+            '<div class="tt-steps">' + STAGES.map(function(s,k){
+                return '<span class="tt-step'+(k<=si?' on':'')+'" onclick="ttSetStage(\''+i.id+'\',\''+s+'\')" title="'+s+'"></span>';
+              }).join('') + '</div>' +
+          '</div>' +
+          '<div class="tt-idea-actions">' +
+            '<button class="change-btn" onclick="ttPlanFromIdea(\''+i.id+'\')">Planera</button>' +
+            '<span class="cal-x" onclick="ttRemoveIdea(\''+i.id+'\')">×</span>' +
+          '</div></div>';
+      }).join('') : '<div class="lo-empty">Inga idéer ännu — skriv in din första ovanför.</div>';
+    }
+    var c = $('ttIdeaCount');
+    if(c) c.textContent = ideas.length ? ideas.length + ' idéer · ' + ideas.filter(function(i){ return i.stage==='Publicerad'; }).length + ' publicerade' : '';
+  }
+
+  function renderPlan(){
+    load();
+    var m = monday(dt(anchorDate()));
+    var tEl = $('ttPlanTitle');
+    if(tEl){ var su=new Date(m); su.setDate(m.getDate()+6);
+      tEl.textContent = 'Content plan · ' + m.getDate()+'/'+(m.getMonth()+1) + '–' + su.getDate()+'/'+(su.getMonth()+1); }
+    var sel = $('ttPlanIdea');
+    if(sel){
+      var open = ideas.filter(function(i){ return i.stage !== 'Publicerad'; });
+      sel.innerHTML = '<option value="">— välj idé —</option>' + open.map(function(i){ return '<option value="'+i.id+'">'+esc(i.title)+'</option>'; }).join('');
+    }
+    var dEl = $('ttPlanDate'); if(dEl && !dEl.value) dEl.value = anchorDate();
+    var wrap = $('ttPlanWeek');
+    if(wrap){
+      var today = iso(new Date());
+      var html = '<div class="tt-week">';
+      for(var i=0;i<7;i++){
+        var d = new Date(m); d.setDate(m.getDate()+i);
+        var dk = iso(d);
+        var posts = plan.filter(function(p){ return p.date===dk; }).sort(function(a,b){ return (a.time||'99').localeCompare(b.time||'99'); });
+        html += '<div class="tt-wcol'+(dk===today?' is-today':'')+'">' +
+          '<div class="tt-whead">'+DAYS[i]+' '+d.getDate()+'</div>' +
+          (posts.length ? posts.map(function(p){
+            return '<div class="tt-post'+(p.done?' is-done':'')+'">' +
+              '<span class="tt-post-t" onclick="ttTogglePost(\''+p.id+'\')">'+(p.time||'—')+'</span>' +
+              '<span class="tt-post-title" onclick="ttTogglePost(\''+p.id+'\')">'+esc(p.title)+'</span>' +
+              '<span class="cal-x" onclick="ttRemovePlan(\''+p.id+'\')">×</span></div>';
+          }).join('') : '<div class="cal-dim">—</div>') +
+          '</div>';
+      }
+      wrap.innerHTML = html + '</div>';
+    }
+    var st = $('ttPlanStats');
+    if(st){
+      var weekEnd = new Date(m); weekEnd.setDate(m.getDate()+6);
+      var inWeek = plan.filter(function(p){ return p.date>=iso(m) && p.date<=iso(weekEnd); });
+      st.textContent = inWeek.length ? inWeek.length + ' planerade · ' + inWeek.filter(function(p){ return p.done; }).length + ' publicerade' : 'Inget planerat den här veckan';
+    }
+  }
+
+  function renderAll(){ if(!ensureDom()) return; renderIdeas(); renderPlan(); }
+
+  /* ---------------- actions ---------------- */
+  window.ttFilterStage = function(s){ filterStage = s; renderIdeas(); };
+  window.ttAddIdea = function(){
+    var t = $('ttIdeaTitle'), h = $('ttIdeaHook'), p = $('ttIdeaPillar');
+    var title = (t.value||'').trim(); if(!title){ t.focus(); return; }
+    load();
+    ideas.unshift({ id:'i'+Date.now()+Math.floor(Math.random()*999), title:title, hook:(h.value||'').trim(), pillar:p?p.value:'', stage:'Idé', planned:'' });
+    save(); t.value=''; if(h) h.value='';
+    renderAll();
+  };
+  window.ttSetStage = function(id, stage){
+    load();
+    ideas.forEach(function(i){ if(i.id===id) i.stage = stage; });
+    save(); renderIdeas();
+  };
+  window.ttRemoveIdea = function(id){
+    load(); ideas = ideas.filter(function(i){ return i.id!==id; }); save(); renderAll();
+  };
+  window.ttPlanFromIdea = function(id){
+    load();
+    var idea = null; ideas.forEach(function(i){ if(i.id===id) idea=i; });
+    if(!idea) return;
+    if(window.setTiktokTab) setTiktokTab('plan');
+    setTimeout(function(){
+      var sel = $('ttPlanIdea'); if(sel) sel.value = id;
+      var d = $('ttPlanDate'); if(d && !d.value) d.value = anchorDate();
+      if(d) d.focus();
+    }, 60);
+  };
+  window.ttAddPlan = function(){
+    load();
+    var d = $('ttPlanDate'), t = $('ttPlanTime'), sel = $('ttPlanIdea'), free = $('ttPlanFree');
+    var title = (free && free.value.trim()) || '';
+    var ideaId = sel ? sel.value : '';
+    if(!title && ideaId){ ideas.forEach(function(i){ if(i.id===ideaId) title = i.title; }); }
+    if(!title){ if(free) free.focus(); return; }
+    var date = (d && d.value) || anchorDate();
+    plan.push({ id:'p'+Date.now()+Math.floor(Math.random()*999), date:date, time:(t&&t.value)||'', title:title, ideaId:ideaId, done:false });
+    if(ideaId) ideas.forEach(function(i){ if(i.id===ideaId) i.planned = date; });
+    save();
+    if(free) free.value=''; if(t) t.value='';
+    renderAll();
+    if(typeof window.renderCalendarView === 'function') window.renderCalendarView();
+  };
+  window.ttTogglePost = function(id){
+    load();
+    plan.forEach(function(p){
+      if(p.id!==id) return;
+      p.done = !p.done;
+      if(p.done && p.ideaId) ideas.forEach(function(i){ if(i.id===p.ideaId) i.stage = 'Publicerad'; });
+    });
+    save(); renderAll();
+  };
+  window.ttRemovePlan = function(id){
+    load(); plan = plan.filter(function(p){ return p.id!==id; }); save(); renderAll();
+    if(typeof window.renderCalendarView === 'function') window.renderCalendarView();
+  };
+
+  /* kalendern hämtar planerade publiceringar härifrån */
+  window.loCalExtra = function(dk){
+    load();
+    return plan.filter(function(p){ return p.date===dk; }).map(function(p){
+      return { time:p.time||'', title:'TikTok: '+p.title, kind:'tiktok', type:'event', done:!!p.done };
+    });
+  };
+
+  function hookTabs(){
+    var orig = window.setTiktokTab;
+    if(typeof orig !== 'function') return false;
+    window.setTiktokTab = function(t){
+      ensureDom();
+      var mine = (t==='ideas' || t==='plan');
+      if(!mine){ try{ orig.apply(this, arguments); }catch(e){} }
+      else {
+        ['oversikt','ideer','videos','analys'].forEach(function(k){
+          var el = $('tiktokPane_'+k); if(el) el.style.display='none';
+          var tb = $('tiktokTab'+k.charAt(0).toUpperCase()+k.slice(1)); if(tb) tb.classList.remove('active');
+        });
+      }
+      var ip = $('ttIdeasPane'), pp = $('ttPlanPane');
+      if(ip) ip.style.display = (t==='ideas') ? 'block' : 'none';
+      if(pp) pp.style.display = (t==='plan') ? 'block' : 'none';
+      var ti = $('tiktokTabIdeas'), tp = $('tiktokTabPlan');
+      if(ti) ti.classList.toggle('active', t==='ideas');
+      if(tp) tp.classList.toggle('active', t==='plan');
+      if(mine) renderAll();
+    };
+    return true;
+  }
+
+  function init(){
+    load();
+    ensureDom();
+    hookTabs();
+    var origSync = window.renderCalendarView;
+    setTimeout(function(){
+      var h = location.hash||'';
+      if(h.indexOf('/tiktok/ideer')>-1 && window.setTiktokTab) setTiktokTab('ideas');
+      if(h.indexOf('/tiktok/plan')>-1 && window.setTiktokTab) setTiktokTab('plan');
+    }, 90);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+<script>
+/* =========================================================================
+   LIFE OS — Hälsa: flikar, manuell loggning, trender
+   ========================================================================= */
+(function(){
+  var KEY = 'lo_health_log_v1';
+  var tab = 'oversikt';
+  var store = { entries: [], workouts: [] };
+  try { var raw = localStorage.getItem(KEY); if(raw){ var p = JSON.parse(raw); if(p && typeof p==='object'){ store.entries = p.entries||[]; store.workouts = p.workouts||[]; } } } catch(e){}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function iso(d){ var m=d.getMonth()+1, dd=d.getDate(); return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(dd<10?'0':'')+dd; }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function range(){ try { return window.LO.period().range; } catch(e){ var t=iso(new Date()); return {start:t,end:t}; } }
+  function inR(d,r){ d=(d||'').slice(0,10); return d>=r.start && d<=r.end; }
+  function nf(n){ return Math.round(n).toLocaleString('sv-SE'); }
+  function empty(t){ return '<div class="lo-empty">'+esc(t)+'</div>'; }
+
+  window.halsaLog = function(){
+    var d = ($('hlDate')||{}).value || iso(new Date());
+    var e = { date:d,
+      weight: parseFloat(($('hlWeight')||{}).value) || null,
+      sleep: parseFloat(($('hlSleep')||{}).value) || null,
+      steps: parseFloat(($('hlSteps')||{}).value) || null,
+      energy: parseFloat(($('hlEnergy')||{}).value) || null,
+      note: (($('hlNote')||{}).value || '').trim() };
+    if(e.weight===null && e.sleep===null && e.steps===null && e.energy===null && !e.note) return;
+    store.entries = store.entries.filter(function(x){ return x.date !== d; });
+    store.entries.push(e);
+    store.entries.sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
+    save(); render();
+  };
+  window.halsaAddWorkout = function(){
+    var n = (($('hwName')||{}).value||'').trim(); if(!n) return;
+    store.workouts.push({ date: (($('hwDate')||{}).value || iso(new Date())), name:n,
+      min: parseFloat(($('hwMin')||{}).value) || 0, type: (($('hwType')||{}).value||'') });
+    store.workouts.sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
+    save(); if($('hwName')) $('hwName').value=''; if($('hwMin')) $('hwMin').value='';
+    render();
+  };
+  window.halsaRemoveWorkout = function(i){ store.workouts.splice(i,1); save(); render(); };
+  window.halsaRemoveEntry = function(d){ store.entries = store.entries.filter(function(x){ return x.date!==d; }); save(); render(); };
+
+  window.setHalsaTab = function(t){ tab = t || 'oversikt'; applyTabs(); render(); };
+
+  function applyTabs(){
+    var v = $('view-halsa'); if(!v) return;
+    var cards = v.querySelectorAll('[data-halsa]');
+    for(var i=0;i<cards.length;i++){
+      var keys = (cards[i].getAttribute('data-halsa')||'').split(/\s+/);
+      cards[i].style.display = (keys.indexOf(tab) > -1) ? '' : 'none';
+    }
+  }
+
+  function logForm(){
+    var box = $('halsaLogForm'); if(!box) return;
+    var today = iso(new Date());
+    var cur = store.entries.filter(function(e){ return e.date===today; })[0] || {};
+    box.innerHTML =
+      '<div class="hl-form">' +
+      '<label>Datum<input type="date" id="hlDate" value="'+today+'"></label>' +
+      '<label>Vikt (kg)<input type="number" step="0.1" id="hlWeight" value="'+(cur.weight||'')+'"></label>' +
+      '<label>Sömn (h)<input type="number" step="0.1" id="hlSleep" value="'+(cur.sleep||'')+'"></label>' +
+      '<label>Steg<input type="number" id="hlSteps" value="'+(cur.steps||'')+'"></label>' +
+      '<label>Energi 1–10<input type="number" min="1" max="10" id="hlEnergy" value="'+(cur.energy||'')+'"></label>' +
+      '<label class="wide">Anteckning<input type="text" id="hlNote" placeholder="hur kändes kroppen?" value="'+esc(cur.note||'')+'"></label>' +
+      '</div>' +
+      '<button class="btn" onclick="halsaLog()">Spara dagens logg</button>' +
+      recentLog();
+  }
+  function recentLog(){
+    var last = store.entries.slice(-7).reverse();
+    if(!last.length) return '<div class="lo-empty" style="margin-top:10px;">Ingen egen logg ännu.</div>';
+    return '<div style="margin-top:12px;">' + last.map(function(e){
+      var p = [];
+      if(e.weight) p.push(e.weight+' kg'); if(e.sleep) p.push(e.sleep+' h sömn');
+      if(e.steps) p.push(nf(e.steps)+' steg'); if(e.energy) p.push('energi '+e.energy);
+      if(e.note) p.push(esc(e.note));
+      return '<div class="lo-kv"><span>'+e.date+'</span><b>'+(p.join(' · ')||'—')+' <a class="cal-x" href="javascript:void(0)" onclick="halsaRemoveEntry(\''+e.date+'\')">✕</a></b></div>';
+    }).join('') + '</div>';
+  }
+
+  function workoutForm(){
+    var box = $('halsaWorkoutForm'); if(!box) return;
+    var r = range();
+    var mine = store.workouts.map(function(w,i){ return {w:w,i:i}; }).filter(function(x){ return inR(x.w.date, r); }).reverse();
+    box.innerHTML =
+      '<div class="hl-form">' +
+      '<label>Datum<input type="date" id="hwDate" value="'+iso(new Date())+'"></label>' +
+      '<label class="wide">Pass<input type="text" id="hwName" placeholder="t.ex. Styrka underkropp"></label>' +
+      '<label>Minuter<input type="number" id="hwMin" placeholder="45"></label>' +
+      '<label>Typ<select id="hwType"><option value="">—</option><option>Styrka</option><option>Kondition</option><option>Promenad</option><option>Yoga</option><option>Annat</option></select></label>' +
+      '</div>' +
+      '<button class="btn" onclick="halsaAddWorkout()">Lägg till pass</button>' +
+      (mine.length ? '<div style="margin-top:12px;">' + mine.map(function(x){
+        return '<div class="lo-kv"><span>'+esc(x.w.name)+'<span style="color:#6B655A;"> · '+x.w.date+(x.w.type?' · '+esc(x.w.type):'')+'</span></span><b>'+(x.w.min||0)+' min <a class="cal-x" href="javascript:void(0)" onclick="halsaRemoveWorkout('+x.i+')">✕</a></b></div>';
+      }).join('') + '</div>' : '');
+  }
+
+  function series(field){
+    var r = range(), out = [];
+    store.entries.forEach(function(e){ if(inR(e.date,r) && e[field]) out.push({ d:e.date, v:e[field] }); });
+    if(window.healthLoaded === true && typeof metricByName === 'function'){
+      var nameMap = { sleep:'sleep_analysis', steps:'step_count', weight:'weight_body_mass' };
+      var m = metricByName(nameMap[field]);
+      if(m && m.data) m.data.forEach(function(p){
+        var d = (p.date||'').slice(0,10);
+        if(!inR(d,r)) return;
+        if(out.some(function(o){ return o.d===d; })) return;
+        var v = (field==='sleep') ? (p.totalSleep||p.qty||0) : (p.qty||0);
+        if(v) out.push({ d:d, v:v });
+      });
+    }
+    out.sort(function(a,b){ return a.d.localeCompare(b.d); });
+    return out;
+  }
+  function chart(title, unit, data){
+    if(!data.length) return '<div class="hl-chart"><div class="hl-chart-t">'+esc(title)+'</div>'+empty('Ingen data i perioden.')+'</div>';
+    var max = Math.max.apply(null, data.map(function(p){ return p.v; }));
+    var min = Math.min.apply(null, data.map(function(p){ return p.v; }));
+    var span = (max-min) || max || 1;
+    var avg = data.reduce(function(a,p){ return a+p.v; },0)/data.length;
+    var first = data[0].v, last = data[data.length-1].v;
+    var diff = last - first;
+    return '<div class="hl-chart">' +
+      '<div class="hl-chart-t">'+esc(title)+'<em>snitt '+(Math.round(avg*10)/10).toLocaleString('sv-SE')+' '+unit+
+      (data.length>1 ? ' · '+(diff>=0?'+':'')+(Math.round(diff*10)/10).toLocaleString('sv-SE')+' '+unit+' i perioden' : '')+'</em></div>' +
+      '<div class="hl-bars">' + data.map(function(p){
+        var h = 14 + Math.round(((p.v-min)/span)*86);
+        return '<div class="hl-bar" title="'+p.d+': '+p.v+' '+unit+'"><span style="height:'+h+'%"></span><em>'+p.d.slice(8)+'</em></div>';
+      }).join('') + '</div></div>';
+  }
+  function trends(){
+    var box = $('halsaTrends'); if(!box) return;
+    box.innerHTML = chart('Steg per dag','steg',series('steps')) +
+      chart('Sömn per natt','h',series('sleep')) +
+      chart('Vikt','kg',series('weight'));
+  }
+
+  function augment(){
+    var r = range();
+    var tl = $('halsaTrainingList');
+    if(tl){
+      var mine = store.workouts.filter(function(w){ return inR(w.date,r); });
+      if(mine.length){
+        if(tl.querySelector('.lo-empty')) tl.innerHTML = '';
+        tl.innerHTML += mine.slice().reverse().map(function(w){
+          return '<div class="lo-kv"><span>'+esc(w.name)+'<span style="color:#6B655A;"> · '+w.date+' · egen logg</span></span><b>'+(w.min||0)+' min</b></div>';
+        }).join('');
+      }
+    }
+    var sl = $('halsaSleep');
+    if(sl){
+      var s = series('sleep');
+      if(s.length && sl.querySelector('.lo-empty')){
+        sl.innerHTML = s.slice(-7).reverse().map(function(p){
+          return '<div class="lo-kv"><span>'+p.d+'</span><b>'+p.v.toFixed(1)+' h</b></div>';
+        }).join('');
+      }
+    }
+  }
+
+  function render(){
+    if(!$('view-halsa')) return;
+    applyTabs(); logForm(); workoutForm(); trends(); augment();
+  }
+  window.renderHalsaExtra = render;
+
+  function boot(){
+    if(!window.LO || !window.LO.renderHalsa){ setTimeout(boot, 80); return; }
+    var orig = window.LO.renderHalsa;
+    window.LO.renderHalsa = function(){ var out = orig.apply(this, arguments); try { render(); } catch(e){} return out; };
+    var h = location.hash || '';
+    var m = h.match(/#\/halsa\/([a-z]+)/);
+    if(m) tab = m[1];
+    setTimeout(render, 120);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+
+
+<script type="module">
+(function(){
+  var KEY='lo_money_v1';
+  var store;
+  try{ store = JSON.parse(localStorage.getItem(KEY)||'null') || {tx:[],budget:{}}; }catch(e){ store={tx:[],budget:{}}; }
+  if(!store.tx) store.tx=[]; if(!store.budget) store.budget={};
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function iso(d){ return d.toISOString().slice(0,10); }
+  function kr(n){ return Math.round(n||0).toLocaleString('sv-SE')+' kr'; }
+  function range(){ try{ return window.LO.period().range; }catch(e){ var t=iso(new Date()); return {start:t,end:t}; } }
+  var CATS=['Boende','Mat','Transport','Nöje','Hälsa','Shopping','Prenumerationer','Sparande','Skuld','Övrigt'];
+  var tab='oversikt';
+
+  function inRange(t,r){ return t.date >= r.start && t.date <= r.end; }
+
+  function applyTabs(){
+    var v=$('view-money'); if(!v) return;
+    var cards=v.querySelectorAll('[data-ekonomi]');
+    for(var i=0;i<cards.length;i++){
+      var keys=(cards[i].getAttribute('data-ekonomi')||'').split(/\s+/);
+      cards[i].style.display = keys.indexOf(tab)>-1 ? '' : 'none';
+    }
+  }
+
+  function txForm(){
+    var box=$('ekTxForm'); if(!box) return;
+    box.innerHTML='<div class="ek-form">'+
+      '<label>Typ<select id="ekType"><option value="out">Utgift</option><option value="in">Inkomst</option></select></label>'+
+      '<label>Datum<input type="date" id="ekDate" value="'+iso(new Date())+'"></label>'+
+      '<label>Belopp (kr)<input type="number" id="ekAmt" placeholder="0"></label>'+
+      '<label>Kategori<select id="ekCat">'+CATS.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></label>'+
+      '<label class="wide">Beskrivning<input type="text" id="ekNote" placeholder="vad gällde det?"></label>'+
+      '</div><button class="btn" onclick="ekAddTx()">Lägg till</button>';
+  }
+
+  function txList(){
+    var box=$('ekTxList'); if(!box) return;
+    var r=range();
+    var rows=store.tx.map(function(t,i){ return {t:t,i:i}; }).filter(function(o){ return inRange(o.t,r); })
+      .sort(function(a,b){ return (b.t.date||'').localeCompare(a.t.date||''); });
+    if(!rows.length){ box.innerHTML='<div class="lo-empty">Inga transaktioner i den här perioden.</div>'; return; }
+    box.innerHTML=rows.map(function(o){
+      return '<div class="ek-row"><div class="t"><b>'+esc(o.t.note||o.t.cat)+'</b><span>'+esc(o.t.date)+' · '+esc(o.t.cat)+'</span></div>'+
+        '<div class="ek-amt '+(o.t.type==='in'?'in':'out')+'">'+(o.t.type==='in'?'+':'−')+kr(o.t.amount)+'</div>'+
+        '<button class="ek-x" onclick="ekRemoveTx('+o.i+')">✕</button></div>';
+    }).join('');
+  }
+
+  function stats(){
+    var box=$('ekPeriodStats'); if(!box) return;
+    var r=range(); var sub=$('ekPeriodSub'); if(sub) sub.textContent=r.start+' → '+r.end;
+    var inc=0,exp=0;
+    store.tx.forEach(function(t){ if(!inRange(t,r)) return; if(t.type==='in') inc+=(+t.amount||0); else exp+=(+t.amount||0); });
+    var net=inc-exp;
+    box.innerHTML=
+      '<div class="stat"><div class="lbl">Inkomst</div><div class="val">'+kr(inc)+'</div></div>'+
+      '<div class="stat"><div class="lbl">Utgifter</div><div class="val">'+kr(exp)+'</div></div>'+
+      '<div class="stat"><div class="lbl">Netto</div><div class="val">'+(net>=0?'+':'−')+kr(Math.abs(net))+'</div></div>'+
+      '<div class="stat"><div class="lbl">Sparkvot</div><div class="val">'+(inc>0?Math.round(net/inc*100):0)+'%</div></div>';
+  }
+
+  function flow(){
+    var box=$('ekFlowChart'); if(!box) return;
+    var months={}, order=[];
+    var now=new Date();
+    for(var k=5;k>=0;k--){ var d=new Date(now.getFullYear(), now.getMonth()-k, 1); var key=iso(d).slice(0,7); months[key]={in:0,out:0}; order.push(key); }
+    store.tx.forEach(function(t){ var key=(t.date||'').slice(0,7); if(months[key]){ if(t.type==='in') months[key].in+=(+t.amount||0); else months[key].out+=(+t.amount||0); } });
+    var max=1; order.forEach(function(k){ max=Math.max(max, months[k].in, months[k].out); });
+    box.innerHTML='<div class="hl-chart-t">Kassaflöde — senaste 6 månaderna</div><div class="ek-bars">'+
+      order.map(function(k){
+        return '<div class="ek-col"><div class="pair"><i class="in" style="height:'+Math.max(2,months[k].in/max*100)+'px"></i>'+
+          '<i class="out" style="height:'+Math.max(2,months[k].out/max*100)+'px"></i></div><span>'+k.slice(5)+'</span></div>';
+      }).join('')+'</div>';
+  }
+
+  function budget(){
+    var f=$('ekBudgetForm'), l=$('ekBudgetList'); if(!f||!l) return;
+    f.innerHTML='<div class="ek-form">'+
+      '<label>Kategori<select id="ekBCat">'+CATS.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></label>'+
+      '<label>Budget/mån (kr)<input type="number" id="ekBAmt" placeholder="0"></label>'+
+      '</div><button class="btn" onclick="ekSetBudget()">Spara budget</button>';
+    var r=range(), spent={};
+    store.tx.forEach(function(t){ if(t.type==='in'||!inRange(t,r)) return; spent[t.cat]=(spent[t.cat]||0)+(+t.amount||0); });
+    var keys=Object.keys(store.budget);
+    if(!keys.length){ l.innerHTML='<div class="lo-empty">Ingen budget satt ännu.</div>'; return; }
+    l.innerHTML=keys.map(function(c){
+      var b=+store.budget[c]||0, s=spent[c]||0, pct=b>0?Math.min(100,Math.round(s/b*100)):0;
+      return '<div class="ek-row" style="display:block;"><div style="display:flex;gap:10px;align-items:center;">'+
+        '<div class="t"><b>'+esc(c)+'</b><span>'+kr(s)+' av '+kr(b)+'</span></div>'+
+        '<div class="ek-amt '+(s<=b?'in':'out')+'">'+pct+'%</div>'+
+        '<button class="ek-x" onclick="ekRemoveBudget(\''+esc(c)+'\')">✕</button></div>'+
+        '<div class="ek-bar"><i class="'+(s<=b?'ok':'')+'" style="width:'+pct+'%"></i></div></div>';
+    }).join('');
+  }
+
+  function render(){ applyTabs(); txForm(); txList(); stats(); flow(); budget(); }
+
+  window.ekAddTx=function(){
+    var amt=parseFloat(($('ekAmt')||{}).value); if(isNaN(amt)||amt<=0) return;
+    store.tx.push({ date: ($('ekDate')||{}).value || iso(new Date()), type: ($('ekType')||{}).value||'out',
+      amount: amt, cat: ($('ekCat')||{}).value||'Övrigt', note: (($('ekNote')||{}).value||'').trim() });
+    save(); render();
+  };
+  window.ekRemoveTx=function(i){ store.tx.splice(i,1); save(); render(); };
+  window.ekSetBudget=function(){
+    var c=($('ekBCat')||{}).value, a=parseFloat(($('ekBAmt')||{}).value);
+    if(!c||isNaN(a)) return; store.budget[c]=a; save(); render();
+  };
+  window.ekRemoveBudget=function(c){ delete store.budget[c]; save(); render(); };
+  window.setEkonomiTab=function(t){ tab=t||'oversikt'; render(); };
+  window.renderEkonomi=render;
+
+  var origMoney = window.renderMoney;
+  if(typeof origMoney === 'function'){
+    window.renderMoney = function(){ var r=origMoney.apply(this, arguments); try{ render(); }catch(e){} return r; };
+  }
+  setTimeout(function(){
+    var h=location.hash||'';
+    var m=h.match(/#\/ekonomi\/([a-z]+)/);
+    if(m) tab=m[1];
+    render();
+  }, 400);
+})();
+</script>
+
+<script type="module">
+(function(){
+  var KEY='lo_hard_v1';
+  var store;
+  try{ store = JSON.parse(localStorage.getItem(KEY)||'null') || {days:{}, start:null}; }catch(e){ store={days:{},start:null}; }
+  if(!store.days) store.days={};
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function iso(d){ var p=function(n){return n<10?'0'+n:''+n;}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+  var tab='idag', pick=iso(new Date());
+
+  function rows(){ try{ return window.hard75Rows || []; }catch(e){ return []; } }
+  function start(){ try{ return window.challengeStart || store.start || iso(new Date()); }catch(e){ return store.start || iso(new Date()); } }
+  function end(){ try{ return window.challengeEnd || ''; }catch(e){ return ''; } }
+
+  function applyTabs(){
+    var v=$('view-hard75'); if(!v) return;
+    var cards=v.querySelectorAll('[data-hard]');
+    for(var i=0;i<cards.length;i++){
+      var keys=(cards[i].getAttribute('data-hard')||'').split(/\s+/);
+      cards[i].style.display = keys.indexOf(tab)>-1 ? '' : 'none';
+    }
+  }
+
+  function logForm(){
+    var box=$('hdLogForm'); if(!box) return;
+    var d=iso(new Date()); var cur=store.days[d]||{};
+    box.innerHTML='<div class="ek-form">'+
+      '<label>Vikt (kg)<input type="number" step="0.1" id="hdW" value="'+(cur.weight||'')+'"></label>'+
+      '<label>Vatten (liter)<input type="number" step="0.1" id="hdWater" value="'+(cur.water||'')+'"></label>'+
+      '<label>Sidor lästa<input type="number" id="hdPages" value="'+(cur.pages||'')+'"></label>'+
+      '<label class="wide">Hur kändes dagen?<input type="text" id="hdNote" value="'+esc(cur.note||'')+'" placeholder="en rad om dagen"></label>'+
+      '</div><button class="btn" onclick="hardSaveDay()">Spara dagens logg</button>';
+  }
+
+  function dayPicker(){
+    var box=$('hdDayPicker'); if(!box) return;
+    box.innerHTML='<input type="date" id="hdPick" value="'+pick+'" onchange="hardPickDay(this.value)" style="padding:8px 12px;border-radius:12px;border:1px solid var(--border);">';
+    var list=$('hdDayList'); if(!list) return;
+    var hs = window.habitState||{};
+    var r = rows();
+    if(!r.length){ list.innerHTML='<li class="list-empty">Inga krav definierade.</li>'; return; }
+    list.innerHTML = r.map(function(h){
+      var done = hs[h] && hs[h][pick];
+      return '<li class="'+(done?'done':'')+'" onclick="hardToggleDay(\''+esc(h).replace(/'/g,"&#39;")+'\')"><span class="box">'+(done?'✓':'')+'</span><span class="t">'+esc(h)+'</span></li>';
+    }).join('');
+  }
+
+  function journal(){
+    var box=$('hdJournal'); if(!box) return;
+    var keys=Object.keys(store.days).filter(function(d){ return (store.days[d]||{}).note; }).sort().reverse();
+    if(!keys.length){ box.innerHTML='<div class="lo-empty">Inga anteckningar ännu.</div>'; return; }
+    box.innerHTML=keys.map(function(d){
+      var e=store.days[d];
+      var meta=[]; if(e.weight) meta.push(e.weight+' kg'); if(e.water) meta.push(e.water+' l'); if(e.pages) meta.push(e.pages+' sidor');
+      return '<div class="ek-row"><div class="t"><b>'+esc(e.note)+'</b><span>'+esc(d)+(meta.length?' · '+esc(meta.join(' · ')):'')+'</span></div>'+
+        '<button class="ek-x" onclick="hardRemoveDay(\''+d+'\')">✕</button></div>';
+    }).join('');
+  }
+
+  function rules(){
+    var box=$('hdRules'); if(!box) return;
+    var r=rows();
+    box.innerHTML='<div class="ek-form">'+
+      '<label>Startdatum<input type="date" id="hdStart" value="'+esc(start())+'"></label>'+
+      '<label>Slutdatum<input type="date" id="hdEnd" value="'+esc(end())+'" disabled></label>'+
+      '</div><button class="btn" onclick="hardSaveStart()">Spara startdatum</button>'+
+      '<div class="card-sub" style="margin-top:14px;">Dagliga krav</div>'+
+      r.map(function(h){ return '<div class="ek-row"><div class="t"><b>'+esc(h)+'</b><span>måste bockas varje dag</span></div></div>'; }).join('');
+  }
+
+  function render(){ applyTabs(); logForm(); dayPicker(); journal(); rules(); }
+
+  window.hardSaveDay=function(){
+    var d=iso(new Date());
+    var e=store.days[d]||{};
+    e.weight=parseFloat(($('hdW')||{}).value)||null;
+    e.water=parseFloat(($('hdWater')||{}).value)||null;
+    e.pages=parseFloat(($('hdPages')||{}).value)||null;
+    e.note=((($('hdNote')||{}).value)||'').trim();
+    store.days[d]=e; save(); render();
+  };
+  window.hardRemoveDay=function(d){ delete store.days[d]; save(); render(); };
+  window.hardPickDay=function(v){ pick=v||pick; dayPicker(); };
+  window.hardToggleDay=function(h){
+    h = h.replace(/&#39;/g, "'");
+    var hs = window.habitState; if(!hs) return;
+    if(!hs[h]) hs[h]={};
+    hs[h][pick] = !hs[h][pick];
+    try{ if(typeof window.saveAll==='function') window.saveAll(); }catch(e){}
+    try{ if(typeof window.renderHard75View==='function') window.renderHard75View(); }catch(e){}
+    try{ if(typeof window.renderHabitTable==='function') window.renderHabitTable(); }catch(e){}
+    dayPicker();
+  };
+  window.hardSaveStart=function(){
+    var v=($('hdStart')||{}).value; if(!v) return;
+    store.start=v; save();
+    try{ window.challengeStart=v; if(typeof window.renderHard75View==='function') window.renderHard75View(); }catch(e){}
+    render();
+  };
+  window.setHardTab=function(t){ tab=t||'idag'; render(); };
+  window.renderHardExtra=render;
+
+  setTimeout(function(){
+    if(store.start){ try{ window.challengeStart = store.start; }catch(e){} }
+    var m=(location.hash||'').match(/#\/hard75\/([a-z]+)/);
+    if(m) tab=m[1];
+    render();
+  }, 450);
+})();
+</script>
+
+<script type="module">
+(function(){
+  var tab='oversikt';
+  var STATUS=['Idé','Aktiv','Pausad','Klar'];
+  function $(id){ return document.getElementById(id); }
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function iso(d){ var p=function(n){return n<10?'0'+n:''+n;}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+  function projs(){ return window.projects || []; }
+
+  function applyTabs(){
+    var v=$('view-projects'); if(!v) return;
+    var cards=v.querySelectorAll('[data-biz]');
+    for(var i=0;i<cards.length;i++){
+      var keys=(cards[i].getAttribute('data-biz')||'').split(/\s+/);
+      var show = keys.indexOf(tab)>-1;
+      if(cards[i].id==='projectDetailCard' && show) continue;
+      cards[i].style.display = show ? '' : 'none';
+    }
+  }
+
+  function stats(){
+    var box=$('bizStats'); if(!box) return;
+    var ps=projs();
+    var active=ps.filter(function(p){return p.status==='Aktiv';}).length;
+    var done=ps.filter(function(p){return p.status==='Klar';}).length;
+    var avg=ps.length?Math.round(ps.reduce(function(a,p){return a+(+p.progress||0);},0)/ps.length):0;
+    var open=0; ps.forEach(function(p){ (p.tasks||[]).forEach(function(t){ if(!t.done) open++; }); });
+    var sub=$('bizSub'); if(sub) sub.textContent = ps.length ? ps.length+' projekt totalt' : 'Inga projekt ännu';
+    box.innerHTML='<div class="stat"><div class="lbl">Aktiva</div><div class="val">'+active+'</div></div>'+
+      '<div class="stat"><div class="lbl">Klara</div><div class="val">'+done+'</div></div>'+
+      '<div class="stat"><div class="lbl">Snittprogress</div><div class="val">'+avg+'%</div></div>'+
+      '<div class="stat"><div class="lbl">Öppna tasks</div><div class="val">'+open+'</div></div>';
+  }
+
+  function deadlines(){
+    var box=$('bizDeadlines'); if(!box) return;
+    var today=iso(new Date());
+    var list=projs().map(function(p,i){return {p:p,i:i};}).filter(function(o){ return o.p.deadline && o.p.status!=='Klar'; })
+      .sort(function(a,b){ return a.p.deadline.localeCompare(b.p.deadline); });
+    if(!list.length){ box.innerHTML='<div class="lo-empty">Inga deadlines satta.</div>'; return; }
+    box.innerHTML=list.map(function(o){
+      var days=Math.round((new Date(o.p.deadline)-new Date(today))/86400000);
+      return '<div class="ek-row" onclick="openProjectDetail('+o.i+')" style="cursor:pointer;"><div class="t"><b>'+esc(o.p.title)+'</b><span>'+esc(o.p.deadline)+' · '+esc(o.p.status)+'</span></div>'+
+        '<div class="ek-amt '+(days<0?'out':'in')+'">'+(days<0?Math.abs(days)+' d sen':days+' d kvar')+'</div></div>';
+    }).join('');
+  }
+
+  function tasks(){
+    var box=$('bizTasks'); if(!box) return;
+    var out=[];
+    projs().forEach(function(p,i){ (p.tasks||[]).forEach(function(t){ if(!t.done) out.push({t:t.t,p:p.title,i:i}); }); });
+    if(!out.length){ box.innerHTML='<div class="lo-empty">Inga öppna tasks.</div>'; return; }
+    box.innerHTML=out.slice(0,20).map(function(o){
+      return '<div class="ek-row" onclick="openProjectDetail('+o.i+')" style="cursor:pointer;"><div class="t"><b>'+esc(o.t)+'</b><span>'+esc(o.p)+'</span></div></div>';
+    }).join('');
+  }
+
+  function board(){
+    var box=$('bizBoard'); if(!box) return;
+    var ps=projs();
+    box.innerHTML='<div class="biz-board">'+STATUS.map(function(st){
+      var items=ps.map(function(p,i){return {p:p,i:i};}).filter(function(o){ return (o.p.status||'Idé')===st; });
+      return '<div class="biz-col"><h6>'+st+' ('+items.length+')</h6>'+
+        (items.length?items.map(function(o){
+          return '<div class="biz-card"><b onclick="openProjectDetail('+o.i+')">'+esc(o.p.title)+'</b>'+
+            '<span>'+(+o.p.progress||0)+'%'+(o.p.deadline?' · '+esc(o.p.deadline):'')+'</span>'+
+            '<div class="biz-move"><button onclick="bizMove('+o.i+',-1)">←</button><button onclick="bizMove('+o.i+',1)">→</button></div></div>';
+        }).join(''):'<div class="lo-empty" style="font-size:11px;">Tomt</div>')+'</div>';
+    }).join('')+'</div>';
+  }
+
+  function render(){ applyTabs(); stats(); deadlines(); tasks(); board(); }
+
+  window.bizMove=function(i,dir){
+    var ps=projs(); var p=ps[i]; if(!p) return;
+    var idx=STATUS.indexOf(p.status||'Idé');
+    idx=Math.max(0,Math.min(STATUS.length-1, idx+dir));
+    p.status=STATUS[idx];
+    if(p.status==='Klar') p.progress=100;
+    try{ if(typeof window.renderProjects==='function') window.renderProjects(); }catch(e){}
+    try{ if(typeof window.saveAll==='function') window.saveAll(); }catch(e){}
+    render();
+  };
+  window.setBizTab=function(t){ tab=t||'oversikt'; render(); };
+  window.renderBiz=render;
+
+  var orig=window.renderProjects;
+  if(typeof orig==='function'){ window.renderProjects=function(){ var r=orig.apply(this,arguments); try{ stats(); deadlines(); tasks(); board(); applyTabs(); }catch(e){} return r; }; }
+
+  setTimeout(function(){
+    var m=(location.hash||'').match(/#\/business\/([a-z]+)/);
+    if(m && m[1]!=='dosed') tab=m[1];
+    render();
+  }, 450);
+})();
+</script>
+
+<script type="module">
+(function(){
+  var KEY='lo_edu_v1';
+  var tab='oversikt';
+  var db={courses:[],sessions:[]};
+  function load(){ try{ var r=JSON.parse(localStorage.getItem(KEY)); if(r){ db.courses=r.courses||[]; db.sessions=r.sessions||[]; } }catch(e){} }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(db)); }catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function pad(n){ return n<10?'0'+n:''+n; }
+  function iso(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function range(){
+    try{ var r=window.LO && window.LO.period && window.LO.period().range; if(r) return r; }catch(e){}
+    var n=new Date(); return { start:iso(new Date(n.getFullYear(),n.getMonth(),1)), end:iso(new Date(n.getFullYear(),n.getMonth()+1,0)) };
+  }
+  function hhmm(m){ return Math.floor(m/60)+'h '+(m%60)+'m'; }
+
+  function applyTabs(){
+    var v=$('view-utbildning'); if(!v) return;
+    var cards=v.querySelectorAll('[data-edu]');
+    for(var i=0;i<cards.length;i++){
+      var keys=(cards[i].getAttribute('data-edu')||'').split(/\s+/);
+      cards[i].style.display = keys.indexOf(tab)>-1 ? '' : 'none';
+    }
+  }
+
+  function stats(){
+    var box=$('eduStats'); if(!box) return;
+    var r=range();
+    var mins=db.sessions.filter(function(s){ return s.date>=r.start && s.date<=r.end; }).reduce(function(a,s){return a+(+s.minutes||0);},0);
+    var active=db.courses.filter(function(c){ return c.status!=='Klar'; }).length;
+    var hp=db.courses.filter(function(c){ return c.status==='Klar'; }).reduce(function(a,c){return a+(+c.points||0);},0);
+    var reading=(window.books||[]).filter(function(b){ return b.status==='Läser'; }).length;
+    var sub=$('eduSub'); if(sub) sub.textContent=r.start+' → '+r.end;
+    box.innerHTML='<div class="stat"><div class="lbl">Studietid</div><div class="val">'+hhmm(mins)+'</div></div>'+
+      '<div class="stat"><div class="lbl">Pågående kurser</div><div class="val">'+active+'</div></div>'+
+      '<div class="stat"><div class="lbl">Klara hp</div><div class="val">'+hp+'</div></div>'+
+      '<div class="stat"><div class="lbl">Läser nu</div><div class="val">'+reading+'</div></div>';
+  }
+
+  function deadlines(){
+    var box=$('eduDeadlines'); if(!box) return;
+    var today=iso(new Date());
+    var list=db.courses.filter(function(c){ return c.date && c.status!=='Klar'; }).sort(function(a,b){return a.date.localeCompare(b.date);});
+    if(!list.length){ box.innerHTML='<div class="lo-empty">Inga tentor eller inlämningar inlagda.</div>'; return; }
+    box.innerHTML=list.map(function(c){
+      var d=Math.round((new Date(c.date)-new Date(today))/86400000);
+      return '<div class="edu-row"><div class="t"><b>'+esc(c.title)+'</b><span>'+esc(c.date)+(c.points?' · '+c.points+' hp':'')+'</span></div>'+
+        '<div style="font-size:12px;font-weight:700;color:'+(d<0?'var(--accent-deep)':'var(--sage)')+';">'+(d<0?Math.abs(d)+' d sen':d+' d kvar')+'</div></div>';
+    }).join('');
+  }
+
+  function chart(){
+    var box=$('eduTimeChart'); if(!box) return;
+    var r=range();
+    var start=new Date(r.start), end=new Date(r.end);
+    var days=Math.min(31, Math.round((end-start)/86400000)+1);
+    var vals=[], labels=[];
+    for(var i=0;i<days;i++){
+      var d=new Date(start.getTime()+i*86400000); var k=iso(d);
+      var m=db.sessions.filter(function(s){return s.date===k;}).reduce(function(a,s){return a+(+s.minutes||0);},0);
+      vals.push(m); labels.push(d.getDate());
+    }
+    var max=Math.max.apply(null, vals.concat([60]));
+    var total=vals.reduce(function(a,b){return a+b;},0);
+    var sub=$('eduTimeSub'); if(sub) sub.textContent = total? 'Totalt '+hhmm(total)+' · snitt '+Math.round(total/days)+' min/dag' : 'Ingen studietid loggad i perioden.';
+    box.innerHTML='<div class="edu-bars">'+vals.map(function(v){ return '<div style="height:'+Math.max(3, Math.round(v/max*90))+'px;" title="'+v+' min"></div>'; }).join('')+'</div>'+
+      '<div class="edu-bar-labels">'+labels.map(function(l,i){ return '<span>'+((i%5===0)?l:'')+'</span>'; }).join('')+'</div>';
+  }
+
+  function courses(){
+    var box=$('eduCourseList'); if(!box) return;
+    if(!db.courses.length){ box.innerHTML='<div class="lo-empty">Inga kurser ännu.</div>'; return; }
+    box.innerHTML=db.courses.map(function(c,i){
+      return '<div class="edu-row"><div class="t"><b>'+esc(c.title)+'</b><span>'+(c.points?c.points+' hp · ':'')+(c.date?esc(c.date)+' · ':'')+esc(c.status)+'</span>'+
+        '<div class="bar" style="margin-top:5px;"><div class="bar-fill" style="width:'+(+c.progress||0)+'%;"></div></div></div>'+
+        '<input type="number" value="'+(+c.progress||0)+'" min="0" max="100" onchange="eduSetProgress('+i+',this.value)" style="width:70px;">'+
+        '<select onchange="eduSetStatus('+i+',this.value)" style="width:auto;">'+['Planerad','Pågår','Klar'].map(function(st){return '<option'+(c.status===st?' selected':'')+'>'+st+'</option>';}).join('')+'</select>'+
+        '<button class="edu-del" onclick="eduDelCourse('+i+')">✕</button></div>';
+    }).join('');
+  }
+
+  function sessions(){
+    var box=$('eduSessionList'); if(!box) return;
+    var r=range();
+    var list=db.sessions.map(function(s,i){return {s:s,i:i};}).filter(function(o){return o.s.date>=r.start&&o.s.date<=r.end;})
+      .sort(function(a,b){return b.s.date.localeCompare(a.s.date);});
+    if(!list.length){ box.innerHTML='<div class="lo-empty">Inga studiepass i perioden.</div>'; return; }
+    box.innerHTML=list.map(function(o){
+      return '<div class="edu-row"><div class="t"><b>'+esc(o.s.subject||'Studiepass')+'</b><span>'+esc(o.s.date)+'</span></div>'+
+        '<div style="font-size:13px;font-weight:700;">'+hhmm(+o.s.minutes||0)+'</div>'+
+        '<button class="edu-del" onclick="eduDelSession('+o.i+')">✕</button></div>';
+    }).join('');
+  }
+
+  function render(){ applyTabs(); stats(); deadlines(); chart(); courses(); sessions(); }
+
+  window.setEduTab=function(t){ tab=t||'oversikt'; render(); };
+  window.renderEdu=render;
+  window.eduAddCourse=function(){
+    var t=$('eduCTitle').value.trim(); if(!t) return;
+    db.courses.push({ title:t, points:parseFloat($('eduCPoints').value)||0, date:$('eduCDate').value||'', status:'Pågår', progress:0 });
+    $('eduCTitle').value=''; $('eduCPoints').value=''; $('eduCDate').value='';
+    save(); render();
+  };
+  window.eduSetProgress=function(i,v){ db.courses[i].progress=Math.max(0,Math.min(100,parseInt(v,10)||0)); save(); render(); };
+  window.eduSetStatus=function(i,v){ db.courses[i].status=v; if(v==='Klar') db.courses[i].progress=100; save(); render(); };
+  window.eduDelCourse=function(i){ db.courses.splice(i,1); save(); render(); };
+  window.eduAddSession=function(){
+    var m=parseInt($('eduSMin').value,10); if(!m) return;
+    db.sessions.push({ date:$('eduSDate').value||iso(new Date()), subject:$('eduSSubject').value.trim(), minutes:m });
+    $('eduSSubject').value=''; $('eduSMin').value='';
+    save(); render();
+  };
+  window.eduDelSession=function(i){ db.sessions.splice(i,1); save(); render(); };
+
+  load();
+  window.addEventListener('hashchange', function(){
+    var m=(location.hash||'').match(/#\/utbildning\/(oversikt|kurser|pass)/);
+    if(m){ tab=m[1]; render(); }
+  });
+  setTimeout(function(){
+    var d=$('eduSDate'); if(d && !d.value) d.value=iso(new Date());
+    var m=(location.hash||'').match(/#\/utbildning\/(oversikt|kurser|pass)/);
+    if(m) tab=m[1];
+    render();
+  }, 470);
+})();
+</script>
+
+<script type="module">
+(function(){
+  var KEY='lo_notes_v1';
+  var notes=[]; var tagFilter='';
+  function load(){ try{ notes=JSON.parse(localStorage.getItem(KEY))||[]; }catch(e){ notes=[]; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(notes)); }catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function stamp(){ var d=new Date(), p=function(n){return n<10?'0'+n:n;}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
+
+  window.ntAdd=function(){
+    var t=$('ntTitle').value.trim(), b=$('ntBody').value.trim();
+    if(!t && !b) return;
+    var tags=$('ntTags').value.split(',').map(function(x){return x.trim();}).filter(Boolean);
+    notes.unshift({ id:Date.now(), title:t||'Utan rubrik', body:b, tags:tags, pinned:false, updated:stamp() });
+    $('ntTitle').value=''; $('ntBody').value=''; $('ntTags').value='';
+    save(); ntRender();
+  };
+  window.ntDel=function(id){ notes=notes.filter(function(n){return n.id!==id;}); save(); ntRender(); };
+  window.ntPin=function(id){ notes.forEach(function(n){ if(n.id===id) n.pinned=!n.pinned; }); save(); ntRender(); };
+  window.ntEdit=function(id){
+    var n=notes.filter(function(x){return x.id===id;})[0]; if(!n) return;
+    var box=$('nt-b-'+id); if(!box) return;
+    if(box.tagName==='TEXTAREA'){
+      n.body=box.value; n.updated=stamp(); save(); ntRender(); return;
+    }
+    var ta=document.createElement('textarea'); ta.id='nt-b-'+id; ta.rows=5; ta.style.width='100%'; ta.value=n.body;
+    box.replaceWith(ta); ta.focus();
+    var btn=$('nt-e-'+id); if(btn) btn.textContent='💾';
+  };
+  window.ntFilter=function(t){ tagFilter = (tagFilter===t?'':t); ntRender(); };
+
+  window.ntRender=function(){
+    var list=$('ntList'); if(!list) return;
+    var q=(($('ntSearch')||{}).value||'').toLowerCase();
+    var tags={}; notes.forEach(function(n){ (n.tags||[]).forEach(function(t){ tags[t]=(tags[t]||0)+1; }); });
+    var bar=$('ntTagBar');
+    if(bar) bar.innerHTML=Object.keys(tags).sort().map(function(t){
+      return '<button class="nt-filter'+(tagFilter===t?' on':'')+'" onclick="ntFilter(\''+t.replace(/'/g,"")+'\')">'+esc(t)+' ('+tags[t]+')</button>';
+    }).join('');
+    var out=notes.filter(function(n){
+      if(tagFilter && (n.tags||[]).indexOf(tagFilter)===-1) return false;
+      if(!q) return true;
+      return (n.title+' '+n.body+' '+(n.tags||[]).join(' ')).toLowerCase().indexOf(q)>-1;
+    }).sort(function(a,b){ return (b.pinned?1:0)-(a.pinned?1:0); });
+    var c=$('ntCount'); if(c) c.textContent = notes.length ? out.length+' av '+notes.length : '';
+    if(!out.length){ list.innerHTML='<div class="lo-empty">'+(notes.length?'Inget matchar sökningen.':'Inga anteckningar ännu.')+'</div>'; return; }
+    list.innerHTML=out.map(function(n){
+      return '<div class="nt-card"><div class="nt-head"><b>'+(n.pinned?'📌 ':'')+esc(n.title)+'</b>'+
+        '<button class="nt-btn" onclick="ntPin('+n.id+')" title="Fäst">'+(n.pinned?'📍':'📌')+'</button>'+
+        '<button class="nt-btn" id="nt-e-'+n.id+'" onclick="ntEdit('+n.id+')" title="Redigera">✎</button>'+
+        '<button class="nt-btn" onclick="ntDel('+n.id+')" title="Ta bort">✕</button></div>'+
+        (n.body?'<div class="nt-body" id="nt-b-'+n.id+'">'+esc(n.body)+'</div>':'<div class="nt-body" id="nt-b-'+n.id+'"></div>')+
+        ((n.tags||[]).length?'<div style="margin-top:8px;">'+n.tags.map(function(t){return '<span class="nt-tag">'+esc(t)+'</span>';}).join('')+'</div>':'')+
+        '<div class="nt-meta">'+esc(n.updated||'')+'</div></div>';
+    }).join('');
+  };
+
+  load();
+  setTimeout(function(){ ntRender(); }, 480);
+})();
+</script>
+
+<script type="module">
+(function(){
+  var KEY='lo_reviews_v1';
+  var revs={};
+  function load(){ try{ revs=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ revs={}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(revs)); }catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function pad(n){ return n<10?'0'+n:''+n; }
+  function iso(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function ls(k,d){ try{ return JSON.parse(localStorage.getItem(k))||d; }catch(e){ return d; } }
+  function range(){
+    try{ var r=window.LO&&window.LO.period&&window.LO.period().range; if(r) return r; }catch(e){}
+    var n=new Date(); return { start:iso(n), end:iso(n) };
+  }
+  function prev(r){
+    var a=new Date(r.start), b=new Date(r.end);
+    var len=Math.round((b-a)/86400000)+1;
+    return { start: iso(new Date(a.getTime()-len*86400000)), end: iso(new Date(a.getTime()-86400000)) };
+  }
+  function mode(){ try{ return (location.hash.match(/#\/ai\/(\w+)/)||[])[1] || 'weekly'; }catch(e){ return 'weekly'; } }
+
+  function metrics(r){
+    var money=ls('lo_money_v1',{tx:[]});
+    var edu=ls('lo_edu_v1',{sessions:[]});
+    var hard=ls('lo_hard_v1',{days:{}});
+    var inR=function(d){ return d>=r.start && d<=r.end; };
+    var tx=(money.tx||[]).filter(function(t){ return inR(t.date); });
+    var income=tx.filter(function(t){return t.type==='in';}).reduce(function(a,t){return a+(+t.amount||0);},0);
+    var expense=tx.filter(function(t){return t.type!=='in';}).reduce(function(a,t){return a+(+t.amount||0);},0);
+    var study=(edu.sessions||[]).filter(function(x){ return inR(x.date); }).reduce(function(a,x){return a+(+x.minutes||0);},0);
+    var hardDays=Object.keys(hard.days||{}).filter(function(d){ return inR(d) && (hard.days[d].tasks? Object.keys(hard.days[d].tasks).filter(function(k){return hard.days[d].tasks[k];}).length>=5 : false); }).length;
+    var steps=null, workouts=null;
+    try{
+      if(window.healthLoaded===true){
+        if(typeof window.metricSumInRange==='function'){ var st=window.metricSumInRange('step_count', r.start, r.end); if(st!==null) steps=Math.round(st); }
+        if(typeof window.workoutsInRange==='function') workouts=window.workoutsInRange(r.start,r.end).length;
+      }
+    }catch(e){}
+    var goals=(window.lifeGoals||[]);
+    var doneActions=0; goals.forEach(function(g){ (g.actions||[]).forEach(function(a){ if(a.done && a.doneDate && inR(a.doneDate)) doneActions++; }); });
+    return {
+      'Inkomster (kr)': Math.round(income),
+      'Utgifter (kr)': Math.round(expense),
+      'Netto (kr)': Math.round(income-expense),
+      'Studietid (min)': study,
+      '75 HARD klara dagar': hardDays,
+      'Steg': steps,
+      'Träningspass': workouts,
+      'Avklarade actions': doneActions
+    };
+  }
+
+  function paintNumbers(){
+    var box=$('aiNumbers'); if(!box) return;
+    var r=range(); var m=metrics(r);
+    var sub=$('aiPeriodSub'); if(sub) sub.textContent=r.start+' → '+r.end;
+    box.innerHTML=Object.keys(m).map(function(k){
+      var v=m[k];
+      return '<div class="lo-kv"><span>'+k+'</span><b>'+(v===null?'Ingen data':(typeof v==='number'?v.toLocaleString('sv-SE'):v))+'</b></div>';
+    }).join('');
+    var cbox=$('aiCompare');
+    if(cbox){
+      var pr=prev(r), pm=metrics(pr);
+      cbox.innerHTML='<div class="card-sub">'+pr.start+' → '+pr.end+'</div>'+Object.keys(m).map(function(k){
+        var a=m[k], b=pm[k];
+        if(a===null||b===null) return '';
+        var d=a-b;
+        var col = d===0 ? 'var(--text-soft)' : (k==='Utgifter (kr)' ? (d>0?'var(--accent-deep)':'var(--sage)') : (d>0?'var(--sage)':'var(--accent-deep)'));
+        return '<div class="lo-kv"><span>'+k+'</span><b style="color:'+col+';">'+(d>0?'+':'')+d.toLocaleString('sv-SE')+'</b></div>';
+      }).join('') || '<div class="lo-empty">Ingen jämförbar data ännu.</div>';
+    }
+  }
+
+  function revKey(){ return mode()+':'+range().start; }
+  function paintReview(){
+    var k=revKey(); var r=revs[k]||{};
+    if($('aiRevWin')) $('aiRevWin').value=r.win||'';
+    if($('aiRevLesson')) $('aiRevLesson').value=r.lesson||'';
+    if($('aiRevNext')) $('aiRevNext').value=r.next||'';
+    var sub=$('aiReviewSub'); if(sub) sub.textContent=mode()+' · '+range().start+' → '+range().end;
+    var sv=$('aiRevSaved'); if(sv) sv.textContent=r.saved?('Sparad '+r.saved):'';
+    var h=$('aiRevHistory');
+    if(h){
+      var keys=Object.keys(revs).sort().reverse().slice(0,10);
+      h.innerHTML=keys.length?keys.map(function(kk){
+        var x=revs[kk];
+        return '<div class="nt-card"><div class="nt-head"><b>'+esc(kk)+'</b></div>'+
+          (x.win?'<div class="nt-body">✅ '+esc(x.win)+'</div>':'')+
+          (x.lesson?'<div class="nt-body">💡 '+esc(x.lesson)+'</div>':'')+
+          (x.next?'<div class="nt-body">➡️ '+esc(x.next)+'</div>':'')+
+          '<div class="nt-meta">'+esc(x.saved||'')+'</div></div>';
+      }).join(''):'<div class="lo-empty">Inga genomgångar sparade ännu.</div>';
+    }
+  }
+
+  window.aiSaveReview=function(){
+    var d=new Date(), p=function(n){return n<10?'0'+n:n;};
+    revs[revKey()]={ win:$('aiRevWin').value.trim(), lesson:$('aiRevLesson').value.trim(), next:$('aiRevNext').value.trim(),
+      saved: d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()) };
+    save(); paintReview();
+  };
+  window.renderAiExtra=function(){ paintNumbers(); paintReview(); };
+
+  load();
+  window.addEventListener('hashchange', function(){ setTimeout(window.renderAiExtra, 60); });
+  setTimeout(function(){
+    try{
+      if(window.LO && typeof window.LO.setAiMode==='function'){
+        var o=window.LO.setAiMode;
+        window.LO.setAiMode=function(m){ var r=o.apply(this,arguments); try{ window.renderAiExtra(); }catch(e){} return r; };
+      }
+    }catch(e){}
+    window.renderAiExtra();
+  }, 500);
 })();
 </script>
 </body>
