@@ -977,31 +977,49 @@
         <div class="card-label" style="margin:0;">TikTok HQ</div>
         <div id="tiktokConnectionStatus" style="font-size:11px;color:var(--text-soft);"></div>
       </div>
-      <div id="tiktokAuthButtons" style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;">
+      <div id="tiktokAuthButtons" style="margin:10px 0 14px;display:flex;gap:8px;flex-wrap:wrap;">
         <button class="save-btn" onclick="startTiktokLogin()">🔗 Logga in med TikTok</button>
         <button class="change-btn" id="tiktokRefreshBtn" style="display:none;" onclick="refreshTiktokFromApi()">🔄 Uppdatera från TikTok</button>
       </div>
-      <div class="card-sub">mot 500 000 följare</div>
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-        <span>Följare</span><span id="tiktokFollowersLabel" style="color:var(--text-soft);">0 / 500 000 · 0%</span>
-      </div>
-      <div class="bar"><div class="bar-fill" id="tiktokFollowersBar" style="width:0%;"></div></div>
-      <div class="stat-grid" style="margin-top:14px;">
-        <div class="stat"><div class="stat-icon">👁️</div><div class="lbl">Views denna månad</div><div class="val" id="tiktokViews">0</div></div>
-        <div class="stat"><div class="stat-icon">💬</div><div class="lbl">Engagement</div><div class="val" id="tiktokEngagement">0%</div></div>
-        <div class="stat"><div class="stat-icon">🎬</div><div class="lbl">Posts denna månad</div><div class="val" id="tiktokPosts">0</div></div>
-      </div>
-      <div class="card-sub" style="margin-top:14px;margin-bottom:4px;">Eller fyll i manuellt</div>
-      <div class="add-row" style="margin-top:4px;flex-wrap:wrap;">
-        <input type="number" id="tiktokFollowersInput" placeholder="Följare nu">
-        <input type="number" id="tiktokViewsInput" placeholder="Views">
-        <input type="number" id="tiktokEngagementInput" placeholder="Engagement %">
-        <input type="number" id="tiktokPostsInput" placeholder="Posts">
-        <button onclick="saveTiktokStats()">Spara</button>
+      <div class="cat-tabs">
+        <div class="cat-tab active" id="tiktokTabOversikt" onclick="setTiktokTab('oversikt')">Översikt</div>
+        <div class="cat-tab" id="tiktokTabIdeer" onclick="setTiktokTab('ideer')">AI-agent</div>
+        <div class="cat-tab" id="tiktokTabVideos" onclick="setTiktokTab('videos')">Mina videos</div>
+        <div class="cat-tab" id="tiktokTabAnalys" onclick="setTiktokTab('analys')">Analys</div>
       </div>
     </div>
 
-    <div class="grid2">
+    <div id="tiktokPane_oversikt">
+      <div class="card">
+        <div class="card-sub">mot 500 000 följare</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+          <span>Följare</span><span id="tiktokFollowersLabel" style="color:var(--text-soft);">0 / 500 000 · 0%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="tiktokFollowersBar" style="width:0%;"></div></div>
+        <div class="stat-grid" style="margin-top:14px;">
+          <div class="stat"><div class="stat-icon">👁️</div><div class="lbl">Views (senaste 20 klippen)</div><div class="val" id="tiktokViews">0</div></div>
+          <div class="stat"><div class="stat-icon">💬</div><div class="lbl">Engagement</div><div class="val" id="tiktokEngagement">0%</div></div>
+          <div class="stat"><div class="stat-icon">🎬</div><div class="lbl">Posts totalt</div><div class="val" id="tiktokPosts">0</div></div>
+        </div>
+        <div class="card-sub" style="margin-top:14px;margin-bottom:4px;">Eller fyll i manuellt</div>
+        <div class="add-row" style="margin-top:4px;flex-wrap:wrap;">
+          <input type="number" id="tiktokFollowersInput" placeholder="Följare nu">
+          <input type="number" id="tiktokViewsInput" placeholder="Views">
+          <input type="number" id="tiktokEngagementInput" placeholder="Engagement %">
+          <input type="number" id="tiktokPostsInput" placeholder="Posts">
+          <button onclick="saveTiktokStats()">Spara</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="reflect-row">
+          <div class="card-label" style="margin:0;">Toppvideos</div>
+          <span style="font-size:11px;color:var(--text-soft);cursor:pointer;" onclick="setTiktokTab('videos')">Visa alla →</span>
+        </div>
+        <div class="card-sub">från dina senaste 20 klipp, rankade på visningar</div>
+        <div id="tiktokTopVideosPreview" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
+      </div>
+
       <div class="card">
         <div class="card-label">Content pillars</div>
         <ul class="task-list" id="tiktokPillars"></ul>
@@ -1009,6 +1027,39 @@
           <input type="text" id="tiktokPillarInput" placeholder="Ny content pillar...">
           <button onclick="addTiktokPillar()">Lägg till</button>
         </div>
+      </div>
+    </div>
+
+    <div id="tiktokPane_ideer" style="display:none;">
+      <div class="card">
+        <div class="reflect-row">
+          <div class="card-label" style="margin:0;">🤖 AI-agent</div>
+          <span id="tiktokSearchUsage" style="font-size:10px;color:var(--text-soft);"></span>
+        </div>
+        <div class="card-sub">känner till dina content pillars och statistik, kan söka på webben för trender vid behov</div>
+        <div id="tiktokChatMessages" style="display:flex;flex-direction:column;gap:10px;margin:14px 0;max-height:420px;overflow-y:auto;"></div>
+        <div class="add-row">
+          <input type="text" id="tiktokChatInput" placeholder="Fråga om trender, idéer, strategi..." onkeydown="if(event.key==='Enter')sendTiktokChatMessage();">
+          <button onclick="sendTiktokChatMessage()">Skicka</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tiktokPane_videos" style="display:none;">
+      <div class="card">
+        <div class="card-label">Mina videos</div>
+        <div class="card-sub">från din senaste hämtning — klicka "🔄 Uppdatera från TikTok" ovan för att förnya</div>
+        <div id="tiktokAllVideosList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <div id="tiktokPane_analys" style="display:none;">
+      <div class="card">
+        <div class="reflect-row">
+          <div class="card-label" style="margin:0;">🤖 AI-analys</div>
+          <button class="save-btn" onclick="requestTiktokAiAnalysis()">Generera analys</button>
+        </div>
+        <div id="tiktokAnalysisResult" style="margin-top:12px;"></div>
       </div>
       <div class="card">
         <div class="card-label">Samarbeten & intäkter</div>
@@ -1018,15 +1069,14 @@
           <button onclick="addTiktokCollab()">Lägg till</button>
         </div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-label">TikTok — logg</div>
-      <div class="card-sub">fritt loggade idéer/klipp</div>
-      <div id="tiktokList"><div class="list-empty" id="tiktokEmpty">Inget loggat än.</div></div>
-      <div class="add-row">
-        <input type="text" id="tiktokInput" placeholder="Idé, klipp eller status...">
-        <button onclick="addTiktokEntry()">Lägg till</button>
+      <div class="card">
+        <div class="card-label">TikTok — logg</div>
+        <div class="card-sub">fritt loggade idéer/klipp</div>
+        <div id="tiktokList"><div class="list-empty" id="tiktokEmpty">Inget loggat än.</div></div>
+        <div class="add-row">
+          <input type="text" id="tiktokInput" placeholder="Idé, klipp eller status...">
+          <button onclick="addTiktokEntry()">Lägg till</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2453,10 +2503,12 @@
       tiktokStats.views = data.views;
       tiktokStats.engagement = data.engagement;
       tiktokStats.posts = data.posts;
+      tiktokVideos = data.topVideos || [];
       tiktokHistory.push({ date: isoDate(new Date()), followers: data.followers, views: data.views, engagement: data.engagement, posts: data.posts });
       if(tiktokHistory.length > 60) tiktokHistory.shift();
       setTiktokConnected(true);
       renderTiktokHQ();
+      renderTiktokVideos();
       saveAll();
     };
     var tag = document.createElement('script');
@@ -4634,6 +4686,121 @@
   // ---------- TIKTOK HQ ----------
   var tiktokStats = { followers:0, views:0, engagement:0, posts:0 };
   var tiktokHistory = [];
+  var tiktokVideos = [];
+  var tiktokTab = 'oversikt';
+  function setTiktokTab(t){
+    tiktokTab = t;
+    ['oversikt','ideer','videos','analys'].forEach(function(k){
+      document.getElementById('tiktokPane_' + k).style.display = (k===t) ? 'block' : 'none';
+      document.getElementById('tiktokTab' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('active', k===t);
+    });
+    if(t === 'videos' || t === 'oversikt') renderTiktokVideos();
+    if(t === 'ideer') renderTiktokChat();
+  }
+  function tiktokVideoRowHTML(v){
+    var thumb = v.cover ? '<img src="' + v.cover + '" style="width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:44px;height:44px;border-radius:10px;background:var(--surface-soft);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;">🎬</div>';
+    var link = v.url ? '<a href="' + v.url + '" target="_blank" style="color:var(--text);text-decoration:none;">' + (v.title || 'Namnlöst klipp') + '</a>' : (v.title || 'Namnlöst klipp');
+    return '<div class="list-item" style="display:flex;align-items:center;gap:10px;">' +
+      thumb +
+      '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + link + '</div>' +
+      '<div style="font-size:11px;color:var(--text-soft);">' + v.views.toLocaleString('sv-SE') + ' visningar · ' + v.engagement + '% engagement</div></div>' +
+      '</div>';
+  }
+  function renderTiktokVideos(){
+    var previewEl = document.getElementById('tiktokTopVideosPreview');
+    var allEl = document.getElementById('tiktokAllVideosList');
+    if(previewEl){
+      previewEl.innerHTML = tiktokVideos.length
+        ? tiktokVideos.slice(0,5).map(tiktokVideoRowHTML).join('')
+        : '<div class="list-empty">Logga in och uppdatera från TikTok för att se dina videos här.</div>';
+    }
+    if(allEl){
+      allEl.innerHTML = tiktokVideos.length
+        ? tiktokVideos.map(tiktokVideoRowHTML).join('')
+        : '<div class="list-empty">Logga in och uppdatera från TikTok för att se dina videos här.</div>';
+    }
+  }
+  var tiktokChatHistory = [];
+  function renderTiktokChat(){
+    var el = document.getElementById('tiktokChatMessages');
+    if(!el) return;
+    el.innerHTML = tiktokChatHistory.length
+      ? tiktokChatHistory.map(function(m){
+          var isUser = m.role === 'user';
+          return '<div style="align-self:' + (isUser?'flex-end':'flex-start') + ';max-width:80%;background:' + (isUser?'var(--accent-soft)':'var(--surface-soft)') + ';border-radius:14px;padding:10px 14px;font-size:13px;white-space:pre-wrap;">' + m.content.replace(/</g,'&lt;') + '</div>';
+        }).join('')
+      : '<div class="list-empty">Hej! Fråga mig om contentidéer, trender, eller din TikTok-strategi.</div>';
+    el.scrollTop = el.scrollHeight;
+  }
+  function sendTiktokChatMessage(){
+    var input = document.getElementById('tiktokChatInput');
+    var val = input.value.trim();
+    if(!val) return;
+    input.value = '';
+    var pillarsLine = tiktokPillars.length ? 'Mina content pillars: ' + tiktokPillars.join(', ') + '. ' : '';
+    var statsLine = 'Just nu: ' + tiktokStats.followers + ' följare, ' + tiktokStats.engagement + '% engagement. ';
+    var topLine = tiktokVideos.length ? 'Bäst presterande klipp: ' + tiktokVideos.slice(0,3).map(function(v){return v.title||'namnlöst';}).join(', ') + '. ' : '';
+    var firstMessage = tiktokChatHistory.length === 0;
+    var userContent = (firstMessage ? pillarsLine + statsLine + topLine : '') + val;
+    tiktokChatHistory.push({ role:'user', content: val });
+    renderTiktokChat();
+    var loadingEl = document.getElementById('tiktokChatMessages');
+    loadingEl.innerHTML += '<div id="tiktokChatLoading" style="align-self:flex-start;font-size:12px;color:var(--text-soft);font-style:italic;">tänker...</div>';
+    loadingEl.scrollTop = loadingEl.scrollHeight;
+
+    var sendHistory = tiktokChatHistory.slice(-8).map(function(m, i, arr){
+      if(i === arr.length-1 && m.role==='user') return { role:'user', content: userContent };
+      return m;
+    });
+    var cbName = 'tiktokChatCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      var loadEl = document.getElementById('tiktokChatLoading');
+      if(loadEl) loadEl.remove();
+      if(data.error){
+        tiktokChatHistory.push({ role:'assistant', content: '⚠️ ' + data.error });
+      } else {
+        tiktokChatHistory.push({ role:'assistant', content: data.reply + (data.usedSearch ? '\n\n(🔍 baserat på en färsk websökning)' : '') });
+      }
+      if(tiktokChatHistory.length > 20) tiktokChatHistory = tiktokChatHistory.slice(-20);
+      renderTiktokChat();
+      saveAll();
+      updateTiktokSearchUsageLabel();
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=tiktok_agent_chat&messages=' + encodeURIComponent(JSON.stringify(sendHistory)) + '&callback=' + cbName;
+    tag.onerror = function(){
+      var loadEl = document.getElementById('tiktokChatLoading');
+      if(loadEl) loadEl.remove();
+      tiktokChatHistory.push({ role:'assistant', content: '⚠️ Kunde inte nå AI just nu.' });
+      renderTiktokChat();
+    };
+    document.body.appendChild(tag);
+  }
+  function updateTiktokSearchUsageLabel(){
+    var el = document.getElementById('tiktokSearchUsage');
+    if(el && window._tiktokLastSearchUsed) el.textContent = '🔍 sökning använd nyss';
+  }
+  function requestTiktokAiAnalysis(){
+    var el = document.getElementById('tiktokAnalysisResult');
+    el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var topTitles = tiktokVideos.slice(0,5).map(function(v){ return v.title || 'namnlöst'; }).join(', ');
+    var input = 'Analysera min TikTok utifrån följare (' + tiktokStats.followers + '), views, engagement (' + tiktokStats.engagement + '%) och mina bäst presterande videos: ' + topTitles + '.';
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      el.innerHTML = '<div style="background:var(--accent-soft);border-radius:16px;padding:16px;margin-bottom:12px;">' +
+        (r.recommendation ? '<div style="font-size:14px;font-weight:700;margin-bottom:6px;">' + r.recommendation.text + '</div><div style="font-size:12px;">' + r.recommendation.why + '</div>' : '') +
+        '</div>' +
+        (r.insights||[]).map(function(i){ return '<div class="list-item"><div style="font-size:13px;">' + (i.emoji||'') + ' ' + i.text + '</div></div>'; }).join('');
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=insights&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(input) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
   var tiktokPillars = [];
   var tiktokCollabs = [];
   function tiktokDeltaSince(daysAgo){
@@ -4658,6 +4825,7 @@
     document.getElementById('tiktokCollabs').innerHTML = tiktokCollabs.length
       ? tiktokCollabs.map(function(c){ return '<li style="cursor:default;"><span class="box">🤝</span><span class="t">' + c + '</span></li>'; }).join('')
       : '<li style="cursor:default;color:var(--text-soft);font-style:italic;font-size:12px;">Inga samarbeten ännu.</li>';
+    renderTiktokVideos();
     saveAll();
     renderHome();
   }
@@ -5428,7 +5596,7 @@
         studyPlans: studyPlans, books: books, lifeGoals: lifeGoals, goalActionIdCounter: goalActionIdCounter,
         monthlyData: monthlyData, yearData: yearData, savingsGoals: savingsGoals, bucketItems: bucketItems,
         dosedFinance: dosedFinance, dosedStagesData: dosedStagesData, dosedTasks: dosedTasks,
-        tiktokStats: tiktokStats, tiktokHistory: tiktokHistory, tiktokPillars: tiktokPillars, tiktokCollabs: tiktokCollabs,
+        tiktokStats: tiktokStats, tiktokHistory: tiktokHistory, tiktokVideos: tiktokVideos, tiktokChatHistory: tiktokChatHistory, tiktokPillars: tiktokPillars, tiktokCollabs: tiktokCollabs,
         projects: projects, ideaVaultItems: ideaVaultItems,
         moneyPrivate: moneyPrivate, moneyBusiness: moneyBusiness, visionData: visionData,
         physicalStats: physicalStats, physicalMilestones: physicalMilestones, mortgageHistory: mortgageHistory, weekFocus: weekFocus, appStagesData: appStagesData,
@@ -5488,6 +5656,8 @@
       if(s.dosedTasks) dosedTasks = s.dosedTasks;
       if(s.tiktokStats) tiktokStats = s.tiktokStats;
       if(s.tiktokHistory) tiktokHistory = s.tiktokHistory;
+      if(s.tiktokVideos) tiktokVideos = s.tiktokVideos;
+      if(s.tiktokChatHistory) tiktokChatHistory = s.tiktokChatHistory;
       if(s.tiktokPillars) tiktokPillars = s.tiktokPillars;
       if(s.tiktokCollabs) tiktokCollabs = s.tiktokCollabs;
       if(s.projects) projects = s.projects;
