@@ -1733,7 +1733,9 @@
           <div class="card-label" style="margin:0;">🤖 AI-agent</div>
           <span id="tiktokSearchUsage" style="font-size:10px;color:var(--text-soft);"></span>
         </div>
-        <div class="card-sub">känner till dina content pillars och statistik, kan söka på webben för trender vid behov</div>
+        <div class="card-sub">känner till dina pillars, statistik, idébank, content plan, TikTok-mål och research — och kan söka på webben vid behov</div>
+        <div id="ttAgentContext" style="margin-top:10px;"></div>
+        <div id="ttAgentQuick" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
         <div id="tiktokChatMessages" style="display:flex;flex-direction:column;gap:10px;margin:14px 0;max-height:420px;overflow-y:auto;"></div>
         <div class="add-row">
           <input type="text" id="tiktokChatInput" placeholder="Fråga om trender, idéer, strategi..." onkeydown="if(event.key==='Enter')sendTiktokChatMessage();">
@@ -2212,11 +2214,18 @@
       <div id="gf_step3" style="display:none;">
         <div class="card-label" style="margin-bottom:14px;">Bekräfta</div>
         <div id="gf_confirmSummary"></div>
+        <div style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px;">
+          <div class="card-label" style="margin-bottom:4px;">Delmål</div>
+          <div class="card-sub" style="margin-bottom:8px;">AI kan föreslå delmål utifrån ditt mål och din data. Du bestämmer vilka som följer med — inget läggs till automatiskt.</div>
+          <button class="btn-light-full" onclick="requestGoalFormMilestones()">✨ Föreslå delmål med AI</button>
+          <div id="gf_milestoneResult" style="margin-top:10px;"></div>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px;">
           <button class="btn-light-full" onclick="goalFormBackToStep1()">Tillbaka</button>
           <button class="btn-dark-full" onclick="saveGoalForm()">Skapa mål</button>
         </div>
       </div>
+
 
       <div id="gf_step4" style="display:none;text-align:center;">
         <div style="font-size:40px;margin-bottom:10px;">✅</div>
@@ -2234,6 +2243,7 @@
       <div class="add-row" style="flex-wrap:wrap;gap:8px;">
         <input type="text" id="ntTitle" placeholder="Rubrik" style="flex:2;min-width:160px;">
         <input type="text" id="ntTags" placeholder="taggar, komma-separerat" style="flex:1;min-width:140px;">
+        <select id="ntGoal" style="flex:1;min-width:150px;"><option value="">Inget mål</option></select>
       </div>
       <textarea id="ntBody" rows="4" placeholder="Skriv fritt..." style="width:100%;margin-top:8px;"></textarea>
       <button class="save-btn" style="margin-top:8px;" onclick="ntAdd()">Spara anteckning</button>
@@ -4818,6 +4828,10 @@
     goalFormGroup = null;
     goalFormDeadlineMode = 'know';
     goalFormAiSuggestion = null;
+    gfMilestoneSuggestions = [];
+    var gfmr = document.getElementById('gf_milestoneResult');
+    if(gfmr) gfmr.innerHTML = '';
+
     renderGoalFormCategoryGrid();
     setDeadlineMode('know');
     document.querySelector('input[name="gf_deadlineMode"][value="know"]').checked = true;
@@ -4893,6 +4907,44 @@
       '<div class="stat"><div class="lbl">Deadline</div><div class="val" style="font-size:13px;">' + (deadline ? formatSwedishDate(deadline) : 'Ingen satt') + '</div></div>' +
       '</div>';
   }
+  var gfMilestoneSuggestions = [];
+  function requestGoalFormMilestones(){
+    var el = document.getElementById('gf_milestoneResult');
+    var title = document.getElementById('gf_title').value.trim();
+    if(!title) return;
+    var deadline = document.getElementById('gf_deadline').value;
+    el.innerHTML = '<div class="list-empty">Analyserar...</div>';
+    var input = 'Nytt mål: ' + title + '. Målnivå: ' + document.getElementById('gf_timeframe').value + '. Deadline: ' + (deadline || 'ingen satt') + '. Kategori: ' + (document.getElementById('gf_category').value.trim() || (goalFormGroup||'—')) + '. Föreslå konkreta delmål.';
+    var cbName = 'aiCb_' + Date.now();
+    window[cbName] = function(data){
+      try { delete window[cbName]; } catch(e){}
+      if(data.error){ el.innerHTML = '<div class="list-empty">Fel: ' + data.error + '</div>'; return; }
+      var r = data.result || {};
+      gfMilestoneSuggestions = (r.milestones || []).map(function(m){
+        return { title: m.title, targetDate: m.targetDate || '', selected: false };
+      });
+      renderGfMilestoneSuggestions();
+    };
+    var tag = document.createElement('script');
+    tag.src = HEALTH_ENDPOINT + '?action=ai_query&mode=suggest_milestones&context=' + encodeURIComponent(buildAIContext()) + '&input=' + encodeURIComponent(input) + '&callback=' + cbName;
+    tag.onerror = function(){ el.innerHTML = '<div class="list-empty">Kunde inte nå AI just nu.</div>'; };
+    document.body.appendChild(tag);
+  }
+  function renderGfMilestoneSuggestions(){
+    var el = document.getElementById('gf_milestoneResult');
+    if(!gfMilestoneSuggestions.length){ el.innerHTML = '<div class="list-empty">Inga förslag ännu.</div>'; return; }
+    el.innerHTML = '<div class="card-sub" style="margin-bottom:6px;">Bocka i de delmål du vill ha med</div>' +
+      gfMilestoneSuggestions.map(function(m, i){
+        return '<label class="list-item" style="display:flex;align-items:center;gap:10px;cursor:pointer;">' +
+          '<input type="checkbox" ' + (m.selected?'checked':'') + ' onchange="toggleGfMilestone(' + i + ')">' +
+          '<span style="font-size:13px;">' + m.title + (m.targetDate ? ' <span style="color:var(--text-soft);font-size:11px;">— ' + m.targetDate + '</span>' : '') + '</span>' +
+          '</label>';
+      }).join('');
+  }
+  function toggleGfMilestone(i){
+    if(gfMilestoneSuggestions[i]) gfMilestoneSuggestions[i].selected = !gfMilestoneSuggestions[i].selected;
+  }
+
   function saveGoalForm(){
     var title = document.getElementById('gf_title').value.trim();
     if(!title) return;
@@ -4911,7 +4963,7 @@
       kpiActual: null,
       kpiUnit: '',
       notes: '',
-      milestones: [],
+      milestones: gfMilestoneSuggestions.filter(function(m){ return m.selected; }).map(function(m){ return { title:m.title, done:false, targetDate:m.targetDate||'' }; }),
       actions: []
     });
     renderGoalsTable();
@@ -4926,6 +4978,9 @@
     el.style.display = 'block';
     window.scrollTo({ top:0, behavior:'smooth' });
   }
+  window.openGoalDetailById = function(id){
+    for(var i=0;i<lifeGoals.length;i++){ if(String(lifeGoals[i].id)===String(id)){ openGoalDetail(i); return; } }
+  };
   function closeGoalDetail(){
     document.getElementById('goalDetailCard').style.display = 'none';
     document.getElementById('goalsOverviewWrap').style.display = 'block';
@@ -5036,10 +5091,19 @@
     } else if(goalDetailTab === 'actions'){
       body = '<div class="reflect-row" style="margin-top:14px;margin-bottom:8px;"><div class="card-sub" style="margin:0;">Actions</div></div>' +
         '<ul class="task-list" id="goalActionList" style="margin-bottom:10px;">' +
-          g.actions.map(function(a){ return '<li class="' + (a.done?'done':'') + '" onclick="toggleActionById(' + a.id + ')"><span class="box">' + (a.done?'✓':'') + '</span><span class="t">' + a.text + ' <span style="color:var(--text-soft);font-size:11px;">(' + a.freq + ')</span></span></li>'; }).join('') +
+          g.actions.map(function(a){
+            var projName = (window.LOProj && a.projectId) ? LOProj.title(a.projectId) : '';
+            return '<li class="' + (a.done?'done':'') + '"><span class="box" onclick="toggleActionById(' + a.id + ')">' + (a.done?'✓':'') + '</span>' +
+              '<span class="t" onclick="toggleActionById(' + a.id + ')">' + a.text + ' <span style="color:var(--text-soft);font-size:11px;">(' + a.freq + ')</span>' +
+              (projName ? ' <span class="lo-linkbadge">🏗 ' + projName.replace(/</g,'&lt;') + '</span>' : '') + '</span>' +
+              '<select onchange="setActionProject(' + a.id + ', this.value)" onclick="event.stopPropagation();" style="width:auto;font-size:11px;margin-left:auto;">' +
+                (window.LOProj ? LOProj.options(a.projectId||'') : '<option value="">Inget projekt</option>') + '</select>' +
+            '</li>';
+          }).join('') +
         '</ul>' +
         '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
           '<input type="text" id="goalActionInput" placeholder="Ny action..." style="flex:1;min-width:120px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--surface-soft);color:var(--text);">' +
+          '<select id="goalActionProject" style="border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text);">' + (window.LOProj ? LOProj.options('') : '') + '</select>' +
           '<select id="goalActionFreq" style="border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;font-family:inherit;background:var(--surface-soft);color:var(--text);"><option>Dagligen</option><option>Veckovis</option><option>Månadsvis</option><option>Kvartalsvis</option><option>Årligen</option></select>' +
           '<button class="change-btn" onclick="addAction()">Lägg till</button>' +
         '</div>';
@@ -5077,7 +5141,9 @@
         '</div>';
     }
 
-    card.innerHTML = header + tabRow + body + renderGoalHierarchyMini(g) + renderGoalResultFooter(g);
+    var linkedHtml = '';
+    try{ if(window.LOLink) linkedHtml = LOLink.linkedHtml(g.id); }catch(e){}
+    card.innerHTML = header + tabRow + body + renderGoalHierarchyMini(g) + renderGoalResultFooter(g) + linkedHtml;
   }
   function renderGoalHierarchyMini(g){
     var chain = [];
@@ -5231,11 +5297,21 @@
     var val = input.value.trim();
     if(!val) return;
     goalActionIdCounter++;
-    lifeGoals[selectedGoalIdx].actions.push({ id: goalActionIdCounter, text: val, freq: document.getElementById('goalActionFreq').value, done:false });
+    var pSel = document.getElementById('goalActionProject');
+    lifeGoals[selectedGoalIdx].actions.push({ id: goalActionIdCounter, text: val, freq: document.getElementById('goalActionFreq').value, done:false, projectId: pSel ? pSel.value : '' });
     renderGoalDetail();
     renderGoalsTable();
     renderAllGoalActionWidgets();
   }
+  function setActionProject(id, v){
+    var found = findActionById(id);
+    if(!found) return;
+    found.action.projectId = v;
+    renderGoalDetail();
+    if(window.renderProjectDetail) try{ renderProjectDetail(); }catch(e){}
+    if(window.saveAll) saveAll();
+  }
+  window.setActionProject = setActionProject;
   function findActionById(id){
     for(var i = 0; i < lifeGoals.length; i++){
       for(var j = 0; j < lifeGoals[i].actions.length; j++){
@@ -5669,7 +5745,7 @@
       document.getElementById('tiktokTab' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('active', k===t);
     });
     if(t === 'videos' || t === 'oversikt') renderTiktokVideos();
-    if(t === 'ideer') renderTiktokChat();
+    if(t === 'ideer'){ renderTiktokChat(); try{ renderTiktokAgentContext(); }catch(e){} }
   }
   function tiktokVideoRowHTML(v, rank){
     var thumb = v.cover ? '<img src="' + v.cover + '" style="width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:44px;height:44px;border-radius:10px;background:var(--surface-soft);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;">🎬</div>';
@@ -5700,6 +5776,7 @@
   function renderTiktokChat(){
     var el = document.getElementById('tiktokChatMessages');
     if(!el) return;
+    try{ renderTiktokAgentContext(); }catch(e){}
     el.innerHTML = tiktokChatHistory.length
       ? tiktokChatHistory.map(function(m){
           var isUser = m.role === 'user';
@@ -5708,16 +5785,110 @@
       : '<div class="list-empty">Hej! Fråga mig om contentidéer, trender, eller din TikTok-strategi.</div>';
     el.scrollTop = el.scrollHeight;
   }
+  function ttAgentData(){
+    function ls(k,d){ try{ return JSON.parse(localStorage.getItem(k)) || d; }catch(e){ return d; } }
+    var ideas = ls('lo_tt_ideas_v1', []);
+    var plan  = ls('lo_tt_plan_v1', []);
+    var notes = ls('lo_notes_v1', []);
+    var today = new Date(); var pad=function(n){return n<10?'0'+n:''+n;};
+    var iso=function(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
+    var in14 = new Date(today.getTime()+14*86400000);
+    var upcoming = plan.filter(function(x){ return x.date >= iso(today) && x.date <= iso(in14); })
+                       .sort(function(a,b){ return a.date.localeCompare(b.date); });
+    var goals = (window.lifeGoals||[]).filter(function(g){
+      var t = ((g.title||'')+' '+(g.category||'')).toLowerCase();
+      return t.indexOf('tiktok') > -1 || t.indexOf('följare') > -1 || t.indexOf('content') > -1;
+    });
+    var linkedIdeaGoals = ideas.filter(function(i){ return i.goalId; });
+    var research = notes.filter(function(n){
+      var tg = (n.tags||[]).join(' ').toLowerCase();
+      return tg.indexOf('tiktok') > -1 || tg.indexOf('research') > -1 || tg.indexOf('content') > -1;
+    }).slice(0,8);
+    return { ideas:ideas, plan:plan, upcoming:upcoming, goals:goals, research:research, linkedIdeaGoals:linkedIdeaGoals };
+  }
+  function ttAgentContextText(){
+    var d = ttAgentData();
+    var L = [];
+    L.push('KONTEXT OM MIG (använd bara dessa fakta, hitta aldrig på siffror):');
+    L.push('- Content pillars: ' + (tiktokPillars.length ? tiktokPillars.join(', ') : 'inga satta ännu'));
+    L.push('- Statistik: ' + (tiktokStats.followers || 0) + ' följare, ' + (tiktokStats.engagement || 0) + '% engagement'
+      + (tiktokVideos.length ? ', ' + tiktokVideos.length + ' hämtade videos' : ', inga videos hämtade'));
+    if(tiktokVideos.length){
+      L.push('- Bäst presterande videos: ' + tiktokVideos.slice(0,5).map(function(v){
+        return (v.title||'namnlöst') + (v.views!==undefined ? ' (' + v.views + ' views)' : '');
+      }).join(' | '));
+    }
+    if(d.ideas.length){
+      var byStage = {};
+      d.ideas.forEach(function(i){ var st=i.stage||'Idé'; byStage[st]=(byStage[st]||0)+1; });
+      L.push('- Idébank: ' + d.ideas.length + ' idéer (' + Object.keys(byStage).map(function(k){ return k+': '+byStage[k]; }).join(', ') + ')');
+      L.push('- Senaste idéer: ' + d.ideas.slice(0,8).map(function(i){
+        return i.title + (i.pillar ? ' [' + i.pillar + ']' : '') + ' – ' + (i.stage||'Idé');
+      }).join(' | '));
+    } else { L.push('- Idébank: tom'); }
+    L.push(d.upcoming.length
+      ? '- Planerat de närmaste 14 dagarna: ' + d.upcoming.map(function(p){ return p.date + ' ' + (p.time||'') + ' ' + p.title; }).join(' | ')
+      : '- Content plan: inget planerat de närmaste 14 dagarna');
+    if(d.goals.length){
+      L.push('- Mina TikTok-relaterade mål: ' + d.goals.map(function(g){
+        return g.title + (g.kpiTarget!==null && g.kpiTarget!==undefined ? ' (' + (g.kpiActual||0) + '/' + g.kpiTarget + ' ' + (g.kpiUnit||'') + ')' : '')
+          + (g.deadline ? ' till ' + g.deadline : '');
+      }).join(' | '));
+    } else { L.push('- Inga TikTok-mål satta ännu'); }
+    if(d.research.length){
+      L.push('- Min research (anteckningar): ' + d.research.map(function(n){
+        return n.title + ': ' + String(n.body||'').slice(0,160);
+      }).join(' | '));
+    }
+    L.push('INSTRUKTION: svara på svenska. Utgå alltid från fakta ovan, säg tydligt när något saknas i min data i stället för att gissa. Ge konkreta nästa steg som passar mina pillars och mål.');
+    return L.join('\n');
+  }
+  function renderTiktokAgentContext(){
+    var el = document.getElementById('ttAgentContext');
+    if(el){
+      var d = ttAgentData();
+      var chips = [
+        (tiktokPillars.length ? tiktokPillars.length + ' pillars' : 'inga pillars'),
+        (tiktokStats.followers || 0) + ' följare',
+        d.ideas.length + ' idéer',
+        d.upcoming.length + ' planerade poster',
+        d.goals.length + ' mål',
+        d.research.length + ' research-anteckningar'
+      ];
+      el.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + chips.map(function(c){
+        return '<span class="lo-linkbadge" style="cursor:default;">' + c + '</span>';
+      }).join('') + '</div>';
+    }
+    var q = document.getElementById('ttAgentQuick');
+    if(q && !q.dataset.filled){
+      var prompts = [
+        'Ge mig 5 idéer utifrån mina pillars och det som funkat bäst',
+        'Vad ska jag prioritera härnäst för att nå mitt följarmål?',
+        'Analysera min idébank — vad saknas?',
+        'Föreslå en publiceringsplan för nästa vecka'
+      ];
+      q.innerHTML = prompts.map(function(p){
+        return '<button class="change-btn" style="font-size:11px;" onclick="ttAgentAsk(' + JSON.stringify(p).replace(/"/g,'&quot;') + ')">' + p + '</button>';
+      }).join('');
+      q.dataset.filled = '1';
+    }
+  }
+  function ttAgentAsk(text){
+    var input = document.getElementById('tiktokChatInput');
+    if(!input) return;
+    input.value = text;
+    sendTiktokChatMessage();
+  }
+  window.ttAgentAsk = ttAgentAsk;
+  window.renderTiktokAgentContext = renderTiktokAgentContext;
+  setTimeout(function(){ try{ renderTiktokAgentContext(); }catch(e){} }, 800);
+
   function sendTiktokChatMessage(){
     var input = document.getElementById('tiktokChatInput');
     var val = input.value.trim();
     if(!val) return;
     input.value = '';
-    var pillarsLine = tiktokPillars.length ? 'Mina content pillars: ' + tiktokPillars.join(', ') + '. ' : '';
-    var statsLine = 'Just nu: ' + tiktokStats.followers + ' följare, ' + tiktokStats.engagement + '% engagement. ';
-    var topLine = tiktokVideos.length ? 'Bäst presterande klipp: ' + tiktokVideos.slice(0,3).map(function(v){return v.title||'namnlöst';}).join(', ') + '. ' : '';
-    var firstMessage = tiktokChatHistory.length === 0;
-    var userContent = (firstMessage ? pillarsLine + statsLine + topLine : '') + val;
+    var userContent = ttAgentContextText() + '\n\nMIN FRÅGA: ' + val;
     tiktokChatHistory.push({ role:'user', content: val });
     renderTiktokChat();
     var loadingEl = document.getElementById('tiktokChatMessages');
@@ -5884,8 +6055,32 @@
 
   // ---------- PROJECTS ----------
   var projects = [];
+  function ensureProjectIds(){
+    var n = 0;
+    projects.forEach(function(pr){ if(!pr.id){ pr.id = 'p' + (Date.now().toString(36)) + (n++) + Math.floor(Math.random()*1000); } });
+  }
+  window.LOProj = {
+    list: function(){ ensureProjectIds(); return projects; },
+    title: function(id){ var f = projects.filter(function(pr){ return String(pr.id)===String(id); })[0]; return f ? f.title : ''; },
+    options: function(sel){
+      ensureProjectIds();
+      return '<option value="">Inget projekt</option>' + projects.map(function(pr){
+        return '<option value="' + pr.id + '"' + (String(sel||'')===String(pr.id)?' selected':'') + '>' + pr.title.replace(/</g,'&lt;') + '</option>';
+      }).join('');
+    },
+    actionsFor: function(id){
+      var out = [];
+      (window.lifeGoals||[]).forEach(function(g){
+        (g.actions||[]).forEach(function(a){
+          if(String(a.projectId||'')===String(id)) out.push({ goal:g, action:a });
+        });
+      });
+      return out;
+    }
+  };
   var selectedProjectIdx = null;
   function renderProjects(){
+    ensureProjectIds();
     var el = document.getElementById('projectsList');
     if(!el) return;
     el.innerHTML = projects.length === 0
@@ -5899,6 +6094,7 @@
             '<span style="background:' + c + '22;color:' + c + ';border-radius:6px;padding:2px 8px;font-size:11px;">' + p.status + '</span></div>' +
             '<div class="bar"><div class="bar-fill" style="width:' + p.progress + '%;"></div></div>' +
             '<div style="font-size:11px;color:var(--text-soft);margin-top:4px;">' + p.progress + '% · ' + (p.deadline||'ingen deadline') + '</div>' +
+            ((p.goalId && window.LOLink) ? '<div style="margin-top:6px;">' + LOLink.badge(p.goalId) + '</div>' : '') +
             '</div>';
         }).join('');
     saveAll();
@@ -5931,6 +6127,7 @@
         '<select onchange="setProjectStatus(this.value)" style="width:auto;"><option' + (p.status==='Idé'?' selected':'') + '>Idé</option><option' + (p.status==='Aktiv'?' selected':'') + '>Aktiv</option><option' + (p.status==='Pausad'?' selected':'') + '>Pausad</option><option' + (p.status==='Klar'?' selected':'') + '>Klar</option></select>' +
         '<input type="date" value="' + (p.deadline||'') + '" onchange="setProjectDeadline(this.value)" style="width:auto;">' +
         '<input type="number" value="' + p.progress + '" min="0" max="100" onchange="setProjectProgress(this.value)" placeholder="Progress %" style="width:110px;">' +
+        '<select onchange="setProjectGoal(this.value)" style="width:auto;">' + (window.LOLink ? LOLink.options(p.goalId||'') : '<option value="">Inget mål</option>') + '</select>' +
       '</div>' +
       '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">Milstolpar</div>' +
       '<ul class="task-list" style="margin-bottom:10px;">' + p.milestones.map(function(m, mi){ return '<li class="' + (m.done?'done':'') + '" onclick="toggleProjectMilestone(' + mi + ')"><span class="box">' + (m.done?'✓':'') + '</span><span class="t">' + m.title + '</span></li>'; }).join('') + '</ul>' +
@@ -5938,8 +6135,26 @@
       '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">Tasks</div>' +
       '<ul class="task-list" style="margin-bottom:10px;">' + p.tasks.map(function(t, ti){ return '<li class="' + (t.done?'done':'') + '" onclick="toggleProjectTask(' + ti + ')"><span class="box">' + (t.done?'✓':'') + '</span><span class="t">' + t.t + '</span></li>'; }).join('') + '</ul>' +
       '<div class="add-row" style="margin-bottom:16px;"><input type="text" id="ptInput" placeholder="Ny task..."><button onclick="addProjectTask()">Lägg till</button></div>' +
+      '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">Actions från mål</div>' +
+      (function(){
+        var acts = window.LOProj ? LOProj.actionsFor(p.id) : [];
+        if(!acts.length) return '<div class="list-empty" style="margin-bottom:16px;">Inga målactions kopplade till det här projektet ännu — koppla dem under Mål → Actions.</div>';
+        return '<ul class="task-list" style="margin-bottom:16px;">' + acts.map(function(x){
+          return '<li class="' + (x.action.done?'done':'') + '" onclick="toggleActionById(' + x.action.id + ');renderProjectDetail();">' +
+            '<span class="box">' + (x.action.done?'✓':'') + '</span>' +
+            '<span class="t">' + x.action.text + ' <span style="color:var(--text-soft);font-size:11px;">(' + x.action.freq + ' · ' + x.goal.title.slice(0,40) + ')</span></span></li>';
+        }).join('') + '</ul>';
+      })() +
       '<button class="change-btn" onclick="closeProjectDetail()">Stäng</button>';
   }
+  function setProjectGoal(v){ projects[selectedProjectIdx].goalId = v; renderProjects(); renderProjectDetail(); }
+  window.setProjectGoal = setProjectGoal;
+  window.renderProjectDetail = renderProjectDetail;
+  setTimeout(function(){ if(window.LOLink) LOLink.register('projects','Projekt','🏗', function(goalId){
+    return projects.filter(function(p){ return String(p.goalId||'')===String(goalId); }).map(function(p){
+      return { title:p.title, sub:p.status + ' · ' + p.progress + '%', go:'#/business/projekt' };
+    });
+  }); }, 600);
   function setProjectStatus(v){ projects[selectedProjectIdx].status = v; renderProjects(); }
   function setProjectDeadline(v){ projects[selectedProjectIdx].deadline = v; renderProjects(); }
   function setProjectProgress(v){ projects[selectedProjectIdx].progress = parseInt(v,10)||0; renderProjects(); }
@@ -6485,9 +6700,21 @@
     pillEl.style.color = status.tone === 'ok' ? 'var(--sage)' : (status.tone === 'warn' ? 'var(--accent)' : 'var(--text-soft)');
   }
 
+  function homeWeekDates(){
+    try{
+      var r = window.LO && LO.period && LO.period().range;
+      if(r && r.start){
+        var out = [], d = new Date(r.start+'T00:00:00');
+        for(var i=0;i<7;i++){ out.push(new Date(d.getFullYear(), d.getMonth(), d.getDate()+i)); }
+        return out;
+      }
+    }catch(e){}
+    return REAL_WEEK_DATES;
+  }
   function renderHomeThisWeek(){
     var el = document.getElementById('homeWeekPctBig');
     if(!el) return;
+    var REAL_WEEK_DATES = homeWeekDates();
     var pct = habitPctForDates(REAL_WEEK_DATES);
     el.textContent = pct + '%';
     document.getElementById('homeWeekBar').style.width = pct + '%';
@@ -6505,9 +6732,11 @@
       if(rows.length && done === rows.length) daysOnTrack++;
     });
     var daysSoFar = REAL_WEEK_DATES.filter(function(dt){ return isoDate(dt) <= isoDate(new Date()); }).length;
-    document.getElementById('homeWeekDaysOnTrack').textContent = daysOnTrack + ' / ' + daysSoFar + ' days on track denna vecka';
+    var isNow = isoDate(REAL_WEEK_DATES[0]) === isoDate(homeRealWeekStart());
+    document.getElementById('homeWeekDaysOnTrack').textContent = daysOnTrack + ' / ' + daysSoFar + ' days on track ' + (isNow ? 'denna vecka' : 'veckan ' + isoDate(REAL_WEEK_DATES[0]) + '–' + isoDate(REAL_WEEK_DATES[6]));
   }
 
+  function homeRealWeekStart(){ return REAL_WEEK_DATES[0]; }
   function renderHomeNorthStar(){
     var el = document.getElementById('homeNorthStar');
     if(!el) return;
@@ -6638,6 +6867,7 @@
       '</div>';
   }
 
+  window.renderHomeAll = function(){ try{ renderHome(); }catch(e){} };
   function renderHome(){
     var el = document.getElementById('homeRingText');
     if(!el) return;
@@ -7055,7 +7285,7 @@
 
   /* ---------------- Gruppstruktur ---------------- */
   var GROUPS = [
-    { id:'home', icon:'🏠', label:'Home', subs:[ {id:'oversikt', label:'Översikt', view:'home'} ] },
+    { id:'home', icon:'🏠', label:'Home', subs:[ {id:'oversikt', label:'Översikt', view:'home', unit:'week'} ] },
     { id:'mal', icon:'🏆', label:'Mål', subs:[
       {id:'kort', label:'Mål', view:'mal', on:function(){ if(window.setGoalView) setGoalView('cards'); }},
       {id:'tabell', label:'Tabell', view:'mal', on:function(){ if(window.setGoalView) setGoalView('table'); }},
@@ -7074,10 +7304,10 @@
       {id:'ar', label:'År', view:'year', unit:'year'}
     ]},
     { id:'hard75', icon:'🔥', label:'75 HARD', subs:[
-      {id:'idag', label:'Idag', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('idag'); }},
-      {id:'historik', label:'Historik', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('historik'); }},
+      {id:'idag', label:'Idag', view:'hard75', unit:'day', on:function(){ if(window.setHardTab) setHardTab('idag'); }},
+      {id:'historik', label:'Historik', view:'hard75', unit:'month', on:function(){ if(window.setHardTab) setHardTab('historik'); }},
       {id:'pass', label:'Pass', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('pass'); }},
-      {id:'dagbok', label:'Dagbok', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('dagbok'); }},
+      {id:'dagbok', label:'Dagbok', view:'hard75', unit:'month', on:function(){ if(window.setHardTab) setHardTab('dagbok'); }},
       {id:'regler', label:'Regler', view:'hard75', on:function(){ if(window.setHardTab) setHardTab('regler'); }}
     ] },
     { id:'halsa', icon:'💚', label:'Hälsa', subs:[
@@ -7107,7 +7337,7 @@
       {id:'agent', label:'AI Agent', view:'tiktok', on:function(){ if(window.setTiktokTab) setTiktokTab('ideer'); }}
     ]},
     { id:'business', icon:'🚀', label:'Business', subs:[
-      {id:'oversikt', label:'Översikt', view:'projects', on:function(){ if(window.setBizTab) setBizTab('oversikt'); }},
+      {id:'oversikt', label:'Översikt', view:'projects', unit:'month', on:function(){ if(window.setBizTab) setBizTab('oversikt'); }},
       {id:'projekt', label:'Projekt', view:'projects', on:function(){ if(window.setBizTab) setBizTab('projekt'); }},
       {id:'tavla', label:'Tavla', view:'projects', on:function(){ if(window.setBizTab) setBizTab('tavla'); }},
       {id:'dosed', label:'DOSED', view:'dosed'}
@@ -7152,6 +7382,8 @@
     bucketlist:   ['Life · Adventure · Meaning','Bucket list','Livet du vill leva, inte bara planera.','"Collect moments."'],
     habits:       ['Habits · Systems · Identity','Vanor','Du blir det du upprepar.','"You do not rise to your goals, you fall to your systems."'],
     money:        ['Money · Control · Freedom','Ekonomi','Få koll på flödet och bygg din frihet.','"Wealth is quiet, freedom is loud."'],
+    utbildning:   ['Learn · Focus · Master','Utbildning','Kurser, tentor och studietid — steg för steg.','"Learning is the highest-return investment."'],
+    anteckningar: ['Notes · Ideas · Knowledge','Anteckningar','Din kunskapsbank — tankar, research och idéer.','"Write it down. Thoughts fade, notes stay."'],
     installningar:['Setup · Data · Control','Inställningar','Integrationer, säkerhetskopior och kontroll.','"Own your system."']
   };
 
@@ -7214,6 +7446,12 @@
       safe('renderEkonomi');
       safe('renderEdu');
       safe('renderAiExtra');
+      safe('renderHomeAll');
+      safe('renderHalsaExtra');
+      safe('renderHardExtra');
+      safe('renderBiz');
+      safe('renderGoalLadder');
+      safe('ttRenderAll');
       safe('saveAll');
     } catch(e){ console.warn('syncPeriod', e); }
     busy = false;
@@ -7737,6 +7975,84 @@
 })();
 </script>
 
+<script>
+/* =========================================================================
+   LIFE OS — LOLink: koppling mellan mål och övriga delar
+   ========================================================================= */
+(function(){
+  var providers = [];
+  function esc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function goals(){ return (window.lifeGoals||[]); }
+
+  window.LOLink = {
+    goals: function(){ return goals(); },
+    title: function(id){
+      if(id===undefined || id===null || id==='') return '';
+      var a = goals();
+      for(var i=0;i<a.length;i++){ if(String(a[i].id)===String(id)) return a[i].title || a[i].category || ('Mål '+a[i].id); }
+      return '';
+    },
+    badge: function(id){
+      var t = this.title(id);
+      return t ? '<span class="lo-linkbadge" onclick="LOLink.open(\''+String(id)+'\')" title="Öppna målet">🎯 '+esc(t)+'</span>' : '';
+    },
+    options: function(selected){
+      return '<option value="">Inget mål</option>' + goals().map(function(g){
+        var lbl = (g.title || g.category || ('Mål '+g.id));
+        return '<option value="'+esc(g.id)+'"'+(String(selected)===String(g.id)?' selected':'')+'>'+esc(lbl)+(g.timeframe?' · '+esc(g.timeframe):'')+'</option>';
+      }).join('');
+    },
+    fillSelect: function(el, selected){
+      if(typeof el === 'string') el = document.getElementById(el);
+      if(!el) return;
+      el.innerHTML = this.options(selected);
+      if(selected !== undefined && selected !== null) el.value = String(selected);
+    },
+    open: function(id){
+      try{
+        if(window.LO && LO.go) LO.go('mal','kort');
+        if(window.openGoalDetailById) window.openGoalDetailById(id);
+      }catch(e){}
+    },
+    register: function(kind, label, icon, fn){ providers.push({ kind:kind, label:label, icon:icon, fn:fn }); },
+    linked: function(goalId){
+      var out = [];
+      providers.forEach(function(p){
+        var items = [];
+        try{ items = p.fn(goalId) || []; }catch(e){ items = []; }
+        if(items.length) out.push({ label:p.label, icon:p.icon, items:items });
+      });
+      return out;
+    },
+    linkedHtml: function(goalId){
+      var groups = this.linked(goalId);
+      if(!groups.length) return '';
+      return '<div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">' +
+        '<div class="card-sub" style="margin-bottom:10px;">Kopplat till det här målet</div>' +
+        groups.map(function(gr){
+          return '<div style="margin-bottom:12px;">' +
+            '<div style="font-size:11px;color:var(--text-soft);margin-bottom:5px;">'+gr.icon+' '+esc(gr.label)+' ('+gr.items.length+')</div>' +
+            gr.items.map(function(it){
+              return '<div class="lo-linkrow"'+(it.go?' onclick="LOLink.goto(\''+it.go+'\')"':'')+'>' +
+                '<span>'+esc(it.title)+'</span>' +
+                (it.sub?'<span style="font-size:11px;color:var(--text-soft);">'+esc(it.sub)+'</span>':'') +
+              '</div>';
+            }).join('') +
+          '</div>';
+        }).join('') + '</div>';
+    },
+    goto: function(hash){ try{ location.hash = hash; }catch(e){} }
+  };
+
+  var st = document.createElement('style');
+  st.textContent = '.lo-linkbadge{display:inline-block;background:var(--surface-soft);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-size:11px;color:var(--text-soft);cursor:pointer;margin-right:6px;}' +
+    '.lo-linkbadge:hover{color:var(--text);}' +
+    '.lo-linkrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:12px;cursor:pointer;background:var(--surface);}' +
+    '.lo-linkrow:hover{background:var(--surface-soft);}';
+  document.head.appendChild(st);
+})();
+</script>
+
 
 <script>
 /* =========================================================================
@@ -8243,6 +8559,7 @@
           '<input type="text" id="ttIdeaTitle" placeholder="Idé / ämne" style="flex:1;min-width:170px;">' +
           '<input type="text" id="ttIdeaHook" placeholder="Hook (första 2 sek)" style="flex:1;min-width:170px;">' +
           '<select id="ttIdeaPillar" style="flex:0 0 160px;"></select>' +
+          '<select id="ttIdeaGoal" style="flex:0 0 180px;"><option value="">Inget mål</option></select>' +
           '<button onclick="ttAddIdea()">Lägg till</button>' +
         '</div>' +
       '</div>' +
@@ -8287,6 +8604,7 @@
       var ps = pillars();
       sel.innerHTML = '<option value="">Ingen pillar</option>' + ps.map(function(p){ return '<option value="'+esc(p)+'">'+esc(p)+'</option>'; }).join('');
     }
+    try{ if(window.LOLink){ var gsel0=$('ttIdeaGoal'); if(gsel0) LOLink.fillSelect(gsel0, gsel0.value); } }catch(e){}
     var tabs = $('ttStageTabs');
     if(tabs){
       tabs.innerHTML = ['alla'].concat(STAGES).map(function(s){
@@ -8305,7 +8623,8 @@
             (i.hook ? '<div class="tt-idea-hook">🎣 '+esc(i.hook)+'</div>' : '') +
             '<div class="tt-idea-meta">' + (i.pillar ? '<span class="tt-pill">'+esc(i.pillar)+'</span>' : '') +
               '<span class="tt-stage">'+esc(i.stage||'Idé')+'</span>' +
-              (i.planned ? '<span class="tt-planned">📅 '+i.planned+'</span>' : '') + '</div>' +
+              (i.planned ? '<span class="tt-planned">📅 '+i.planned+'</span>' : '') +
+              ((i.goalId && window.LOLink) ? LOLink.badge(i.goalId) : '') + '</div>' +
             '<div class="tt-steps">' + STAGES.map(function(s,k){
                 return '<span class="tt-step'+(k<=si?' on':'')+'" onclick="ttSetStage(\''+i.id+'\',\''+s+'\')" title="'+s+'"></span>';
               }).join('') + '</div>' +
@@ -8361,6 +8680,7 @@
   }
 
   function renderAll(){ if(!ensureDom()) return; renderIdeas(); renderPlan(); }
+  window.ttRenderAll = renderAll;
 
   /* ---------------- actions ---------------- */
   window.ttFilterStage = function(s){ filterStage = s; renderIdeas(); };
@@ -8368,10 +8688,17 @@
     var t = $('ttIdeaTitle'), h = $('ttIdeaHook'), p = $('ttIdeaPillar');
     var title = (t.value||'').trim(); if(!title){ t.focus(); return; }
     load();
-    ideas.unshift({ id:'i'+Date.now()+Math.floor(Math.random()*999), title:title, hook:(h.value||'').trim(), pillar:p?p.value:'', stage:'Idé', planned:'' });
+    var gsel = $('ttIdeaGoal');
+    ideas.unshift({ id:'i'+Date.now()+Math.floor(Math.random()*999), title:title, hook:(h.value||'').trim(), pillar:p?p.value:'', goalId:(gsel?gsel.value:''), stage:'Idé', planned:'' });
     save(); t.value=''; if(h) h.value='';
     renderAll();
   };
+  if(window.LOLink) LOLink.register('tiktok','TikTok-idéer','🎬', function(goalId){
+    load();
+    return ideas.filter(function(i){ return String(i.goalId||'')===String(goalId); }).map(function(i){
+      return { title:i.title, sub:(i.stage||'Idé'), go:'#/tiktok/ideer' };
+    });
+  });
   window.ttSetStage = function(id, stage){
     load();
     ideas.forEach(function(i){ if(i.id===id) i.stage = stage; });
@@ -8786,6 +9113,7 @@
   function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function iso(d){ var p=function(n){return n<10?'0'+n:''+n;}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
   var tab='idag', pick=iso(new Date());
+  function anchorDate(){ try{ if(window.LO && LO.period) return LO.period().anchor; }catch(e){} return iso(new Date()); }
 
   function rows(){ try{ return window.hard75Rows || []; }catch(e){ return []; } }
   function start(){ try{ return window.challengeStart || store.start || iso(new Date()); }catch(e){ return store.start || iso(new Date()); } }
@@ -8802,8 +9130,10 @@
 
   function logForm(){
     var box=$('hdLogForm'); if(!box) return;
-    var d=iso(new Date()); var cur=store.days[d]||{};
+    var d=anchorDate(); var cur=store.days[d]||{};
+    var lbl=$('hdLogDate'); if(lbl) lbl.textContent = (d===iso(new Date()) ? 'idag' : d);
     box.innerHTML='<div class="ek-form">'+
+      '<div class="wide" style="font-size:11px;color:var(--text-soft);">Loggar för '+(d===iso(new Date())?'idag ('+d+')':d)+'</div>'+
       '<label>Vikt (kg)<input type="number" step="0.1" id="hdW" value="'+(cur.weight||'')+'"></label>'+
       '<label>Vatten (liter)<input type="number" step="0.1" id="hdWater" value="'+(cur.water||'')+'"></label>'+
       '<label>Sidor lästa<input type="number" id="hdPages" value="'+(cur.pages||'')+'"></label>'+
@@ -8813,6 +9143,7 @@
 
   function dayPicker(){
     var box=$('hdDayPicker'); if(!box) return;
+    pick = anchorDate();
     box.innerHTML='<input type="date" id="hdPick" value="'+pick+'" onchange="hardPickDay(this.value)" style="padding:8px 12px;border-radius:12px;border:1px solid var(--border);">';
     var list=$('hdDayList'); if(!list) return;
     var hs = window.habitState||{};
@@ -8826,8 +9157,13 @@
 
   function journal(){
     var box=$('hdJournal'); if(!box) return;
-    var keys=Object.keys(store.days).filter(function(d){ return (store.days[d]||{}).note; }).sort().reverse();
-    if(!keys.length){ box.innerHTML='<div class="lo-empty">Inga anteckningar ännu.</div>'; return; }
+    var rg = (function(){ try{ return window.LO.period().range; }catch(e){ return null; } })();
+    var keys=Object.keys(store.days).filter(function(d){
+      if(!(store.days[d]||{}).note) return false;
+      if(rg && (d < rg.start || d > rg.end)) return false;
+      return true;
+    }).sort().reverse();
+    if(!keys.length){ box.innerHTML='<div class="lo-empty">Inga anteckningar för den här perioden.</div>'; return; }
     box.innerHTML=keys.map(function(d){
       var e=store.days[d];
       var meta=[]; if(e.weight) meta.push(e.weight+' kg'); if(e.water) meta.push(e.water+' l'); if(e.pages) meta.push(e.pages+' sidor');
@@ -8850,7 +9186,7 @@
   function render(){ applyTabs(); logForm(); dayPicker(); journal(); rules(); }
 
   window.hardSaveDay=function(){
-    var d=iso(new Date());
+    var d=anchorDate();
     var e=store.days[d]||{};
     e.weight=parseFloat(($('hdW')||{}).value)||null;
     e.water=parseFloat(($('hdWater')||{}).value)||null;
@@ -8859,7 +9195,7 @@
     store.days[d]=e; save(); render();
   };
   window.hardRemoveDay=function(d){ delete store.days[d]; save(); render(); };
-  window.hardPickDay=function(v){ pick=v||pick; dayPicker(); };
+  window.hardPickDay=function(v){ if(v && window.LO && LO.go){ pick=v; try{ location.hash = '#/hard75/historik/d/'+v; }catch(e){} } dayPicker(); };
   window.hardToggleDay=function(h){
     h = h.replace(/&#39;/g, "'");
     var hs = window.habitState; if(!hs) return;
@@ -9129,7 +9465,8 @@
     var t=$('ntTitle').value.trim(), b=$('ntBody').value.trim();
     if(!t && !b) return;
     var tags=$('ntTags').value.split(',').map(function(x){return x.trim();}).filter(Boolean);
-    notes.unshift({ id:Date.now(), title:t||'Utan rubrik', body:b, tags:tags, pinned:false, updated:stamp() });
+    var gsel=$('ntGoal');
+    notes.unshift({ id:Date.now(), title:t||'Utan rubrik', body:b, tags:tags, goalId:(gsel?gsel.value:''), pinned:false, updated:stamp() });
     $('ntTitle').value=''; $('ntBody').value=''; $('ntTags').value='';
     save(); ntRender();
   };
@@ -9149,6 +9486,7 @@
 
   window.ntRender=function(){
     var list=$('ntList'); if(!list) return;
+    try{ if(window.LOLink){ var gs=$('ntGoal'); if(gs){ var keep=gs.value; LOLink.fillSelect(gs, keep); } } }catch(e){}
     var q=(($('ntSearch')||{}).value||'').toLowerCase();
     var tags={}; notes.forEach(function(n){ (n.tags||[]).forEach(function(t){ tags[t]=(tags[t]||0)+1; }); });
     var bar=$('ntTagBar');
@@ -9169,11 +9507,17 @@
         '<button class="nt-btn" onclick="ntDel('+n.id+')" title="Ta bort">✕</button></div>'+
         (n.body?'<div class="nt-body" id="nt-b-'+n.id+'">'+esc(n.body)+'</div>':'<div class="nt-body" id="nt-b-'+n.id+'"></div>')+
         ((n.tags||[]).length?'<div style="margin-top:8px;">'+n.tags.map(function(t){return '<span class="nt-tag">'+esc(t)+'</span>';}).join('')+'</div>':'')+
+        ((n.goalId && window.LOLink)?'<div style="margin-top:8px;">'+LOLink.badge(n.goalId)+'</div>':'')+
         '<div class="nt-meta">'+esc(n.updated||'')+'</div></div>';
     }).join('');
   };
 
   load();
+  if(window.LOLink) LOLink.register('notes','Anteckningar','📝', function(goalId){
+    return notes.filter(function(n){ return String(n.goalId||'')===String(goalId); }).map(function(n){
+      return { title:n.title, sub:n.updated||'', go:'#/anteckningar/anteckningar' };
+    });
+  });
   setTimeout(function(){ ntRender(); }, 480);
 })();
 </script>
