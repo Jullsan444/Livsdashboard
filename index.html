@@ -2426,7 +2426,7 @@
     localStorage.setItem('tiktok_oauth_state', state);
     pkceChallengeFromVerifier(verifier, function(challenge) {
       var url = 'https://www.tiktok.com/v2/auth/authorize/?client_key=' + TIKTOK_CLIENT_KEY +
-        '&scope=' + encodeURIComponent('user.info.basic,video.list') +
+        '&scope=' + encodeURIComponent('user.info.stats,video.list') +
         '&response_type=code&redirect_uri=' + encodeURIComponent(TIKTOK_REDIRECT_URI) +
         '&state=' + state + '&code_challenge=' + challenge + '&code_challenge_method=S256';
       window.location.href = url;
